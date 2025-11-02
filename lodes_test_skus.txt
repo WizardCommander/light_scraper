@@ -1,0 +1,17 @@
+# Lodes.com valid product SKUs for Milestone 1 testing
+# Updated list with confirmed working products
+kelly
+megaphone
+a-tube-suspension
+nostalgia
+rain
+ombre
+buds
+vollee
+muse
+dora-wall
+cargo
+giulietta
+soffio
+twiggy
+t-black

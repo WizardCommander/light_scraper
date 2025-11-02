@@ -1,0 +1,7 @@
+*.md
+notes.txt
+*.xlsx
+*.pdf
+*.env
+*.ini
+venv/*

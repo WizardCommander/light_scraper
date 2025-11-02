@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:woocommerce.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.stagehand.dev)",
+      "WebFetch(domain:www.stagehand.dev)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "WebFetch(domain:www.lodes.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
