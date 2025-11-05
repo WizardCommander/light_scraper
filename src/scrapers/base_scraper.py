@@ -129,6 +129,23 @@ class BaseScraper(ABC):
         """
         pass
 
+    @abstractmethod
+    def scrape_category(self, category_url: str) -> list[SKU]:
+        """Discover all product SKUs from a category page.
+
+        Must be implemented by each manufacturer scraper.
+
+        Args:
+            category_url: URL of category/collection page
+
+        Returns:
+            List of discovered product SKUs
+
+        Raises:
+            Exception: If category scraping fails
+        """
+        pass
+
     def __enter__(self):
         """Context manager entry - setup browser."""
         self.setup_browser()

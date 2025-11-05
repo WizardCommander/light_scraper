@@ -4,12 +4,21 @@ Following CLAUDE.md: manufacturer-specific logic only, inherits common functiona
 Based on lodes_structure.md selector mappings.
 """
 
+import re
 from typing import Optional
-from playwright.sync_api import Page
+
 from loguru import logger
+from playwright.sync_api import Page, TimeoutError as PlaywrightTimeout
 
 from src.scrapers.base_scraper import BaseScraper
-from src.types import SKU, ProductData, ScraperConfig, ImageUrl, Manufacturer, EAN
+from src.scrapers.attribute_parser import (
+    parse_designer_from_title,
+    parse_table_header_attributes,
+    parse_weight_from_text,
+    parse_hills_from_text,
+    extract_certifications_from_html,
+)
+from src.types import EAN, SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
 
 
 class LodesScraper(BaseScraper):
@@ -32,9 +41,6 @@ class LodesScraper(BaseScraper):
     def build_product_url(self, sku: SKU) -> str:
         """Construct product URL from SKU.
 
-        Note: Lodes uses product name slugs in URLs, not numeric SKUs.
-        This method assumes SKU is the product slug (e.g., 'a-tube-suspension').
-
         Args:
             sku: Product identifier/slug
 
@@ -42,6 +48,76 @@ class LodesScraper(BaseScraper):
             Full product URL
         """
         return f"{self.config.base_url}/products/{sku}/"
+
+    def scrape_category(self, category_url: str) -> list[SKU]:
+        """Discover all product SKUs from a Lodes category page.
+
+        Args:
+            category_url: URL of category/collection page
+
+        Returns:
+            List of discovered product SKUs
+
+        Raises:
+            Exception: If category scraping fails
+        """
+        if self._page is None:
+            self.setup_browser()
+
+        assert self._page is not None
+
+        logger.info(f"Scraping Lodes category: {category_url}")
+
+        try:
+            response = self._page.goto(
+                category_url,
+                wait_until="networkidle",
+                timeout=self.config.timeout * 1000,
+            )
+
+            if response and response.status >= 400:
+                raise Exception(f"HTTP {response.status} error for {category_url}")
+
+            self._page.wait_for_selector("a[href*='/products/']", timeout=10000)
+
+            for _ in range(5):
+                self._page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                self._page.wait_for_timeout(1000)
+
+            product_links = self._page.query_selector_all("a[href*='/products/']")
+            seen_skus = set()
+
+            for link in product_links:
+                href = link.get_attribute("href")
+                if href:
+                    sku = self._extract_sku_from_url(href)
+                    if sku:
+                        seen_skus.add(sku)
+
+            skus = list(seen_skus)
+            logger.info(f"Found {len(skus)} products in category {category_url}")
+            self.rate_limit()
+
+            return skus
+
+        except Exception as e:
+            logger.error(f"Failed to scrape category {category_url}: {e}")
+            raise
+
+    def _extract_sku_from_url(self, url: str) -> SKU | None:
+        """Extract product SKU/slug from product URL.
+
+        Args:
+            url: Product URL (e.g., /en/products/kelly/ or https://www.lodes.com/en/products/kelly/)
+
+        Returns:
+            Product SKU/slug or None if not found
+        """
+        # Match /products/{slug}/ pattern
+        match = re.search(r"/products/([^/]+)", url)
+        if match:
+            return SKU(match.group(1))
+        return None
 
     def scrape_product(self, sku: SKU) -> ProductData:
         """Extract product data from Lodes product page.
@@ -64,7 +140,6 @@ class LodesScraper(BaseScraper):
         logger.info(f"Scraping Lodes product: {url}")
 
         try:
-            # Wait for JavaScript-loaded content
             response = self._page.goto(
                 url, wait_until="networkidle", timeout=self.config.timeout * 1000
             )
@@ -76,18 +151,36 @@ class LodesScraper(BaseScraper):
             logger.error(f"Failed to load page {url}: {e}")
             raise
 
-        # Extract product data using lodes_structure.md selectors
         try:
             name = self._extract_product_name(self._page)
             description = self._extract_description(self._page)
             images = self._extract_images(self._page)
             attributes = self._extract_attributes(self._page)
             categories = self._extract_categories(self._page)
-            variants_info = self._extract_variants(self._page)
+            variants = self._extract_variants(self._page)
 
-            # Combine variant info into attributes
-            if variants_info:
-                attributes.update(variants_info)
+            if not variants:
+                product = ProductData(
+                    sku=sku,
+                    name=name,
+                    description=description,
+                    manufacturer=self.config.manufacturer,
+                    categories=categories,
+                    attributes=attributes,
+                    images=images,
+                )
+
+                logger.info(f"Successfully scraped {name} (SKU: {sku})")
+                self.rate_limit()
+
+                return product
+
+            logger.info(
+                f"Product {name} has {len(variants)} variants (returning simple product)"
+            )
+
+            variant_summary = f"{len(variants)} variants available"
+            attributes["Variants"] = variant_summary
 
             product = ProductData(
                 sku=sku,
@@ -167,34 +260,41 @@ class LodesScraper(BaseScraper):
         return unique_images[: self.MAX_IMAGES]
 
     def _extract_attributes(self, page: Page) -> dict[str, str]:
-        """Extract technical specifications from tables."""
+        """Extract technical specifications from variant dropdowns."""
         attributes = {}
 
-        # Extract designer from h1 title
         title_elem = page.query_selector("h1.inline.title-n.font26.serif")
         if title_elem:
-            em_elem = title_elem.query_selector("em")
-            if em_elem:
-                designer_text = em_elem.text_content()
-                if designer_text and "Design by" in designer_text:
-                    designer_name = designer_text.replace("Design by", "").strip()
-                    if designer_name:
-                        attributes["Designer"] = designer_name
+            title_text = title_elem.text_content()
+            if title_text:
+                designer = parse_designer_from_title(title_text)
+                if designer:
+                    attributes["Designer"] = designer
 
-        # Extract technical specs from variant tables
-        variant_tables = page.query_selector_all("table.table-variante")
-        for table in variant_tables:
-            rows = table.query_selector_all("tbody tr")
-            for row in rows:
-                header = row.query_selector("th")
-                cell = row.query_selector("td")
-                if header and cell:
-                    key_text = header.text_content()
-                    value_text = cell.text_content()
-                    if key_text and value_text:
-                        attributes[key_text.strip()] = value_text.strip()
+        self._expand_technical_sheet_dropdown(page)
 
-        # Extract datasheet PDF link
+        header_texts = self._get_table_header_texts(page)
+        table_attrs = parse_table_header_attributes(header_texts)
+        attributes.update(table_attrs)
+
+        secondary_info = page.query_selector("div.secondary-info")
+        if secondary_info:
+            info_text = secondary_info.text_content()
+            if info_text:
+                weight = parse_weight_from_text(info_text)
+                if weight:
+                    attributes["Net weight"] = weight
+
+                hills = parse_hills_from_text(info_text)
+                if hills:
+                    attributes["Hills"] = hills
+
+        page_html = page.content()
+        certifications = extract_certifications_from_html(page_html)
+        for key, value in certifications.items():
+            if key not in attributes:
+                attributes[key] = value
+
         pdf_link = page.query_selector('a[href$=".pdf"]')
         if pdf_link:
             href = pdf_link.get_attribute("href")
@@ -202,6 +302,34 @@ class LodesScraper(BaseScraper):
                 attributes["Datasheet URL"] = href
 
         return attributes
+
+    def _expand_technical_sheet_dropdown(self, page: Page) -> None:
+        """Click dropdown to reveal technical specifications."""
+        try:
+            expand_headers = page.query_selector_all("div.header-variante")
+            if expand_headers and len(expand_headers) > 0:
+                expand_headers[0].click()
+                page.wait_for_selector(
+                    "table.table-variante", state="visible", timeout=5000
+                )
+        except PlaywrightTimeout as e:
+            logger.warning(f"Could not expand technical sheet dropdown: {e}")
+
+    def _get_table_header_texts(self, page: Page) -> list[str]:
+        """Extract all table header texts from variant tables."""
+        header_texts = []
+        variant_tables = page.query_selector_all("table.table-variante")
+
+        for table in variant_tables:
+            thead = table.query_selector("thead")
+            if thead:
+                header_cells = thead.query_selector_all("th")
+                for cell in header_cells:
+                    header_text = cell.text_content()
+                    if header_text:
+                        header_texts.append(header_text.strip())
+
+        return header_texts
 
     def _extract_categories(self, page: Page) -> list[str]:
         """Extract product categories from breadcrumbs."""
@@ -225,28 +353,63 @@ class LodesScraper(BaseScraper):
 
         return categories if categories else ["Lighting"]
 
-    def _extract_variants(self, page: Page) -> dict[str, str]:
-        """Extract variant information from div.variante."""
-        variants_data = {}
-        variant_names = []
+    def _extract_variants(self, page: Page) -> list[dict[str, str]]:
+        """Extract variant information from variant tables.
 
-        # Look for variant sections
-        variants = page.query_selector_all("div.variante")
+        Returns:
+            List of variant dictionaries with SKU and attribute values.
+            Empty list if no variants found.
+        """
+        variants = []
 
-        for variant in variants:
-            # Extract variant name from header
-            header = variant.query_selector(
+        # Look for variant table rows
+        variant_tables = page.query_selector_all("table.table-variante")
+
+        for table in variant_tables:
+            rows = table.query_selector_all("tbody tr")
+
+            # Extract header to identify attribute columns
+            headers = []
+            header_row = table.query_selector("thead tr")
+            if header_row:
+                header_cells = header_row.query_selector_all("th")
+                headers = [
+                    cell.text_content().strip()
+                    for cell in header_cells
+                    if cell.text_content()
+                ]
+
+            for row in rows:
+                cells = row.query_selector_all("td")
+                if not cells:
+                    continue
+
+                variant_data = {}
+
+                # Map each cell to its corresponding header by index
+                for idx, cell in enumerate(cells):
+                    if idx < len(headers):
+                        attr_name = headers[idx]
+                        attr_value = cell.text_content()
+                        if attr_value:
+                            variant_data[attr_name] = attr_value.strip()
+
+                if variant_data:
+                    variants.append(variant_data)
+
+        # Also check div.variante sections for variant names
+        variant_sections = page.query_selector_all("div.variante")
+        for section in variant_sections:
+            header = section.query_selector(
                 "div.header-variante.relative div.left.col25.font26.serif"
             )
             if header:
                 name_text = header.text_content()
-                if name_text:
-                    variant_names.append(name_text.strip())
+                if name_text and variants:
+                    # Add variant type to first variant if not already present
+                    variants[0]["Variant Type"] = name_text.strip()
 
-        if variant_names:
-            variants_data["Variants"] = ", ".join(variant_names)
-
-        return variants_data
+        return variants
 
     def _is_product_image(self, src: str) -> bool:
         """Filter out non-product images (logos, icons, etc.)."""

@@ -79,6 +79,9 @@ Examples:
   # Read SKUs from file
   python -m src.cli --manufacturer lodes --skus-file lodes_skus.txt
 
+  # Scrape entire category
+  python -m src.cli --manufacturer lodes --category https://www.lodes.com/en/collections/suspension/
+
   # Skip image downloads
   python -m src.cli --manufacturer lodes --skus kelly --no-images
 
@@ -106,6 +109,11 @@ Examples:
         "-f",
         help="Path to file containing SKUs (one per line)",
     )
+    sku_group.add_argument(
+        "--category",
+        "-c",
+        help="Category/collection URL to scrape all products from",
+    )
 
     parser.add_argument(
         "--output",
@@ -121,6 +129,12 @@ Examples:
     )
 
     parser.add_argument(
+        "--ai-descriptions",
+        action="store_true",
+        help="Generate unique descriptions using AI (requires ANTHROPIC_API_KEY)",
+    )
+
+    parser.add_argument(
         "--verbose",
         "-v",
         action="store_true",
@@ -132,18 +146,23 @@ Examples:
     # Setup logging
     setup_logging(args.verbose)
 
-    # Get SKU list
+    # Get SKU list or category URL
+    skus = None
+    category_url = None
+
     if args.skus:
         skus = [sku.strip() for sku in args.skus.split(",")]
-    else:
+    elif args.skus_file:
         try:
             skus = read_skus_from_file(args.skus_file)
         except FileNotFoundError as e:
             logger.error(str(e))
             return 1
+    elif args.category:
+        category_url = args.category
 
-    if not skus:
-        logger.error("No SKUs provided")
+    if not skus and not category_url:
+        logger.error("No SKUs or category URL provided")
         return 1
 
     # Run scraper
@@ -151,7 +170,9 @@ Examples:
         products, csv_path, excel_path = scrape_and_export(
             manufacturer=args.manufacturer,
             skus=skus,
+            category_url=category_url,
             download_images=not args.no_images,
+            ai_descriptions=args.ai_descriptions,
             output_dir=args.output,
         )
 

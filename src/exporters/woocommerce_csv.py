@@ -65,7 +65,7 @@ def _product_to_woocommerce_row(product: ProductData) -> dict[str, Any]:
     # Base WooCommerce columns
     row = {
         "ID": "",  # Empty for new products
-        "Type": "simple",  # Simple product (not variable/grouped)
+        "Type": product.product_type,  # simple, variable, or variation
         "SKU": product.sku,
         "Name": product.name,
         "Published": 1,  # 1 = published
@@ -98,7 +98,7 @@ def _product_to_woocommerce_row(product: ProductData) -> dict[str, Any]:
         "Images": images,
         "Download limit": "",
         "Download expiry days": "",
-        "Parent": "",
+        "Parent": product.parent_sku if product.parent_sku else "",
         "Grouped products": "",
         "Upsells": "",
         "Cross-sells": "",
@@ -106,6 +106,16 @@ def _product_to_woocommerce_row(product: ProductData) -> dict[str, Any]:
         "Button text": "",
         "Position": 0,
     }
+
+    # Add variation attributes for variable/variation products
+    if product.variation_attributes:
+        for idx, (attr_name, attr_value) in enumerate(
+            product.variation_attributes.items(), start=1
+        ):
+            row[f"Attribute {idx} name"] = attr_name
+            row[f"Attribute {idx} value(s)"] = attr_value
+            row[f"Attribute {idx} visible"] = 1
+            row[f"Attribute {idx} global"] = 0
 
     # Add custom attributes as meta fields
     if product.attributes:

@@ -12,6 +12,8 @@ from src.types import SKU, ProductData, Manufacturer
 from src.scrapers.lodes_scraper import LodesScraper
 from src.exporters.woocommerce_csv import export_to_woocommerce_csv
 from src.exporters.excel_exporter import export_to_excel
+from src.ai.description_generator import generate_description
+from src.downloaders.asset_downloader import download_pdf
 
 
 class ScraperOrchestrator:
@@ -28,25 +30,32 @@ class ScraperOrchestrator:
     def scrape_products(
         self,
         manufacturer: str,
-        skus: list[str],
+        skus: list[str] | None = None,
+        category_url: str | None = None,
         download_images: bool = True,
+        ai_descriptions: bool = False,
         output_dir: str = "output",
     ) -> list[ProductData]:
         """Scrape products from manufacturer website.
 
         Args:
             manufacturer: Manufacturer name (e.g., 'lodes')
-            skus: List of product SKUs/slugs to scrape
+            skus: List of product SKUs/slugs to scrape (optional if category_url provided)
+            category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download product images
+            ai_descriptions: Whether to generate unique descriptions with AI
             output_dir: Base output directory
 
         Returns:
             List of scraped product data
 
         Raises:
-            ValueError: If manufacturer is not supported
+            ValueError: If manufacturer is not supported or neither skus nor category_url provided
             Exception: If scraping fails
         """
+        if not skus and not category_url:
+            raise ValueError("Either skus or category_url must be provided")
+
         manufacturer_lower = manufacturer.lower()
 
         if manufacturer_lower not in self.scrapers:
@@ -59,23 +68,57 @@ class ScraperOrchestrator:
         scraper_class = self.scrapers[manufacturer_lower]
         products = []
 
-        logger.info(f"Starting scrape for {len(skus)} products from {manufacturer}")
-
         with scraper_class() as scraper:
+            if category_url:
+                logger.info(f"Discovering products from category: {category_url}")
+                try:
+                    skus = [str(sku) for sku in scraper.scrape_category(category_url)]
+                    logger.info(f"Found {len(skus)} products in category")
+                except Exception as e:
+                    logger.error(f"Failed to scrape category {category_url}: {e}")
+                    raise
+
+            logger.info(f"Starting scrape for {len(skus)} products from {manufacturer}")
+
             for sku_str in skus:
                 sku = SKU(sku_str)
                 try:
                     product = scraper.scrape_product(sku)
+
+                    if ai_descriptions:
+                        try:
+                            new_description = generate_description(product)
+                            product.description = new_description
+                            logger.info(
+                                f"✓ Generated AI description for {product.name}"
+                            )
+                        except Exception as e:
+                            logger.warning(
+                                f"Failed to generate AI description for {sku}: {e}"
+                            )
+
                     products.append(product)
 
                     if download_images and product.images:
                         scraper.download_product_images(product, f"{output_dir}/images")
 
+                    if product.attributes.get("Datasheet URL"):
+                        try:
+                            pdf_url = product.attributes["Datasheet URL"]
+                            download_pdf(
+                                pdf_url,
+                                product.sku,
+                                product.manufacturer,
+                                f"{output_dir}/datasheets",
+                            )
+                            logger.info(f"✓ Downloaded datasheet for {product.sku}")
+                        except Exception as e:
+                            logger.warning(f"Failed to download datasheet for {product.sku}: {e}")
+
                     logger.info(f"✓ Scraped: {product.name} ({sku})")
 
                 except Exception as e:
                     logger.error(f"✗ Failed to scrape {sku}: {e}")
-                    # Continue with next product instead of failing entire batch
 
         logger.info(
             f"Scraping complete: {len(products)}/{len(skus)} products successful"
@@ -115,16 +158,20 @@ class ScraperOrchestrator:
     def run_full_pipeline(
         self,
         manufacturer: str,
-        skus: list[str],
+        skus: list[str] | None = None,
+        category_url: str | None = None,
         download_images: bool = True,
+        ai_descriptions: bool = False,
         output_dir: str = "output",
     ) -> tuple[list[ProductData], Path, Path]:
         """Run complete scraping and export pipeline.
 
         Args:
             manufacturer: Manufacturer name
-            skus: List of product SKUs/slugs
+            skus: List of product SKUs/slugs (optional if category_url provided)
+            category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download images
+            ai_descriptions: Whether to generate unique descriptions with AI
             output_dir: Output directory
 
         Returns:
@@ -132,11 +179,23 @@ class ScraperOrchestrator:
         """
         logger.info("=" * 60)
         logger.info(f"Starting full pipeline for {manufacturer}")
-        logger.info(f"SKUs: {skus}")
+        if skus:
+            logger.info(f"SKUs: {skus}")
+        if category_url:
+            logger.info(f"Category: {category_url}")
+        if ai_descriptions:
+            logger.info("AI descriptions: ENABLED")
         logger.info("=" * 60)
 
         # Step 1: Scrape products
-        products = self.scrape_products(manufacturer, skus, download_images, output_dir)
+        products = self.scrape_products(
+            manufacturer,
+            skus,
+            category_url,
+            download_images,
+            ai_descriptions,
+            output_dir,
+        )
 
         if not products:
             logger.warning("No products were successfully scraped")
@@ -157,16 +216,20 @@ class ScraperOrchestrator:
 
 def scrape_and_export(
     manufacturer: str,
-    skus: list[str],
+    skus: list[str] | None = None,
+    category_url: str | None = None,
     download_images: bool = True,
+    ai_descriptions: bool = False,
     output_dir: str = "output",
 ) -> tuple[list[ProductData], Path, Path]:
     """Convenience function for running full scraping pipeline.
 
     Args:
         manufacturer: Manufacturer name (e.g., 'lodes')
-        skus: List of product SKUs/slugs to scrape
+        skus: List of product SKUs/slugs to scrape (optional if category_url provided)
+        category_url: Category URL to discover products from (optional if skus provided)
         download_images: Whether to download product images
+        ai_descriptions: Whether to generate unique descriptions with AI
         output_dir: Output directory
 
     Returns:
@@ -174,5 +237,5 @@ def scrape_and_export(
     """
     orchestrator = ScraperOrchestrator()
     return orchestrator.run_full_pipeline(
-        manufacturer, skus, download_images, output_dir
+        manufacturer, skus, category_url, download_images, ai_descriptions, output_dir
     )

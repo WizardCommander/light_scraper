@@ -1,7 +1,33 @@
+# Markdown files (except README)
 *.md
+!README.md
+
+# Secrets and notes
+*.env
 notes.txt
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+.hypothesis/
+
+# Output files
 *.xlsx
 *.pdf
-*.env
+output/
+output_*/
+logs/
+
+# Test files
+debug_*.py
+test_*.txt
+*_test/
+
+# Config files (except pytest.ini)
 *.ini
-venv/*
+!pytest.ini
+
+# Virtual environment
+venv/

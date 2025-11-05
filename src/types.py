@@ -5,7 +5,7 @@ to prevent mixing different string types.
 """
 
 from dataclasses import dataclass
-from typing import NewType
+from typing import Literal, NewType
 
 # Branded types for type safety
 SKU = NewType("SKU", str)
@@ -13,6 +13,9 @@ ImageUrl = NewType("ImageUrl", str)
 ProductUrl = NewType("ProductUrl", str)
 EAN = NewType("EAN", str)
 Manufacturer = NewType("Manufacturer", str)
+
+
+ProductType = Literal["simple", "variable", "variation"]
 
 
 @dataclass
@@ -26,6 +29,11 @@ class ProductData:
     categories: list[str]
     attributes: dict[str, str]
     images: list[ImageUrl]
+    product_type: ProductType = "simple"  # simple, variable, or variation
+    parent_sku: SKU | None = None  # For variation products
+    variation_attributes: dict[str, str] | None = (
+        None  # e.g., {"Size": "Large", "Color": "Red"}
+    )
     regular_price: float | None = None
     sale_price: float | None = None
     stock: int | None = None
