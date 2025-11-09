@@ -12,6 +12,7 @@ from pathlib import Path
 from loguru import logger
 
 from src.orchestrator import scrape_and_export
+from src.scrapers.registry import get_available_manufacturers
 
 
 def setup_logging(verbose: bool = False) -> None:
@@ -94,7 +95,7 @@ Examples:
         "--manufacturer",
         "-m",
         required=True,
-        choices=["lodes"],  # Will expand as more scrapers are added
+        choices=get_available_manufacturers(),
         help="Manufacturer to scrape from",
     )
 

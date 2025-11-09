@@ -9,7 +9,7 @@ from typing import Optional
 from loguru import logger
 
 from src.types import SKU, ProductData, Manufacturer
-from src.scrapers.lodes_scraper import LodesScraper
+from src.scrapers.registry import get_scraper_class
 from src.exporters.woocommerce_csv import export_to_woocommerce_csv
 from src.exporters.excel_exporter import export_to_excel
 from src.ai.description_generator import generate_description
@@ -19,14 +19,6 @@ from src.downloaders.asset_downloader import download_pdf
 
 class ScraperOrchestrator:
     """Coordinates scraping, data collection, and export workflow."""
-
-    def __init__(self):
-        """Initialize orchestrator with available scrapers."""
-        self.scrapers = {
-            "lodes": LodesScraper,
-            # Future scrapers will be added here
-            # "vibia": VibiaScraper,
-        }
 
     def scrape_products(
         self,
@@ -61,14 +53,8 @@ class ScraperOrchestrator:
 
         manufacturer_lower = manufacturer.lower()
 
-        if manufacturer_lower not in self.scrapers:
-            available = ", ".join(self.scrapers.keys())
-            raise ValueError(
-                f"Manufacturer '{manufacturer}' not supported. "
-                f"Available: {available}"
-            )
-
-        scraper_class = self.scrapers[manufacturer_lower]
+        # Get scraper class from registry
+        scraper_class = get_scraper_class(manufacturer_lower)
         products = []
 
         with scraper_class() as scraper:

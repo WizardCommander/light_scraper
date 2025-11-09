@@ -25,8 +25,18 @@ from src.types import EAN, SKU, ImageUrl, Manufacturer, ProductData, ScraperConf
 class LodesScraper(BaseScraper):
     """Scraper for Lodes.com product pages."""
 
+    # Configuration constants
     MIN_DESCRIPTION_LENGTH = 20
     MAX_IMAGES = 10
+    IMAGE_EXCLUDE_PATTERNS = [
+        "logo",
+        "icon",
+        "banner",
+        "cookie",
+        ".svg",
+        "avatar",
+        "placeholder",
+    ]
 
     def __init__(self):
         """Initialize Lodes scraper with default configuration."""
@@ -196,6 +206,12 @@ class LodesScraper(BaseScraper):
             weight_kg = None
             if "Net weight" in attributes:
                 weight_kg = parse_weight_to_float(attributes["Net weight"])
+                # Validate weight is positive
+                if weight_kg is not None and weight_kg <= 0:
+                    logger.warning(
+                        f"Invalid weight value {weight_kg} kg, setting to None"
+                    )
+                    weight_kg = None
 
             if not variants:
                 product = ProductData(
@@ -288,7 +304,12 @@ class LodesScraper(BaseScraper):
             if src and self._is_product_image(src):
                 # Get full resolution URL
                 full_src = self._get_full_resolution_url(src)
-                images.append(ImageUrl(full_src))
+
+                # Validate URL format
+                if self._is_valid_url(full_src):
+                    images.append(ImageUrl(full_src))
+                else:
+                    logger.warning(f"Invalid image URL skipped: {full_src}")
 
         # Remove duplicates while preserving order
         unique_images = list(dict.fromkeys(images))
@@ -302,55 +323,79 @@ class LodesScraper(BaseScraper):
         """Extract technical specifications from variant dropdowns."""
         attributes = {}
 
-        title_elem = page.query_selector("h1.inline.title-n.font26.serif")
-        if title_elem:
-            title_text = title_elem.text_content()
-            if title_text:
-                designer = parse_designer_from_title(title_text)
-                if designer:
-                    attributes["Designer"] = designer
+        # Extract designer from title
+        try:
+            title_elem = page.query_selector("h1.inline.title-n.font26.serif")
+            if title_elem:
+                title_text = title_elem.text_content()
+                if title_text:
+                    designer = parse_designer_from_title(title_text)
+                    if designer:
+                        attributes["Designer"] = designer
+        except Exception as e:
+            logger.warning(f"Failed to extract designer: {e}")
 
-        self._expand_technical_sheet_dropdown(page)
+        # Extract table header attributes
+        try:
+            self._expand_technical_sheet_dropdown(page)
+            header_texts = self._get_table_header_texts(page)
+            table_attrs = parse_table_header_attributes(header_texts)
+            attributes.update(table_attrs)
+        except Exception as e:
+            logger.warning(f"Failed to extract table attributes: {e}")
 
-        header_texts = self._get_table_header_texts(page)
-        table_attrs = parse_table_header_attributes(header_texts)
-        attributes.update(table_attrs)
-
-        # Check div.left.pesi for weight (German: Nettogewicht, English: Net weight)
-        weight_elem = page.query_selector("div.left.pesi")
-        if weight_elem:
-            weight_text = weight_elem.text_content()
-            if weight_text:
-                weight = parse_weight_from_text(weight_text)
-                if weight:
-                    attributes["Net weight"] = weight
-
-        # Also check secondary-info as fallback
-        secondary_info = page.query_selector("div.secondary-info")
-        if secondary_info:
-            info_text = secondary_info.text_content()
-            if info_text:
-                # Try weight if not already found
-                if "Net weight" not in attributes:
-                    weight = parse_weight_from_text(info_text)
+        # Extract weight from div.left.pesi
+        try:
+            weight_elem = page.query_selector("div.left.pesi")
+            if weight_elem:
+                weight_text = weight_elem.text_content()
+                if weight_text:
+                    weight = parse_weight_from_text(weight_text)
                     if weight:
                         attributes["Net weight"] = weight
+        except Exception as e:
+            logger.warning(f"Failed to extract weight from pesi div: {e}")
 
-                hills = parse_hills_from_text(info_text)
-                if hills:
-                    attributes["Hills"] = hills
+        # Extract weight and hills from secondary-info as fallback
+        try:
+            secondary_info = page.query_selector("div.secondary-info")
+            if secondary_info:
+                info_text = secondary_info.text_content()
+                if info_text:
+                    # Try weight if not already found
+                    if "Net weight" not in attributes:
+                        weight = parse_weight_from_text(info_text)
+                        if weight:
+                            attributes["Net weight"] = weight
 
-        page_html = page.content()
-        certifications = extract_certifications_from_html(page_html)
-        for key, value in certifications.items():
-            if key not in attributes:
-                attributes[key] = value
+                    hills = parse_hills_from_text(info_text)
+                    if hills:
+                        attributes["Hills"] = hills
+        except Exception as e:
+            logger.warning(f"Failed to extract from secondary-info: {e}")
 
-        pdf_link = page.query_selector('a[href$=".pdf"]')
-        if pdf_link:
-            href = pdf_link.get_attribute("href")
-            if href:
-                attributes["Datasheet URL"] = href
+        # Extract certifications from page HTML
+        try:
+            page_html = page.content()
+            certifications = extract_certifications_from_html(page_html)
+            for key, value in certifications.items():
+                if key not in attributes:
+                    attributes[key] = value
+        except Exception as e:
+            logger.warning(f"Failed to extract certifications: {e}")
+
+        # Extract PDF datasheet link
+        try:
+            # Try specific selector first, fallback to generic
+            pdf_link = page.query_selector("a.pdf-link") or page.query_selector(
+                'a[href$=".pdf"]'
+            )
+            if pdf_link:
+                href = pdf_link.get_attribute("href")
+                if href:
+                    attributes["Datasheet URL"] = href
+        except Exception as e:
+            logger.warning(f"Failed to extract PDF link: {e}")
 
         return attributes
 
@@ -393,14 +438,22 @@ class LodesScraper(BaseScraper):
             bred2_link = breadcrumb_container.query_selector("span.bred2 a")
             if bred2_link:
                 text = bred2_link.text_content()
-                if text:
-                    categories.append(text.strip())
+                if text and text.strip():
+                    category = text.strip()
+                    # Validate category is meaningful (not just whitespace/special chars)
+                    if len(category) > 0 and not category.isspace():
+                        categories.append(category)
 
             bred3_link = breadcrumb_container.query_selector("span.bred3 a")
             if bred3_link:
                 text = bred3_link.text_content()
-                if text:
-                    categories.append(text.strip())
+                if text and text.strip():
+                    category = text.strip()
+                    if len(category) > 0 and not category.isspace():
+                        categories.append(category)
+
+        # Filter out any empty strings that may have slipped through
+        categories = [c for c in categories if c and c.strip()]
 
         return categories if categories else ["Lighting"]
 
@@ -464,17 +517,34 @@ class LodesScraper(BaseScraper):
 
     def _is_product_image(self, src: str) -> bool:
         """Filter out non-product images (logos, icons, etc.)."""
-        exclude_patterns = [
-            "logo",
-            "icon",
-            "banner",
-            "cookie",
-            ".svg",
-            "avatar",
-            "placeholder",
-        ]
         src_lower = src.lower()
-        return not any(pattern in src_lower for pattern in exclude_patterns)
+        return not any(pattern in src_lower for pattern in self.IMAGE_EXCLUDE_PATTERNS)
+
+    def _is_valid_url(self, url: str) -> bool:
+        """Validate URL format.
+
+        Args:
+            url: URL string to validate
+
+        Returns:
+            True if URL is valid, False otherwise
+        """
+        if not url:
+            return False
+
+        # Check if URL starts with http:// or https:// or //
+        url_normalized = url.strip().lower()
+        if not url_normalized:
+            return False
+
+        if not (
+            url_normalized.startswith("http://")
+            or url_normalized.startswith("https://")
+            or url_normalized.startswith("//")
+        ):
+            return False
+
+        return True
 
     def _get_full_resolution_url(self, src: str) -> str:
         """Convert thumbnail or scaled URLs to full resolution."""

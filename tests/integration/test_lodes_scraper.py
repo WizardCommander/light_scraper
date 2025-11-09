@@ -108,3 +108,26 @@ def test_rate_limiting_applied():
         # Should take at least 1 second due to rate limiting (1 req/sec)
         # First request + 1 second delay before second = at least 1 second total
         assert elapsed >= 1.0
+
+
+@pytest.mark.integration
+@pytest.mark.slow
+def test_product_with_variants():
+    """Should successfully scrape product with multiple variants."""
+    # Kelly product has 39 variants
+    test_sku = SKU("kelly")
+
+    with LodesScraper() as scraper:
+        product = scraper.scrape_product(test_sku)
+
+        # Verify product is scraped successfully
+        assert product.sku == test_sku
+        assert len(product.name) > 0
+
+        # Verify "Variants" attribute is added for products with variants
+        assert "Variants" in product.attributes
+        assert "variants available" in product.attributes["Variants"].lower()
+
+        # Verify other attributes are still present
+        assert len(product.attributes) > 1  # More than just "Variants"
+        assert len(product.images) > 0

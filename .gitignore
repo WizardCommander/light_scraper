@@ -20,6 +20,8 @@ __pycache__/
 output/
 output_*/
 logs/
+*.png
+*.jpg
 
 # Test files
 debug_*.py
