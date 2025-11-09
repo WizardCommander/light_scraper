@@ -8,9 +8,23 @@
       "WebFetch(domain:www.stagehand.dev)",
       "Bash(mkdir:*)",
       "Bash(touch:*)",
-      "WebFetch(domain:www.lodes.com)"
+      "WebFetch(domain:www.lodes.com)",
+      "mcp__excalidraw__batch_create_elements",
+      "mcp__excalidraw__get_resource",
+      "mcp__excalidraw__query_elements",
+      "mcp__excalidraw__delete_element",
+      "mcp__MCP_DOCKER__browser_navigate",
+      "mcp__MCP_DOCKER__browser_take_screenshot",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "mcp__MCP_DOCKER__browser_click",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "excalidraw"
+  ]
 }

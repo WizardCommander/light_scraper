@@ -15,6 +15,7 @@ from src.scrapers.attribute_parser import (
     parse_designer_from_title,
     parse_table_header_attributes,
     parse_weight_from_text,
+    parse_weight_to_float,
     parse_hills_from_text,
     extract_certifications_from_html,
 )
@@ -31,23 +32,32 @@ class LodesScraper(BaseScraper):
         """Initialize Lodes scraper with default configuration."""
         config = ScraperConfig(
             manufacturer=Manufacturer("lodes"),
-            base_url="https://www.lodes.com/en",
+            base_url="https://www.lodes.com",
             rate_limit_delay=1.0,  # ≤1 req/sec per lodes_structure.md
             max_retries=3,
             timeout=30,
+            language_priority=["de", "en"],  # Try German first, fall back to English
+            default_price=0.0,
         )
         super().__init__(config)
 
-    def build_product_url(self, sku: SKU) -> str:
-        """Construct product URL from SKU.
+    def build_product_url(self, sku: SKU, language: str = "en") -> str:
+        """Construct product URL from SKU with language support.
 
         Args:
             sku: Product identifier/slug
+            language: Language code (e.g., "de", "en")
 
         Returns:
             Full product URL
         """
-        return f"{self.config.base_url}/products/{sku}/"
+        return f"{self.config.base_url}/{language}/products/{sku}/"
+
+    def _ensure_browser(self) -> None:
+        """Ensure browser is initialized and ready for use."""
+        if self._page is None:
+            self.setup_browser()
+        assert self._page is not None
 
     def scrape_category(self, category_url: str) -> list[SKU]:
         """Discover all product SKUs from a Lodes category page.
@@ -61,11 +71,7 @@ class LodesScraper(BaseScraper):
         Raises:
             Exception: If category scraping fails
         """
-        if self._page is None:
-            self.setup_browser()
-
-        assert self._page is not None
-
+        self._ensure_browser()
         logger.info(f"Scraping Lodes category: {category_url}")
 
         try:
@@ -120,7 +126,7 @@ class LodesScraper(BaseScraper):
         return None
 
     def scrape_product(self, sku: SKU) -> ProductData:
-        """Extract product data from Lodes product page.
+        """Extract product data from Lodes product page with multi-language support.
 
         Args:
             sku: Product SKU/name slug
@@ -129,27 +135,54 @@ class LodesScraper(BaseScraper):
             Structured product data
 
         Raises:
-            Exception: If scraping fails or page not found
+            ValueError: If SKU is invalid
+            Exception: If scraping fails or page not found in all languages
         """
-        if self._page is None:
-            self.setup_browser()
+        # Validate SKU
+        if not sku or not sku.strip():
+            raise ValueError("SKU cannot be empty")
 
-        assert self._page is not None
+        if not re.match(r"^[a-zA-Z0-9_-]+$", sku):
+            raise ValueError(f"SKU contains invalid characters: {sku}")
 
-        url = self.build_product_url(sku)
-        logger.info(f"Scraping Lodes product: {url}")
+        self._ensure_browser()
 
-        try:
-            response = self._page.goto(
-                url, wait_until="networkidle", timeout=self.config.timeout * 1000
-            )
+        # Try languages in priority order
+        languages = self.config.language_priority or ["en"]
+        last_error = None
+        scraped_lang = None
+        url = None
 
-            if response and response.status >= 400:
-                raise Exception(f"HTTP {response.status} error for {url}")
+        for lang in languages:
+            url = self.build_product_url(sku, language=lang)
+            logger.info(f"Trying to scrape Lodes product ({lang}): {url}")
 
-        except Exception as e:
-            logger.error(f"Failed to load page {url}: {e}")
-            raise
+            try:
+                response = self._page.goto(
+                    url, wait_until="networkidle", timeout=self.config.timeout * 1000
+                )
+
+                if response and response.status >= 400:
+                    logger.warning(
+                        f"HTTP {response.status} for {url}, trying next language"
+                    )
+                    last_error = Exception(f"HTTP {response.status} error for {url}")
+                    continue
+
+                # Successfully loaded page
+                scraped_lang = lang
+                logger.info(f"Successfully loaded page in {lang}")
+                break
+
+            except Exception as e:
+                logger.warning(f"Failed to load {url}: {e}, trying next language")
+                last_error = e
+                continue
+
+        # Verify we successfully loaded a page
+        if scraped_lang is None:
+            logger.error(f"Failed to load product {sku} in any language")
+            raise last_error if last_error else Exception(f"Could not scrape {sku}")
 
         try:
             name = self._extract_product_name(self._page)
@@ -158,6 +191,11 @@ class LodesScraper(BaseScraper):
             attributes = self._extract_attributes(self._page)
             categories = self._extract_categories(self._page)
             variants = self._extract_variants(self._page)
+
+            # Extract weight as float from attributes
+            weight_kg = None
+            if "Net weight" in attributes:
+                weight_kg = parse_weight_to_float(attributes["Net weight"])
 
             if not variants:
                 product = ProductData(
@@ -168,9 +206,13 @@ class LodesScraper(BaseScraper):
                     categories=categories,
                     attributes=attributes,
                     images=images,
+                    weight=weight_kg,
+                    scraped_language=scraped_lang,
                 )
 
-                logger.info(f"Successfully scraped {name} (SKU: {sku})")
+                logger.info(
+                    f"Successfully scraped {name} (SKU: {sku}) in {scraped_lang}"
+                )
                 self.rate_limit()
 
                 return product
@@ -190,9 +232,11 @@ class LodesScraper(BaseScraper):
                 categories=categories,
                 attributes=attributes,
                 images=images,
+                weight=weight_kg,
+                scraped_language=scraped_lang,
             )
 
-            logger.info(f"Successfully scraped {name} (SKU: {sku})")
+            logger.info(f"Successfully scraped {name} (SKU: {sku}) in {scraped_lang}")
             self.rate_limit()
 
             return product
@@ -247,12 +291,7 @@ class LodesScraper(BaseScraper):
                 images.append(ImageUrl(full_src))
 
         # Remove duplicates while preserving order
-        seen = set()
-        unique_images = []
-        for img in images:
-            if img not in seen:
-                seen.add(img)
-                unique_images.append(img)
+        unique_images = list(dict.fromkeys(images))
 
         if not unique_images:
             logger.warning("No product images found")
@@ -277,13 +316,25 @@ class LodesScraper(BaseScraper):
         table_attrs = parse_table_header_attributes(header_texts)
         attributes.update(table_attrs)
 
+        # Check div.left.pesi for weight (German: Nettogewicht, English: Net weight)
+        weight_elem = page.query_selector("div.left.pesi")
+        if weight_elem:
+            weight_text = weight_elem.text_content()
+            if weight_text:
+                weight = parse_weight_from_text(weight_text)
+                if weight:
+                    attributes["Net weight"] = weight
+
+        # Also check secondary-info as fallback
         secondary_info = page.query_selector("div.secondary-info")
         if secondary_info:
             info_text = secondary_info.text_content()
             if info_text:
-                weight = parse_weight_from_text(info_text)
-                if weight:
-                    attributes["Net weight"] = weight
+                # Try weight if not already found
+                if "Net weight" not in attributes:
+                    weight = parse_weight_from_text(info_text)
+                    if weight:
+                        attributes["Net weight"] = weight
 
                 hills = parse_hills_from_text(info_text)
                 if hills:

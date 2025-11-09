@@ -2,6 +2,7 @@
 
 Following CLAUDE.md: pure, testable functions with clear responsibilities.
 Based on official WooCommerce CSV import format specification.
+German column headers for German WooCommerce stores.
 """
 
 import csv
@@ -14,14 +15,97 @@ from loguru import logger
 from src.types import ProductData
 
 
+# WooCommerce German column names mapping (exact order from schema)
+WOOCOMMERCE_GERMAN_COLUMNS = [
+    "ID",
+    "Typ",
+    "Artikelnummer",
+    "GTIN, UPC, EAN oder ISBN",
+    "Name",
+    "Veröffentlicht",
+    "Ist hervorgehoben?",
+    "Sichtbarkeit im Katalog",
+    "Kurzbeschreibung",
+    "Beschreibung",
+    "Datum, an dem Angebotspreis beginnt",
+    "Datum, an dem Angebotspreis endet",
+    "Steuerstatus",
+    "Steuerklasse",
+    "Vorrätig?",
+    "Bestand",
+    "Geringe Lagermenge",
+    "Lieferrückstande erlaubt?",
+    "Nur einzeln verkaufen?",
+    "Gewicht (kg)",
+    "Länge (cm)",
+    "Breite (cm)",
+    "Höhe (cm)",
+    "Kundenrezensionen erlauben?",
+    "Hinweis zum Kauf",
+    "Angebotspreis",
+    "Regulärer Preis",
+    "Kategorien",
+    "Schlagwörter",
+    "Versandklasse",
+    "Bilder",
+    "Downloadlimit",
+    "Ablauftage des Downloads",
+    "Übergeordnetes Produkt",
+    "Gruppierte Produkte",
+    "Zusatzverkäufe",
+    "Cross-Sells (Querverkäufe)",
+    "Externe URL",
+    "Button-Text",
+    "Position",
+    "Marken",
+    "Attribut 1 Name",
+    "Attribut 1 Wert(e)",
+    "Attribut 1 Sichtbar",
+    "Attribut 1 Global",
+    "Attribut 2 Name",
+    "Attribut 2 Wert(e)",
+    "Attribut 2 Sichtbar",
+    "Attribut 2 Global",
+    "Attribut 3 Name",
+    "Attribut 3 Wert(e)",
+    "Attribut 3 Sichtbar",
+    "Attribut 3 Global",
+    "Attribut 4 Name",
+    "Attribut 4 Wert(e)",
+    "Attribut 4 Sichtbar",
+    "Attribut 4 Global",
+    "Attribut 1 Standard",
+    "Attribut 3 Standard",
+    "Attribut 4 Standard",
+]
+
+
+def format_german_decimal(value: float | None, decimal_places: int = 2) -> str:
+    """Format number with German decimal separator (comma).
+
+    Args:
+        value: Number to format
+        decimal_places: Number of decimal places
+
+    Returns:
+        Formatted string with comma separator, or empty string if value is None
+    """
+    if value is None:
+        return ""
+    return f"{value:.{decimal_places}f}".replace(".", ",")
+
+
 def export_to_woocommerce_csv(
-    products: list[ProductData], output_path: str = "output/products.csv"
+    products: list[ProductData],
+    output_path: str = "output/products.csv",
+    default_price: float = 0.0,
 ) -> Path:
-    """Export products to WooCommerce-compatible CSV format.
+    """Export products to WooCommerce-compatible CSV format with German headers.
 
     Args:
         products: List of product data to export
         output_path: Path to output CSV file
+        default_price: Default price for products without pricing (default: 0.0)
 
     Returns:
         Path to created CSV file
@@ -33,28 +117,37 @@ def export_to_woocommerce_csv(
         raise ValueError("Cannot export empty product list")
 
     # Build DataFrame with WooCommerce columns
-    rows = [_product_to_woocommerce_row(product) for product in products]
+    rows = [_product_to_woocommerce_row(product, default_price) for product in products]
     df = pd.DataFrame(rows)
+
+    # Reorder columns: WooCommerce standard columns first, then custom meta fields
+    standard_cols = [col for col in WOOCOMMERCE_GERMAN_COLUMNS if col in df.columns]
+    meta_cols = [col for col in df.columns if col.startswith("meta:")]
+    all_cols = standard_cols + meta_cols
+    df = df[all_cols]
 
     # Ensure output directory exists
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Export to CSV with proper encoding
-    df.to_csv(output_file, index=False, encoding="utf-8", quoting=csv.QUOTE_ALL)
+    # Export to CSV with proper encoding (UTF-8 with BOM for Excel compatibility)
+    df.to_csv(output_file, index=False, encoding="utf-8-sig", quoting=csv.QUOTE_ALL)
 
     logger.info(f"Exported {len(products)} products to {output_file}")
     return output_file
 
 
-def _product_to_woocommerce_row(product: ProductData) -> dict[str, Any]:
-    """Convert ProductData to WooCommerce CSV row format.
+def _product_to_woocommerce_row(
+    product: ProductData, default_price: float = 0.0
+) -> dict[str, Any]:
+    """Convert ProductData to WooCommerce CSV row format with German columns.
 
     Args:
         product: Product data to convert
+        default_price: Default price if product.regular_price is None
 
     Returns:
-        Dictionary representing a CSV row with WooCommerce columns
+        Dictionary representing a CSV row with German WooCommerce columns
     """
     # Format images: pipe-separated URLs (first image becomes featured)
     images = "|".join(product.images) if product.images else ""
@@ -62,80 +155,85 @@ def _product_to_woocommerce_row(product: ProductData) -> dict[str, Any]:
     # Format categories: comma-separated
     categories = ", ".join(product.categories) if product.categories else "Lighting"
 
-    # Base WooCommerce columns
+    # Format prices with German decimal separator
+    regular_price = format_german_decimal(
+        product.regular_price if product.regular_price is not None else default_price
+    )
+    sale_price = format_german_decimal(product.sale_price)
+
+    # Format weight and dimensions with German decimal separator
+    weight = format_german_decimal(product.weight)
+
+    # Base WooCommerce columns (German names)
     row = {
         "ID": "",  # Empty for new products
-        "Type": product.product_type,  # simple, variable, or variation
-        "SKU": product.sku,
+        "Typ": product.product_type,  # simple, variable, or variation
+        "Artikelnummer": product.sku,
+        "GTIN, UPC, EAN oder ISBN": product.ean if product.ean else "",
         "Name": product.name,
-        "Published": 1,  # 1 = published
-        "Is featured?": 0,  # 0 = not featured
-        "Visibility in catalog": "visible",
-        "Short description": _truncate_description(product.description, 120),
-        "Description": product.description,
-        "Date sale price starts": "",
-        "Date sale price ends": "",
-        "Tax status": "taxable",
-        "Tax class": "",
-        "In stock?": 1,
-        "Stock": product.stock if product.stock is not None else "",
-        "Low stock amount": "",
-        "Backorders allowed?": 0,
-        "Sold individually?": 0,
-        "Weight": product.weight if product.weight is not None else "",
-        "Length": "",
-        "Width": "",
-        "Height": "",
-        "Allow customer reviews?": 1,
-        "Purchase note": "",
-        "Sale price": product.sale_price if product.sale_price is not None else "",
-        "Regular price": (
-            product.regular_price if product.regular_price is not None else ""
-        ),
-        "Categories": categories,
-        "Tags": product.manufacturer,  # Use manufacturer as tag
-        "Shipping class": "",
-        "Images": images,
-        "Download limit": "",
-        "Download expiry days": "",
-        "Parent": product.parent_sku if product.parent_sku else "",
-        "Grouped products": "",
-        "Upsells": "",
-        "Cross-sells": "",
-        "External URL": "",
-        "Button text": "",
+        "Veröffentlicht": 1,  # 1 = published
+        "Ist hervorgehoben?": 0,  # 0 = not featured
+        "Sichtbarkeit im Katalog": "visible",
+        "Kurzbeschreibung": _truncate_description(product.description, 120),
+        "Beschreibung": product.description,
+        "Datum, an dem Angebotspreis beginnt": "",
+        "Datum, an dem Angebotspreis endet": "",
+        "Steuerstatus": "taxable",
+        "Steuerklasse": "",
+        "Vorrätig?": 1,
+        "Bestand": product.stock if product.stock is not None else "",
+        "Geringe Lagermenge": "",
+        "Lieferrückstande erlaubt?": 0,
+        "Nur einzeln verkaufen?": 0,
+        "Gewicht (kg)": weight,
+        "Länge (cm)": "",
+        "Breite (cm)": "",
+        "Höhe (cm)": "",
+        "Kundenrezensionen erlauben?": 1,
+        "Hinweis zum Kauf": "",
+        "Angebotspreis": sale_price,
+        "Regulärer Preis": regular_price,
+        "Kategorien": categories,
+        "Schlagwörter": product.manufacturer,  # Use manufacturer as tag
+        "Versandklasse": "",  # Empty - to be configured by client
+        "Bilder": images,
+        "Downloadlimit": "",
+        "Ablauftage des Downloads": "",
+        "Übergeordnetes Produkt": product.parent_sku if product.parent_sku else "",
+        "Gruppierte Produkte": "",
+        "Zusatzverkäufe": "",
+        "Cross-Sells (Querverkäufe)": "",
+        "Externe URL": "",
+        "Button-Text": "",
         "Position": 0,
+        "Marken": product.manufacturer,  # Brand field
     }
 
-    # Add variation attributes for variable/variation products
+    # Add variation attributes for variable/variation products (German format)
     if product.variation_attributes:
         for idx, (attr_name, attr_value) in enumerate(
             product.variation_attributes.items(), start=1
         ):
-            row[f"Attribute {idx} name"] = attr_name
-            row[f"Attribute {idx} value(s)"] = attr_value
-            row[f"Attribute {idx} visible"] = 1
-            row[f"Attribute {idx} global"] = 0
+            if idx <= 4:  # WooCommerce supports max 4 attributes
+                row[f"Attribut {idx} Name"] = attr_name
+                row[f"Attribut {idx} Wert(e)"] = attr_value
+                row[f"Attribut {idx} Sichtbar"] = 1
+                row[f"Attribut {idx} Global"] = 0
 
-    # Add custom attributes as meta fields
-    if product.attributes:
-        for key, value in product.attributes.items():
-            # Sanitize key for meta field (replace spaces with underscores)
-            meta_key = f"meta:{_sanitize_meta_key(key)}"
-            row[meta_key] = value
-
-    # Add EAN if available
-    if product.ean:
-        row["meta:EAN"] = product.ean
-
-    # Add dimensions if available
+    # Add dimensions if available (with German decimal formatting)
     if product.dimensions:
         if "length" in product.dimensions:
-            row["Length"] = product.dimensions["length"]
+            row["Länge (cm)"] = format_german_decimal(product.dimensions["length"])
         if "width" in product.dimensions:
-            row["Width"] = product.dimensions["width"]
+            row["Breite (cm)"] = format_german_decimal(product.dimensions["width"])
         if "height" in product.dimensions:
-            row["Height"] = product.dimensions["height"]
+            row["Höhe (cm)"] = format_german_decimal(product.dimensions["height"])
+
+    # Add custom attributes as meta fields (for additional product info)
+    if product.attributes:
+        for key, value in product.attributes.items():
+            meta_key = f"meta:{_sanitize_meta_key(key)}"
+            row[meta_key] = value
 
     return row
 

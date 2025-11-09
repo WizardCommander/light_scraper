@@ -135,6 +135,12 @@ Examples:
     )
 
     parser.add_argument(
+        "--translate-german",
+        action="store_true",
+        help="Translate product content to German (requires ANTHROPIC_API_KEY)",
+    )
+
+    parser.add_argument(
         "--verbose",
         "-v",
         action="store_true",
@@ -173,6 +179,7 @@ Examples:
             category_url=category_url,
             download_images=not args.no_images,
             ai_descriptions=args.ai_descriptions,
+            translate_to_german=args.translate_german,
             output_dir=args.output,
         )
 

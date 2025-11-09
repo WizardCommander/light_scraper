@@ -1,6 +1,7 @@
-# Markdown files (except README)
+# Markdown files (except README and WORK_SUMMARY)
 *.md
 !README.md
+WORK_SUMMARY.md
 
 # Secrets and notes
 *.env
@@ -28,6 +29,14 @@ test_*.txt
 # Config files (except pytest.ini)
 *.ini
 !pytest.ini
+woocommerce_schema.csv
 
 # Virtual environment
 venv/
+
+# MCP Config
+.mcp.json
+*.excalidraw
+
+# Claude files
+.claude/*

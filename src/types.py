@@ -40,6 +40,12 @@ class ProductData:
     ean: EAN | None = None
     weight: float | None = None
     dimensions: dict[str, float] | None = None  # length, width, height
+    installation_type: str | None = None  # Montageart (e.g., Wandleuchte, Hängeleuchte)
+    material: str | None = None  # Material (e.g., Aluminium, Marmor, Glas)
+    ip_rating: str | None = None  # IP Rating (e.g., IP20, IP44, IP65)
+    light_specs: dict[str, str] | None = None  # LED specs (wattage, lumen, kelvin)
+    scraped_language: str = "en"  # Language of scraped content
+    translated_to_german: bool = False  # Whether content was AI-translated
 
 
 @dataclass
@@ -51,3 +57,5 @@ class ScraperConfig:
     rate_limit_delay: float = 1.0  # seconds between requests
     max_retries: int = 3
     timeout: int = 30  # seconds
+    language_priority: list[str] | None = None  # e.g., ["de", "en"]
+    default_price: float = 0.0  # Default price for products without pricing

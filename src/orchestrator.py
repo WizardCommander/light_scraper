@@ -13,6 +13,7 @@ from src.scrapers.lodes_scraper import LodesScraper
 from src.exporters.woocommerce_csv import export_to_woocommerce_csv
 from src.exporters.excel_exporter import export_to_excel
 from src.ai.description_generator import generate_description
+from src.ai.german_translator import translate_product_data
 from src.downloaders.asset_downloader import download_pdf
 
 
@@ -34,6 +35,7 @@ class ScraperOrchestrator:
         category_url: str | None = None,
         download_images: bool = True,
         ai_descriptions: bool = False,
+        translate_to_german: bool = False,
         output_dir: str = "output",
     ) -> list[ProductData]:
         """Scrape products from manufacturer website.
@@ -44,6 +46,7 @@ class ScraperOrchestrator:
             category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download product images
             ai_descriptions: Whether to generate unique descriptions with AI
+            translate_to_german: Whether to translate content to German if not already in German
             output_dir: Base output directory
 
         Returns:
@@ -97,6 +100,17 @@ class ScraperOrchestrator:
                                 f"Failed to generate AI description for {sku}: {e}"
                             )
 
+                    # Translate to German if requested and not already in German
+                    if translate_to_german and product.scraped_language != "de":
+                        try:
+                            product = translate_product_data(product)
+                            product.translated_to_german = True
+                            logger.info(
+                                f"✓ Translated {product.name} from {product.scraped_language} to German"
+                            )
+                        except Exception as e:
+                            logger.warning(f"Failed to translate {sku} to German: {e}")
+
                     products.append(product)
 
                     if download_images and product.images:
@@ -113,7 +127,9 @@ class ScraperOrchestrator:
                             )
                             logger.info(f"✓ Downloaded datasheet for {product.sku}")
                         except Exception as e:
-                            logger.warning(f"Failed to download datasheet for {product.sku}: {e}")
+                            logger.warning(
+                                f"Failed to download datasheet for {product.sku}: {e}"
+                            )
 
                     logger.info(f"✓ Scraped: {product.name} ({sku})")
 
@@ -162,6 +178,7 @@ class ScraperOrchestrator:
         category_url: str | None = None,
         download_images: bool = True,
         ai_descriptions: bool = False,
+        translate_to_german: bool = False,
         output_dir: str = "output",
     ) -> tuple[list[ProductData], Path, Path]:
         """Run complete scraping and export pipeline.
@@ -172,6 +189,7 @@ class ScraperOrchestrator:
             category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download images
             ai_descriptions: Whether to generate unique descriptions with AI
+            translate_to_german: Whether to translate content to German
             output_dir: Output directory
 
         Returns:
@@ -194,6 +212,7 @@ class ScraperOrchestrator:
             category_url,
             download_images,
             ai_descriptions,
+            translate_to_german,
             output_dir,
         )
 
@@ -220,6 +239,7 @@ def scrape_and_export(
     category_url: str | None = None,
     download_images: bool = True,
     ai_descriptions: bool = False,
+    translate_to_german: bool = False,
     output_dir: str = "output",
 ) -> tuple[list[ProductData], Path, Path]:
     """Convenience function for running full scraping pipeline.
@@ -230,6 +250,7 @@ def scrape_and_export(
         category_url: Category URL to discover products from (optional if skus provided)
         download_images: Whether to download product images
         ai_descriptions: Whether to generate unique descriptions with AI
+        translate_to_german: Whether to translate content to German
         output_dir: Output directory
 
     Returns:
@@ -237,5 +258,11 @@ def scrape_and_export(
     """
     orchestrator = ScraperOrchestrator()
     return orchestrator.run_full_pipeline(
-        manufacturer, skus, category_url, download_images, ai_descriptions, output_dir
+        manufacturer,
+        skus,
+        category_url,
+        download_images,
+        ai_descriptions,
+        translate_to_german,
+        output_dir,
     )

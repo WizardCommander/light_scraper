@@ -6,6 +6,8 @@ Following CLAUDE.md: testable, composable functions with no side effects.
 import re
 from typing import Optional
 
+from loguru import logger
+
 
 CERTIFICATION_PATTERNS = [
     (r"IP\s*(\d{2})", "IP Rating"),
@@ -64,19 +66,61 @@ def parse_table_header_attributes(header_texts: list[str]) -> dict[str, str]:
 
 
 def parse_weight_from_text(text: str) -> Optional[str]:
-    """Extract weight from text content.
+    """Extract weight from text content (multilingual).
 
     Args:
-        text: Text containing weight info (e.g., "Net weight: 0.22 kg")
+        text: Text containing weight info in various languages:
+              - English: "Net weight: 0.22 kg"
+              - German: "Nettogewicht: 0,40 kg"
+              - Italian: "Peso netto: 6.00 kg"
 
     Returns:
-        Weight string (e.g., "0.22 kg") or None
+        Weight string normalized to format "0.22 kg" or None
     """
     if not text:
         return None
 
-    match = re.search(r"Net weight:\s*([\d.]+\s*kg)", text, re.IGNORECASE)
-    return match.group(1).strip() if match else None
+    # Match multiple languages
+    # English: Net weight, German: Nettogewicht, Italian: Peso netto
+    # Allow both decimal separators: . and ,
+    match = re.search(
+        r"(?:Net\s*weight|Nettogewicht|Peso\s*netto):\s*([\d,\.]+)\s*kg",
+        text,
+        re.IGNORECASE,
+    )
+    if match:
+        weight_str = match.group(1).strip()
+        # Normalize comma to decimal point
+        weight_str = weight_str.replace(",", ".")
+        return f"{weight_str} kg"
+
+    logger.debug(f"Failed to parse weight from text: {text[:100]}")
+    return None
+
+
+def parse_weight_to_float(weight_str: str) -> Optional[float]:
+    """Convert weight string to float in kg.
+
+    Args:
+        weight_str: Weight string like "0.40 kg" or "1.2 kg"
+
+    Returns:
+        Weight as float (kg) or None if parsing fails
+    """
+    if not weight_str:
+        return None
+
+    # Extract just the number part
+    match = re.search(r"([\d.]+)", weight_str)
+    if match:
+        try:
+            return float(match.group(1))
+        except ValueError:
+            logger.warning(f"Failed to convert weight to float: {weight_str}")
+            return None
+
+    logger.debug(f"No numeric pattern found in weight string: {weight_str}")
+    return None
 
 
 def parse_hills_from_text(text: str) -> Optional[str]:

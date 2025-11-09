@@ -10,7 +10,10 @@ import pandas as pd
 import pytest
 
 from src.types import ProductData, SKU, ImageUrl, Manufacturer
-from src.exporters.woocommerce_csv import export_to_woocommerce_csv
+from src.exporters.woocommerce_csv import (
+    export_to_woocommerce_csv,
+    format_german_decimal,
+)
 from src.exporters.excel_exporter import export_to_excel
 
 
@@ -69,22 +72,30 @@ def test_export_to_woocommerce_csv_creates_file(sample_product):
 
 @pytest.mark.unit
 def test_woocommerce_csv_contains_correct_columns(sample_product):
-    """Should include all required WooCommerce columns."""
+    """Should include all required WooCommerce columns (German)."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_path = f"{tmpdir}/products.csv"
         export_to_woocommerce_csv([sample_product], output_path)
 
         df = pd.read_csv(output_path)
 
-        # Check required columns exist
-        required_columns = ["SKU", "Name", "Type", "Published", "Description", "Images"]
+        # Check required German columns exist
+        required_columns = [
+            "Artikelnummer",  # SKU
+            "Name",  # Name (same in German)
+            "Typ",  # Type
+            "Veröffentlicht",  # Published
+            "Beschreibung",  # Description
+            "Bilder",  # Images
+            "Marken",  # Brands (new field)
+        ]
         for col in required_columns:
             assert col in df.columns, f"Missing required column: {col}"
 
 
 @pytest.mark.unit
 def test_woocommerce_csv_product_data_accuracy(sample_product):
-    """Should accurately export product data to CSV."""
+    """Should accurately export product data to CSV with German columns."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_path = f"{tmpdir}/products.csv"
         export_to_woocommerce_csv([sample_product], output_path)
@@ -92,14 +103,18 @@ def test_woocommerce_csv_product_data_accuracy(sample_product):
         df = pd.read_csv(output_path)
         row = df.iloc[0]
 
-        assert row["SKU"] == "test-product-123"
+        # Check German column names
+        assert row["Artikelnummer"] == "test-product-123"  # SKU
         assert row["Name"] == "Test Ceiling Light"
-        assert row["Type"] == "simple"
-        assert row["Published"] == 1
-        assert "beautiful test ceiling light" in row["Description"].lower()
-        assert "Ceiling, Modern" in row["Categories"]
-        assert row["Regular price"] == 299.99
-        assert row["Stock"] == 10
+        assert row["Typ"] == "simple"  # Type
+        assert row["Veröffentlicht"] == 1  # Published
+        assert (
+            "beautiful test ceiling light" in row["Beschreibung"].lower()
+        )  # Description
+        assert "Ceiling, Modern" in row["Kategorien"]  # Categories
+        # Check German decimal formatting (comma separator)
+        assert row["Regulärer Preis"] == "299,99"  # Regular price with comma
+        assert row["Bestand"] == 10  # Stock
 
 
 @pytest.mark.unit
@@ -110,7 +125,7 @@ def test_woocommerce_csv_images_pipe_separated(sample_product):
         export_to_woocommerce_csv([sample_product], output_path)
 
         df = pd.read_csv(output_path)
-        images = df.iloc[0]["Images"]
+        images = df.iloc[0]["Bilder"]  # German column name for Images
 
         assert "|" in images
         assert "image1.jpg" in images
@@ -201,12 +216,52 @@ def test_batch_export_multiple_products(multiple_products):
         export_to_woocommerce_csv(multiple_products, csv_path)
         export_to_excel(multiple_products, excel_path)
 
-        # Verify CSV
+        # Verify CSV (German column names)
         csv_df = pd.read_csv(csv_path)
         assert len(csv_df) == 2
-        assert list(csv_df["SKU"]) == ["test-product-123", "test-product-456"]
+        assert list(csv_df["Artikelnummer"]) == [
+            "test-product-123",
+            "test-product-456",
+        ]  # SKU
 
         # Verify Excel
         excel_df = pd.read_excel(excel_path, sheet_name="Products")
         assert len(excel_df) == 2
         assert list(excel_df["Name"]) == ["Test Ceiling Light", "Test Wall Sconce"]
+
+
+# Test German decimal formatting function
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "value,decimal_places,expected",
+    [
+        (5.2, 2, "5,20"),
+        (299.99, 2, "299,99"),
+        (0.0, 2, "0,00"),
+        (1234.56, 2, "1234,56"),
+        (0.1, 2, "0,10"),
+        (999.999, 2, "1000,00"),  # Rounding
+        (5.2, 1, "5,2"),
+        (299.99, 3, "299,990"),
+        (None, 2, ""),  # None returns empty string
+    ],
+)
+def test_format_german_decimal(value, decimal_places, expected):
+    """Should format numbers with German decimal separator (comma)."""
+    result = format_german_decimal(value, decimal_places)
+    assert result == expected
+
+
+@pytest.mark.unit
+def test_format_german_decimal_default_places():
+    """Should use 2 decimal places by default."""
+    assert format_german_decimal(5.2) == "5,20"
+    assert format_german_decimal(299.99) == "299,99"
+
+
+@pytest.mark.unit
+def test_format_german_decimal_none_returns_empty():
+    """Should return empty string for None value."""
+    result = format_german_decimal(None)
+    assert result == ""
+    assert isinstance(result, str)

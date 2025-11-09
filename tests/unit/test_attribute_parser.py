@@ -9,6 +9,7 @@ from src.scrapers.attribute_parser import (
     parse_designer_from_title,
     parse_table_header_attributes,
     parse_weight_from_text,
+    parse_weight_to_float,
     parse_hills_from_text,
     extract_certifications_from_html,
 )
@@ -28,9 +29,7 @@ class TestParseDesignerFromTitle:
             ("Lamp, design by Designer Name Inc.", "Designer Name Inc."),
         ],
     )
-    def test_parse_designer_from_valid_titles(
-        self, title: str, expected_designer: str
-    ):
+    def test_parse_designer_from_valid_titles(self, title: str, expected_designer: str):
         """Test designer extraction from various valid title formats."""
         result = parse_designer_from_title(title)
         assert result == expected_designer
@@ -123,6 +122,25 @@ class TestParseWeightFromText:
         assert result == expected_weight
 
     @pytest.mark.parametrize(
+        "text,expected_weight",
+        [
+            # German format with comma decimal separator
+            ("Nettogewicht: 0,40 kg", "0.40 kg"),
+            ("Nettogewicht: 6,00 kg", "6.00 kg"),
+            # Italian format
+            ("Peso netto: 6.00 kg", "6.00 kg"),
+            ("Peso netto: 0,40 kg", "0.40 kg"),
+            # Mixed case
+            ("NETTOGEWICHT: 2,5 kg", "2.5 kg"),
+            ("peso NETTO: 1.25 kg", "1.25 kg"),
+        ],
+    )
+    def test_parse_weight_multilingual(self, text: str, expected_weight: str):
+        """Test weight extraction supports German and Italian."""
+        result = parse_weight_from_text(text)
+        assert result == expected_weight
+
+    @pytest.mark.parametrize(
         "text",
         [
             "No weight here",
@@ -165,6 +183,44 @@ class TestParseHillsFromText:
     def test_parse_hills_from_invalid_text(self, text: str):
         """Test hills extraction returns None for invalid input."""
         result = parse_hills_from_text(text)
+        assert result is None
+
+
+@pytest.mark.unit
+class TestParseWeightToFloat:
+    """Test weight string to float conversion."""
+
+    @pytest.mark.parametrize(
+        "weight_str,expected_float",
+        [
+            ("0.40 kg", 0.40),
+            ("6.00 kg", 6.00),
+            ("1.5 kg", 1.5),
+            ("10 kg", 10.0),
+            ("0.22 kg", 0.22),
+            # Edge cases
+            ("5kg", 5.0),  # No space
+            ("  2.5 kg  ", 2.5),  # Extra whitespace
+        ],
+    )
+    def test_parse_weight_to_float_valid(self, weight_str: str, expected_float: float):
+        """Test conversion of valid weight strings to float."""
+        result = parse_weight_to_float(weight_str)
+        assert result == expected_float
+
+    @pytest.mark.parametrize(
+        "weight_str",
+        [
+            None,
+            "",
+            "invalid",
+            "kg only",
+            "no numbers here",
+        ],
+    )
+    def test_parse_weight_to_float_invalid(self, weight_str: str):
+        """Test conversion returns None for invalid input."""
+        result = parse_weight_to_float(weight_str)
         assert result is None
 
 
