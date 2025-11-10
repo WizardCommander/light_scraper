@@ -9,10 +9,14 @@ import argparse
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
 from loguru import logger
 
 from src.orchestrator import scrape_and_export
 from src.scrapers.registry import get_available_manufacturers
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def setup_logging(verbose: bool = False) -> None:

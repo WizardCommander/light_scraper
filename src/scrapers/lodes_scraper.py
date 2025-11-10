@@ -69,6 +69,15 @@ class LodesScraper(BaseScraper):
             self.setup_browser()
         assert self._page is not None
 
+    def _convert_to_german_url(self, url: str) -> str:
+        """Convert any Lodes URL to German version."""
+        if "/de/" in url:
+            return url
+        url = url.replace("https://www.lodes.com/", "https://www.lodes.com/de/")
+        url = url.replace("https://www.lodes.com/en/", "https://www.lodes.com/de/")
+        url = url.replace("https://www.lodes.com/fr/", "https://www.lodes.com/de/")
+        return url
+
     def scrape_category(self, category_url: str) -> list[SKU]:
         """Discover all product SKUs from a Lodes category page.
 
@@ -82,7 +91,8 @@ class LodesScraper(BaseScraper):
             Exception: If category scraping fails
         """
         self._ensure_browser()
-        logger.info(f"Scraping Lodes category: {category_url}")
+        category_url = self._convert_to_german_url(category_url)
+        logger.info(f"Scraping Lodes category (German): {category_url}")
 
         try:
             response = self._page.goto(
@@ -94,13 +104,19 @@ class LodesScraper(BaseScraper):
             if response and response.status >= 400:
                 raise Exception(f"HTTP {response.status} error for {category_url}")
 
-            self._page.wait_for_selector("a[href*='/products/']", timeout=10000)
-
+            # Scroll to load all products
             for _ in range(5):
                 self._page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                 self._page.wait_for_timeout(1000)
 
-            product_links = self._page.query_selector_all("a[href*='/products/']")
+            # Debug: log all links to understand page structure
+            all_links = self._page.query_selector_all("a[href]")
+            logger.debug(f"Found {len(all_links)} total links on page")
+            sample_hrefs = [link.get_attribute("href") for link in all_links[:20]]
+            logger.debug(f"Sample links: {sample_hrefs}")
+
+            # Try various product link patterns (producten, prodotti, produkte, products)
+            product_links = self._page.query_selector_all("a[href*='/producten/'], a[href*='/prodotti/'], a[href*='/produkte/'], a[href*='/products/']")
             seen_skus = set()
 
             for link in product_links:
@@ -124,13 +140,13 @@ class LodesScraper(BaseScraper):
         """Extract product SKU/slug from product URL.
 
         Args:
-            url: Product URL (e.g., /en/products/kelly/ or https://www.lodes.com/en/products/kelly/)
+            url: Product URL (e.g., /en/producten/kelly/ or https://www.lodes.com/de/producten/kelly/)
 
         Returns:
             Product SKU/slug or None if not found
         """
-        # Match /products/{slug}/ pattern
-        match = re.search(r"/products/([^/]+)", url)
+        # Match various product URL patterns (producten, products, prodotti, produkte)
+        match = re.search(r"/(?:producten|products|prodotti|produkte)/([^/?]+)", url)
         if match:
             return SKU(match.group(1))
         return None
