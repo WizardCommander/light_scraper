@@ -12,12 +12,13 @@ from playwright.sync_api import Page, TimeoutError as PlaywrightTimeout
 
 from src.scrapers.base_scraper import BaseScraper
 from src.scrapers.attribute_parser import (
+    clean_variant_header_name,
+    extract_certifications_from_html,
     parse_designer_from_title,
+    parse_hills_from_text,
     parse_table_header_attributes,
     parse_weight_from_text,
     parse_weight_to_float,
-    parse_hills_from_text,
-    extract_certifications_from_html,
 )
 from src.types import EAN, SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
 
@@ -116,7 +117,9 @@ class LodesScraper(BaseScraper):
             logger.debug(f"Sample links: {sample_hrefs}")
 
             # Try various product link patterns (producten, prodotti, produkte, products)
-            product_links = self._page.query_selector_all("a[href*='/producten/'], a[href*='/prodotti/'], a[href*='/produkte/'], a[href*='/products/']")
+            product_links = self._page.query_selector_all(
+                "a[href*='/producten/'], a[href*='/prodotti/'], a[href*='/produkte/'], a[href*='/products/']"
+            )
             seen_skus = set()
 
             for link in product_links:
@@ -151,7 +154,7 @@ class LodesScraper(BaseScraper):
             return SKU(match.group(1))
         return None
 
-    def scrape_product(self, sku: SKU) -> ProductData:
+    def scrape_product(self, sku: SKU) -> list[ProductData]:
         """Extract product data from Lodes product page with multi-language support.
 
         Args:
@@ -247,31 +250,31 @@ class LodesScraper(BaseScraper):
                 )
                 self.rate_limit()
 
-                return product
+                return [product]
 
+            # Product has variants - create variable product with children
             logger.info(
-                f"Product {name} has {len(variants)} variants (returning simple product)"
+                f"Product {name} has {len(variants)} variants (creating variable product)"
             )
 
-            variant_summary = f"{len(variants)} variants available"
-            attributes["Variants"] = variant_summary
-
-            product = ProductData(
-                sku=sku,
+            products = self._build_variable_products(
+                parent_sku=sku,
                 name=name,
                 description=description,
-                manufacturer=self.config.manufacturer,
                 categories=categories,
                 attributes=attributes,
                 images=images,
-                weight=weight_kg,
-                scraped_language=scraped_lang,
+                variants=variants,
+                weight_kg=weight_kg,
+                scraped_lang=scraped_lang,
             )
 
-            logger.info(f"Successfully scraped {name} (SKU: {sku}) in {scraped_lang}")
+            logger.info(
+                f"Successfully scraped {name} with {len(products)-1} variations"
+            )
             self.rate_limit()
 
-            return product
+            return products
 
         except Exception as e:
             logger.error(f"Failed to extract data from {url}: {e}")
@@ -339,7 +342,17 @@ class LodesScraper(BaseScraper):
         """Extract technical specifications from variant dropdowns."""
         attributes = {}
 
-        # Extract designer from title
+        attributes.update(self._extract_designer(page))
+        attributes.update(self._extract_table_attributes(page))
+        attributes.update(self._extract_weight_from_pesi(page))
+        attributes.update(self._extract_from_secondary_info(page, attributes))
+        attributes.update(self._extract_certifications(page, attributes))
+        attributes.update(self._extract_pdf_link(page))
+
+        return attributes
+
+    def _extract_designer(self, page: Page) -> dict[str, str]:
+        """Extract designer from product title."""
         try:
             title_elem = page.query_selector("h1.inline.title-n.font26.serif")
             if title_elem:
@@ -347,20 +360,23 @@ class LodesScraper(BaseScraper):
                 if title_text:
                     designer = parse_designer_from_title(title_text)
                     if designer:
-                        attributes["Designer"] = designer
+                        return {"Designer": designer}
         except Exception as e:
             logger.warning(f"Failed to extract designer: {e}")
+        return {}
 
-        # Extract table header attributes
+    def _extract_table_attributes(self, page: Page) -> dict[str, str]:
+        """Extract attributes from technical specification table."""
         try:
             self._expand_technical_sheet_dropdown(page)
             header_texts = self._get_table_header_texts(page)
-            table_attrs = parse_table_header_attributes(header_texts)
-            attributes.update(table_attrs)
+            return parse_table_header_attributes(header_texts)
         except Exception as e:
             logger.warning(f"Failed to extract table attributes: {e}")
+            return {}
 
-        # Extract weight from div.left.pesi
+    def _extract_weight_from_pesi(self, page: Page) -> dict[str, str]:
+        """Extract weight from div.left.pesi element."""
         try:
             weight_elem = page.query_selector("div.left.pesi")
             if weight_elem:
@@ -368,39 +384,56 @@ class LodesScraper(BaseScraper):
                 if weight_text:
                     weight = parse_weight_from_text(weight_text)
                     if weight:
-                        attributes["Net weight"] = weight
+                        return {"Net weight": weight}
         except Exception as e:
             logger.warning(f"Failed to extract weight from pesi div: {e}")
+        return {}
 
-        # Extract weight and hills from secondary-info as fallback
+    def _extract_from_secondary_info(
+        self, page: Page, existing_attrs: dict[str, str]
+    ) -> dict[str, str]:
+        """Extract weight and hills from secondary-info as fallback."""
         try:
             secondary_info = page.query_selector("div.secondary-info")
             if secondary_info:
                 info_text = secondary_info.text_content()
                 if info_text:
+                    extracted = {}
+
                     # Try weight if not already found
-                    if "Net weight" not in attributes:
+                    if "Net weight" not in existing_attrs:
                         weight = parse_weight_from_text(info_text)
                         if weight:
-                            attributes["Net weight"] = weight
+                            extracted["Net weight"] = weight
 
                     hills = parse_hills_from_text(info_text)
                     if hills:
-                        attributes["Hills"] = hills
+                        extracted["Hills"] = hills
+
+                    return extracted
         except Exception as e:
             logger.warning(f"Failed to extract from secondary-info: {e}")
+        return {}
 
-        # Extract certifications from page HTML
+    def _extract_certifications(
+        self, page: Page, existing_attrs: dict[str, str]
+    ) -> dict[str, str]:
+        """Extract certifications from page HTML."""
         try:
             page_html = page.content()
             certifications = extract_certifications_from_html(page_html)
-            for key, value in certifications.items():
-                if key not in attributes:
-                    attributes[key] = value
+            # Only add certifications not already present
+            return {
+                key: value
+                for key, value in certifications.items()
+                if key not in existing_attrs
+            }
         except Exception as e:
             logger.warning(f"Failed to extract certifications: {e}")
+            return {}
 
-        # Extract PDF datasheet link
+    def _extract_pdf_link(self, page: Page) -> dict[str, str]:
+        """Extract PDF datasheet link."""
         try:
             # Try specific selector first, fallback to generic
             pdf_link = page.query_selector("a.pdf-link") or page.query_selector(
@@ -409,11 +442,10 @@ class LodesScraper(BaseScraper):
             if pdf_link:
                 href = pdf_link.get_attribute("href")
                 if href:
-                    attributes["Datasheet URL"] = href
+                    return {"Datasheet URL": href}
         except Exception as e:
             logger.warning(f"Failed to extract PDF link: {e}")
-
-        return attributes
+        return {}
 
     def _expand_technical_sheet_dropdown(self, page: Page) -> None:
         """Click dropdown to reveal technical specifications."""
@@ -473,6 +505,157 @@ class LodesScraper(BaseScraper):
 
         return categories if categories else ["Lighting"]
 
+    @staticmethod
+    def _extract_variation_attribute_names(variants: list[dict[str, str]]) -> set[str]:
+        """Extract attribute names that vary across product variants.
+
+        Args:
+            variants: List of variant dictionaries
+
+        Returns:
+            Set of attribute names (excluding "Code")
+        """
+        variation_attr_names = set()
+        for variant in variants:
+            variation_attr_names.update(variant.keys())
+
+        variation_attr_names.discard("Code")
+        return variation_attr_names
+
+    @staticmethod
+    def _build_parent_variation_attributes(
+        variants: list[dict[str, str]], variation_attr_names: set[str]
+    ) -> dict[str, str]:
+        """Build parent product variation attributes with ALL possible values.
+
+        Args:
+            variants: List of variant dictionaries
+            variation_attr_names: Set of variation attribute names
+
+        Returns:
+            Dict mapping attribute names to comma-separated lists of all values
+        """
+        parent_variation_attrs = {}
+
+        for attr_name in variation_attr_names:
+            values = set()
+            for variant in variants:
+                if attr_name in variant and variant[attr_name]:
+                    values.add(variant[attr_name])
+
+            if values:
+                parent_variation_attrs[attr_name] = ", ".join(sorted(values))
+
+        return parent_variation_attrs
+
+    @staticmethod
+    def _build_variation_name(
+        base_name: str,
+        variant: dict[str, str],
+        variation_attr_names: set[str],
+        idx: int,
+    ) -> str:
+        """Build descriptive name for a product variation.
+
+        Args:
+            base_name: Parent product name
+            variant: Variant data dict
+            variation_attr_names: Set of variation attribute names
+            idx: Variant index (for fallback naming)
+
+        Returns:
+            Formatted variation name
+        """
+        variant_details = []
+        for attr_name in sorted(variation_attr_names):
+            if attr_name in variant and variant[attr_name]:
+                variant_details.append(variant[attr_name])
+
+        if variant_details:
+            return f"{base_name} - {' / '.join(variant_details)}"
+        return f"{base_name} - Variant {idx+1}"
+
+    def _build_variable_products(
+        self,
+        parent_sku: SKU,
+        name: str,
+        description: str,
+        categories: list[str],
+        attributes: dict[str, str],
+        images: list[ImageUrl],
+        variants: list[dict[str, str]],
+        weight_kg: float | None,
+        scraped_lang: str,
+    ) -> list[ProductData]:
+        """Build parent + child variation products from variant data.
+
+        Args:
+            parent_sku: SKU for parent product (used as reference for children)
+            name: Product name
+            description: Product description
+            categories: Product categories
+            attributes: Product attributes (Designer, IP Rating, etc.)
+            images: Product images
+            variants: List of variant dicts with Code, Structure, Diffusor, etc.
+            weight_kg: Product weight in kg
+            scraped_lang: Language code
+
+        Returns:
+            List with 1 parent + N child variation ProductData objects
+        """
+        if not variants:
+            return []
+
+        variation_attr_names = self._extract_variation_attribute_names(variants)
+        parent_variation_attrs = self._build_parent_variation_attributes(
+            variants, variation_attr_names
+        )
+
+        parent = ProductData(
+            sku=SKU(""),
+            name=name,
+            description=description,
+            manufacturer=self.config.manufacturer,
+            categories=categories,
+            attributes=attributes,
+            images=images,
+            product_type="variable",
+            weight=weight_kg,
+            scraped_language=scraped_lang,
+            variation_attributes=parent_variation_attrs,
+        )
+
+        children = []
+        for idx, variant in enumerate(variants):
+            variant_sku = variant.get("Code", f"{parent_sku}-{idx+1}")
+            variant_name = self._build_variation_name(
+                name, variant, variation_attr_names, idx
+            )
+
+            child_variation_attrs = {
+                attr_name: variant[attr_name]
+                for attr_name in variation_attr_names
+                if attr_name in variant and variant[attr_name]
+            }
+
+            child = ProductData(
+                sku=SKU(variant_sku),
+                name=variant_name,
+                description="",
+                manufacturer=self.config.manufacturer,
+                categories=[],
+                attributes={},
+                images=[],
+                product_type="variation",
+                parent_sku=parent_sku,
+                variation_attributes=child_variation_attrs,
+                weight=weight_kg,
+                scraped_language=scraped_lang,
+            )
+            children.append(child)
+
+        return [parent] + children
+
     def _extract_variants(self, page: Page) -> list[dict[str, str]]:
         """Extract variant information from variant tables.
 
@@ -482,38 +665,14 @@ class LodesScraper(BaseScraper):
         """
         variants = []
 
-        # Look for variant table rows
         variant_tables = page.query_selector_all("table.table-variante")
 
         for table in variant_tables:
+            header_map = self._build_header_index_map(table)
             rows = table.query_selector_all("tbody tr")
 
-            # Extract header to identify attribute columns
-            headers = []
-            header_row = table.query_selector("thead tr")
-            if header_row:
-                header_cells = header_row.query_selector_all("th")
-                headers = [
-                    cell.text_content().strip()
-                    for cell in header_cells
-                    if cell.text_content()
-                ]
-
             for row in rows:
-                cells = row.query_selector_all("td")
-                if not cells:
-                    continue
-
-                variant_data = {}
-
-                # Map each cell to its corresponding header by index
-                for idx, cell in enumerate(cells):
-                    if idx < len(headers):
-                        attr_name = headers[idx]
-                        attr_value = cell.text_content()
-                        if attr_value:
-                            variant_data[attr_name] = attr_value.strip()
-
+                variant_data = self._parse_variant_row(row, header_map)
                 if variant_data:
                     variants.append(variant_data)
 
@@ -530,6 +689,60 @@ class LodesScraper(BaseScraper):
                     variants[0]["Variant Type"] = name_text.strip()
 
         return variants
+
+    def _build_header_index_map(self, table) -> list[tuple[int, str]]:
+        """Build mapping of cell indices to cleaned header names.
+
+        Note: First column is often a variant group identifier (e.g., "Kelly medium dome 60")
+        so we keep it even if it looks like a variant name.
+
+        Args:
+            table: Table element containing thead with header cells
+
+        Returns:
+            List of (index, cleaned_header_name) tuples
+        """
+        header_map = []
+        header_row = table.query_selector("thead tr")
+
+        if header_row:
+            header_cells = header_row.query_selector_all("th")
+            for idx, cell in enumerate(header_cells):
+                if cell.text_content():
+                    cleaned = clean_variant_header_name(cell.text_content())
+                    # Keep first column even if filtering would remove it (it's a grouping header)
+                    if cleaned or idx == 0:
+                        final_name = cleaned if cleaned else cell.text_content().strip()
+                        header_map.append((idx, final_name))
+
+        return header_map
+
+    def _parse_variant_row(
+        self, row, header_map: list[tuple[int, str]]
+    ) -> dict[str, str]:
+        """Parse a variant table row into attribute dictionary.
+
+        Args:
+            row: Table row element containing td cells
+            header_map: List of (cell_index, attribute_name) tuples
+
+        Returns:
+            Dictionary of attribute names to values, or empty dict if no data
+        """
+        cells = row.query_selector_all("td")
+        if not cells:
+            return {}
+
+        variant_data = {}
+
+        # Map cells to headers using the index mapping
+        for cell_idx, attr_name in header_map:
+            if cell_idx < len(cells):
+                attr_value = cells[cell_idx].text_content()
+                if attr_value:
+                    variant_data[attr_name] = attr_value.strip()
+
+        return variant_data
 
     def _is_product_image(self, src: str) -> bool:
         """Filter out non-product images (logos, icons, etc.)."""

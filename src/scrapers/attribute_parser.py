@@ -65,6 +65,44 @@ def parse_table_header_attributes(header_texts: list[str]) -> dict[str, str]:
     return attributes
 
 
+def clean_variant_header_name(header_text: str) -> str:
+    """Clean variant table header to extract just the attribute name.
+
+    Handles headers like "Diffusore: Vetro" -> "Diffusore"
+    Filters out variant product names that look like "Kelly medium dome 60"
+
+    Args:
+        header_text: Raw header text from table
+
+    Returns:
+        Cleaned attribute name, or empty string if header should be ignored
+    """
+    if not header_text:
+        return ""
+
+    header_text = header_text.strip()
+
+    # Filter out headers that look like variant names/codes
+    # These typically contain product names or numbers followed by size/model info
+    invalid_patterns = [
+        r"^[A-Z][\w\-]+\s+(small|medium|large|mini|dome|pendant|suspension).*\d+$",  # e.g., "Kelly medium dome 60", "A-Tube small pendant 40"
+        r"^\d{5,}",  # Long product codes like "14127"
+    ]
+
+    for pattern in invalid_patterns:
+        if re.match(pattern, header_text):
+            return ""  # Ignore this header
+
+    # If header contains colon, extract only the attribute name (before colon)
+    if ":" in header_text:
+        # Split on first colon and take the left part
+        attribute_name = header_text.split(":", 1)[0].strip()
+        return attribute_name
+
+    # Otherwise return as-is
+    return header_text
+
+
 def parse_weight_from_text(text: str) -> Optional[str]:
     """Extract weight from text content (multilingual).
 

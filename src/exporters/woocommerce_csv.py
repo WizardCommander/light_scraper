@@ -75,8 +75,22 @@ WOOCOMMERCE_GERMAN_COLUMNS = [
     "Attribut 4 Sichtbar",
     "Attribut 4 Global",
     "Attribut 1 Standard",
+    "Attribut 2 Standard",
     "Attribut 3 Standard",
     "Attribut 4 Standard",
+]
+
+# Priority order for product attributes (most important first)
+# Used when mapping simple product attributes to WooCommerce columns
+PRODUCT_ATTRIBUTE_PRIORITY = [
+    "Designer",
+    "IP Rating",
+    "Voltage",
+    "Certification",
+    "Structure",
+    "Armatur",
+    "Diffusor",
+    "Variants",
 ]
 
 
@@ -93,6 +107,77 @@ def format_german_decimal(value: float | None, decimal_places: int = 2) -> str:
     if value is None:
         return ""
     return f"{value:.{decimal_places}f}".replace(".", ",")
+
+
+def _build_attribute_mapping(
+    attributes: list[tuple[str, str]], is_global: bool, max_attrs: int = 4
+) -> dict[str, Any]:
+    """Build WooCommerce attribute mapping from attribute list.
+
+    Args:
+        attributes: List of (name, value) tuples
+        is_global: Whether to set Global=1 (for variations) or Global=0 (for products)
+        max_attrs: Maximum number of attributes to map (default 4)
+
+    Returns:
+        Dictionary with Attribut 1-N Name/Wert(e)/Sichtbar/Global columns
+    """
+    attr_mapping = {}
+
+    for idx, (attr_name, attr_value) in enumerate(attributes[:max_attrs], start=1):
+        attr_mapping[f"Attribut {idx} Name"] = attr_name
+        attr_mapping[f"Attribut {idx} Wert(e)"] = attr_value
+        attr_mapping[f"Attribut {idx} Sichtbar"] = 1  # Visible on product page
+        attr_mapping[f"Attribut {idx} Global"] = 1 if is_global else 0
+
+    return attr_mapping
+
+
+def _map_product_attributes_to_woocommerce(
+    product: ProductData,
+) -> dict[str, Any]:
+    """Map ProductData.attributes to WooCommerce Attribut 1-4 columns.
+
+    Args:
+        product: Product data with attributes to map
+
+    Returns:
+        Dictionary with Attribut 1-4 Name/Wert(e)/Sichtbar/Global columns
+    """
+    if not product.attributes:
+        return {}
+
+    # Filter to only attributes that exist in product, maintaining priority order
+    available_attrs = [
+        (name, product.attributes[name])
+        for name in PRODUCT_ATTRIBUTE_PRIORITY
+        if name in product.attributes
+    ]
+
+    return _build_attribute_mapping(available_attrs, is_global=False)
+
+
+def _map_variation_attributes_to_woocommerce(
+    variation_attributes: dict[str, str],
+) -> dict[str, Any]:
+    """Map variation attributes to WooCommerce Attribut columns.
+
+    For variable products (parent): values are comma-separated lists of ALL options
+    For variation products (child): values are single specific selections
+
+    Args:
+        variation_attributes: Dict of attribute name to value(s)
+
+    Returns:
+        Dictionary with Attribut 1-4 Name/Wert(e)/Sichtbar/Global columns
+    """
+    if not variation_attributes:
+        return {}
+
+    # Convert dict to list of tuples for consistent interface
+    attr_list = list(variation_attributes.items())
+
+    return _build_attribute_mapping(attr_list, is_global=True)
 
 
 def export_to_woocommerce_csv(
@@ -120,18 +205,26 @@ def export_to_woocommerce_csv(
     rows = [_product_to_woocommerce_row(product, default_price) for product in products]
     df = pd.DataFrame(rows)
 
-    # Reorder columns: WooCommerce standard columns first, then custom meta fields
-    standard_cols = [col for col in WOOCOMMERCE_GERMAN_COLUMNS if col in df.columns]
-    meta_cols = [col for col in df.columns if col.startswith("meta:")]
-    all_cols = standard_cols + meta_cols
-    df = df[all_cols]
+    # Ensure ALL WooCommerce columns are present (even if empty)
+    for col in WOOCOMMERCE_GERMAN_COLUMNS:
+        if col not in df.columns:
+            df[col] = ""
+
+    # Use only standard WooCommerce columns (no meta: columns)
+    df = df[WOOCOMMERCE_GERMAN_COLUMNS]
 
     # Ensure output directory exists
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Export to CSV with proper encoding (UTF-8 with BOM for Excel compatibility)
-    df.to_csv(output_file, index=False, encoding="utf-8-sig", quoting=csv.QUOTE_ALL)
+    # Export to CSV matching schema format exactly
+    df.to_csv(
+        output_file,
+        index=False,
+        encoding="utf-8-sig",
+        quoting=csv.QUOTE_MINIMAL,
+        lineterminator="\n",
+    )
 
     logger.info(f"Exported {len(products)} products to {output_file}")
     return output_file
@@ -209,17 +302,6 @@ def _product_to_woocommerce_row(
         "Marken": product.manufacturer,  # Brand field
     }
 
-    # Add variation attributes for variable/variation products (German format)
-    if product.variation_attributes:
-        for idx, (attr_name, attr_value) in enumerate(
-            product.variation_attributes.items(), start=1
-        ):
-            if idx <= 4:  # WooCommerce supports max 4 attributes
-                row[f"Attribut {idx} Name"] = attr_name
-                row[f"Attribut {idx} Wert(e)"] = attr_value
-                row[f"Attribut {idx} Sichtbar"] = 1
-                row[f"Attribut {idx} Global"] = 0
-
     # Add dimensions if available (with German decimal formatting)
     if product.dimensions:
         if "length" in product.dimensions:
@@ -229,11 +311,24 @@ def _product_to_woocommerce_row(
         if "height" in product.dimensions:
             row["Höhe (cm)"] = format_german_decimal(product.dimensions["height"])
 
-    # Add custom attributes as meta fields (for additional product info)
-    if product.attributes:
-        for key, value in product.attributes.items():
-            meta_key = f"meta:{_sanitize_meta_key(key)}"
-            row[meta_key] = value
+    # Map attributes to WooCommerce Attribut 1-4 columns
+    # For variable/variation products: use variation_attributes
+    # For simple products: use regular attributes
+    if (
+        product.product_type in ["variable", "variation"]
+        and product.variation_attributes
+    ):
+        attribute_mapping = _map_variation_attributes_to_woocommerce(
+            product.variation_attributes
+        )
+    else:
+        attribute_mapping = _map_product_attributes_to_woocommerce(product)
+
+    row.update(attribute_mapping)
+
+    # Set parent product reference for variations
+    if product.product_type == "variation" and product.parent_sku:
+        row["Übergeordnetes Produkt"] = f"id:{product.parent_sku}"
 
     return row
 
@@ -252,19 +347,3 @@ def _truncate_description(text: str, max_length: int) -> str:
         return text
 
     return text[: max_length - 3].strip() + "..."
-
-
-def _sanitize_meta_key(key: str) -> str:
-    """Sanitize attribute key for WooCommerce meta field.
-
-    Args:
-        key: Original attribute key
-
-    Returns:
-        Sanitized key suitable for meta field name
-    """
-    # Replace spaces and special characters with underscores
-    sanitized = key.replace(" ", "_").replace("-", "_").replace("/", "_")
-    # Remove any remaining special characters
-    sanitized = "".join(c for c in sanitized if c.isalnum() or c == "_")
-    return sanitized.lower()

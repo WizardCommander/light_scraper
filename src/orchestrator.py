@@ -72,52 +72,58 @@ class ScraperOrchestrator:
             for sku_str in skus:
                 sku = SKU(sku_str)
                 try:
-                    product = scraper.scrape_product(sku)
+                    scraped_products = scraper.scrape_product(sku)
 
-                    if ai_descriptions:
-                        try:
-                            new_description = generate_description(product)
-                            product.description = new_description
-                            logger.info(
-                                f"✓ Generated AI description for {product.name}"
-                            )
-                        except Exception as e:
-                            logger.warning(
-                                f"Failed to generate AI description for {sku}: {e}"
-                            )
+                    for product in scraped_products:
+                        if ai_descriptions:
+                            try:
+                                new_description = generate_description(product)
+                                product.description = new_description
+                                logger.info(
+                                    f"✓ Generated AI description for {product.name}"
+                                )
+                            except Exception as e:
+                                logger.warning(
+                                    f"Failed to generate AI description for {product.sku}: {e}"
+                                )
 
-                    # Translate to German if requested and not already in German
-                    if translate_to_german and product.scraped_language != "de":
-                        try:
-                            product = translate_product_data(product)
-                            product.translated_to_german = True
-                            logger.info(
-                                f"✓ Translated {product.name} from {product.scraped_language} to German"
-                            )
-                        except Exception as e:
-                            logger.warning(f"Failed to translate {sku} to German: {e}")
+                        # Translate to German if requested and not already in German
+                        if translate_to_german and product.scraped_language != "de":
+                            try:
+                                product = translate_product_data(product)
+                                product.translated_to_german = True
+                                logger.info(
+                                    f"✓ Translated {product.name} from {product.scraped_language} to German"
+                                )
+                            except Exception as e:
+                                logger.warning(
+                                    f"Failed to translate {product.sku} to German: {e}"
+                                )
 
-                    products.append(product)
-
-                    if download_images and product.images:
-                        scraper.download_product_images(product, f"{output_dir}/images")
-
-                    if product.attributes.get("Datasheet URL"):
-                        try:
-                            pdf_url = product.attributes["Datasheet URL"]
-                            download_pdf(
-                                pdf_url,
-                                product.sku,
-                                product.manufacturer,
-                                f"{output_dir}/datasheets",
-                            )
-                            logger.info(f"✓ Downloaded datasheet for {product.sku}")
-                        except Exception as e:
-                            logger.warning(
-                                f"Failed to download datasheet for {product.sku}: {e}"
+                        if download_images and product.images:
+                            scraper.download_product_images(
+                                product, f"{output_dir}/images"
                             )
 
-                    logger.info(f"✓ Scraped: {product.name} ({sku})")
+                        if product.attributes and product.attributes.get(
+                            "Datasheet URL"
+                        ):
+                            try:
+                                pdf_url = product.attributes["Datasheet URL"]
+                                download_pdf(
+                                    pdf_url,
+                                    product.sku,
+                                    product.manufacturer,
+                                    f"{output_dir}/datasheets",
+                                )
+                                logger.info(f"✓ Downloaded datasheet for {product.sku}")
+                            except Exception as e:
+                                logger.warning(
+                                    f"Failed to download datasheet for {product.sku}: {e}"
+                                )
+
+                        products.append(product)
+                        logger.info(f"✓ Scraped: {product.name} ({product.sku})")
 
                 except Exception as e:
                     logger.error(f"✗ Failed to scrape {sku}: {e}")

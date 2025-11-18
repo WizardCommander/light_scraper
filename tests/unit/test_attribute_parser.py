@@ -6,12 +6,13 @@ Following CLAUDE.md: parameterized inputs, test entire structure, no trivial ass
 import pytest
 
 from src.scrapers.attribute_parser import (
+    clean_variant_header_name,
+    extract_certifications_from_html,
     parse_designer_from_title,
+    parse_hills_from_text,
     parse_table_header_attributes,
     parse_weight_from_text,
     parse_weight_to_float,
-    parse_hills_from_text,
-    extract_certifications_from_html,
 )
 
 
@@ -272,3 +273,70 @@ class TestExtractCertificationsFromHtml:
 
         assert result1["Voltage"] == "100-240V"
         assert result2["Voltage"] == "220–240V"
+
+
+@pytest.mark.unit
+class TestCleanVariantHeaderName:
+    """Test cleaning of variant table header names."""
+
+    @pytest.mark.parametrize(
+        "header_text,expected_cleaned",
+        [
+            ("Diffusore: Vetro", "Diffusore"),
+            ("Structure: Metal", "Structure"),
+            ("Codice", "Codice"),
+            ("Code", "Code"),
+            ("Variant Type: Large", "Variant Type"),
+            ("Color: Black", "Color"),
+            ("  Diffusore: Vetro  ", "Diffusore"),  # With whitespace
+            ("", ""),  # Empty string
+        ],
+    )
+    def test_clean_header_with_colon(self, header_text: str, expected_cleaned: str):
+        """Should extract attribute name from header text with colon."""
+        result = clean_variant_header_name(header_text)
+        assert result == expected_cleaned
+
+    def test_clean_header_without_colon(self):
+        """Should return header as-is when no colon present."""
+        result = clean_variant_header_name("Codice")
+        assert result == "Codice"
+
+    def test_clean_header_multiple_colons(self):
+        """Should split on first colon only."""
+        result = clean_variant_header_name("Attribute: Value: Extra")
+        assert result == "Attribute"
+
+    def test_clean_header_none(self):
+        """Should return empty string for None input."""
+        result = clean_variant_header_name(None)
+        assert result == ""
+
+    @pytest.mark.parametrize(
+        "invalid_header",
+        [
+            "Kelly medium dome 60",
+            "A-Tube small pendant 40",
+            "Product large size 80",
+        ],
+    )
+    def test_filter_out_variant_names(self, invalid_header: str):
+        """Should filter out headers that look like variant names."""
+        result = clean_variant_header_name(invalid_header)
+        assert result == ""
+
+    @pytest.mark.parametrize(
+        "valid_header",
+        [
+            "Codice",
+            "Code",
+            "Structure",
+            "Diffusore",
+            "Color",
+            "Variant Type",
+        ],
+    )
+    def test_keep_valid_attribute_names(self, valid_header: str):
+        """Should keep headers that are valid attribute names."""
+        result = clean_variant_header_name(valid_header)
+        assert result == valid_header

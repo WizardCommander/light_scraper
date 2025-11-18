@@ -18,7 +18,8 @@
       "Bash(python:*)",
       "Bash(dir:*)",
       "mcp__MCP_DOCKER__browser_click",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:slt.lighting)"
     ],
     "deny": [],
     "ask": []
