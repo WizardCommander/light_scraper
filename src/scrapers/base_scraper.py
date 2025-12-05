@@ -10,8 +10,8 @@ from typing import Optional
 from playwright.sync_api import sync_playwright, Browser, Page, Playwright
 from loguru import logger
 
-from src.types import SKU, ProductData, ScraperConfig, ImageUrl, Manufacturer
-from src.downloaders.asset_downloader import download_image, download_pdf
+from src.models import SKU, ProductData, ScraperConfig
+from src.downloaders.asset_downloader import download_image
 
 
 class BaseScraper(ABC):

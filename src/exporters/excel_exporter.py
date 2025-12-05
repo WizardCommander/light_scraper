@@ -9,7 +9,7 @@ from typing import Any
 import pandas as pd
 from loguru import logger
 
-from src.types import ProductData
+from src.models import ProductData
 
 
 def export_to_excel(
@@ -52,7 +52,7 @@ def export_to_excel(
                 try:
                     if len(str(cell.value)) > max_length:
                         max_length = len(str(cell.value))
-                except:
+                except Exception:
                     pass
 
             adjusted_width = min(max_length + 2, 50)  # Cap at 50 characters

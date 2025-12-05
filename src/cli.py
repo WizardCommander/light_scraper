@@ -90,6 +90,9 @@ Examples:
   # Skip image downloads
   python -m src.cli --manufacturer lodes --skus kelly --no-images
 
+  # Skip German translation (translation is enabled by default)
+  python -m src.cli --manufacturer lodes --skus kelly --no-translate
+
   # Custom output directory
   python -m src.cli --manufacturer lodes --skus kelly --output my_output
         """,
@@ -140,9 +143,10 @@ Examples:
     )
 
     parser.add_argument(
-        "--translate-german",
-        action="store_true",
-        help="Translate product content to German (requires ANTHROPIC_API_KEY)",
+        "--no-translate",
+        action="store_false",
+        dest="translate_to_german",
+        help="Skip German translation (translation is enabled by default, requires ANTHROPIC_API_KEY)",
     )
 
     parser.add_argument(
@@ -178,19 +182,23 @@ Examples:
 
     # Run scraper
     try:
-        products, csv_path, excel_path = scrape_and_export(
+        products, csv_paths, excel_paths = scrape_and_export(
             manufacturer=args.manufacturer,
             skus=skus,
             category_url=category_url,
             download_images=not args.no_images,
             ai_descriptions=args.ai_descriptions,
-            translate_to_german=args.translate_german,
+            translate_to_german=args.translate_to_german,
             output_dir=args.output,
         )
 
         logger.success(f"Successfully scraped {len(products)} products!")
-        logger.info(f"CSV: {csv_path}")
-        logger.info(f"Excel: {excel_path}")
+        logger.info(f"Generated {len(csv_paths)} CSV files:")
+        for csv_path in csv_paths:
+            logger.info(f"  - {csv_path}")
+        logger.info(f"Generated {len(excel_paths)} Excel files:")
+        for excel_path in excel_paths:
+            logger.info(f"  - {excel_path}")
 
         return 0
 

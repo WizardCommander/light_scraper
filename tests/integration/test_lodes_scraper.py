@@ -7,7 +7,7 @@ These tests require internet connection and real Lodes.com access.
 import pytest
 
 from src.scrapers.lodes_scraper import LodesScraper
-from src.types import SKU
+from src.models import SKU
 
 
 @pytest.mark.integration

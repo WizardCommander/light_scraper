@@ -4,15 +4,17 @@ Following CLAUDE.md: pure functions with clear separation of concerns.
 """
 
 from pathlib import Path
-from typing import Optional
 
 from loguru import logger
 
-from src.types import SKU, ProductData, Manufacturer
+from src.models import SKU, ProductData
 from src.scrapers.registry import get_scraper_class
 from src.exporters.woocommerce_csv import export_to_woocommerce_csv
 from src.exporters.excel_exporter import export_to_excel
-from src.ai.description_generator import generate_description
+from src.ai.description_generator import (
+    generate_description,
+    generate_short_description,
+)
 from src.ai.german_translator import translate_product_data
 from src.downloaders.asset_downloader import download_pdf
 
@@ -27,7 +29,7 @@ class ScraperOrchestrator:
         category_url: str | None = None,
         download_images: bool = True,
         ai_descriptions: bool = False,
-        translate_to_german: bool = False,
+        translate_to_german: bool = True,
         output_dir: str = "output",
     ) -> list[ProductData]:
         """Scrape products from manufacturer website.
@@ -38,7 +40,7 @@ class ScraperOrchestrator:
             category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download product images
             ai_descriptions: Whether to generate unique descriptions with AI
-            translate_to_german: Whether to translate content to German if not already in German
+            translate_to_german: Whether to translate content to German (default: True)
             output_dir: Base output directory
 
         Returns:
@@ -87,41 +89,35 @@ class ScraperOrchestrator:
                                     f"Failed to generate AI description for {product.sku}: {e}"
                                 )
 
-                        # Translate to German if requested and not already in German
-                        if translate_to_german and product.scraped_language != "de":
+                        # Translate to German if requested
+                        # Note: Always translate when enabled, as some manufacturers have
+                        # Italian content on their German pages (e.g., Lodes /de/ has Italian text)
+                        if translate_to_german:
                             try:
                                 product = translate_product_data(product)
                                 product.translated_to_german = True
-                                logger.info(
-                                    f"✓ Translated {product.name} from {product.scraped_language} to German"
-                                )
+                                logger.info(f"✓ Translated {product.name} to German")
                             except Exception as e:
                                 logger.warning(
                                     f"Failed to translate {product.sku} to German: {e}"
                                 )
 
-                        if download_images and product.images:
-                            scraper.download_product_images(
-                                product, f"{output_dir}/images"
+                        # Generate short description (always enabled per client requirements)
+                        try:
+                            short_desc = generate_short_description(
+                                product, max_words=20
+                            )
+                            product.short_description = short_desc
+                            logger.info(
+                                f"✓ Generated short description for {product.name}"
+                            )
+                        except Exception as e:
+                            logger.warning(
+                                f"Failed to generate short description for {product.sku}: {e}"
                             )
 
-                        if product.attributes and product.attributes.get(
-                            "Datasheet URL"
-                        ):
-                            try:
-                                pdf_url = product.attributes["Datasheet URL"]
-                                download_pdf(
-                                    pdf_url,
-                                    product.sku,
-                                    product.manufacturer,
-                                    f"{output_dir}/datasheets",
-                                )
-                                logger.info(f"✓ Downloaded datasheet for {product.sku}")
-                            except Exception as e:
-                                logger.warning(
-                                    f"Failed to download datasheet for {product.sku}: {e}"
-                                )
-
+                        # Note: Image and PDF downloading now handled per-product
+                        # in run_full_pipeline for better organization
                         products.append(product)
                         logger.info(f"✓ Scraped: {product.name} ({product.sku})")
 
@@ -163,6 +159,48 @@ class ScraperOrchestrator:
         logger.info(f"Export complete: {csv_path} and {excel_path}")
         return csv_path, excel_path
 
+    def _group_products_by_base_sku(
+        self, products: list[ProductData]
+    ) -> dict[str, list[ProductData]]:
+        """Group products by their base SKU (parent for variations, own SKU for parents).
+
+        Args:
+            products: List of all scraped products
+
+        Returns:
+            Dictionary mapping base SKU to list of products (parent + variations)
+        """
+        grouped = {}
+
+        for i, product in enumerate(products):
+            # For variations: use their parent_sku (check is not None to handle empty strings)
+            if product.parent_sku is not None:
+                base_sku = product.parent_sku
+            # For variable parents: use their own SKU (even if empty)
+            elif product.product_type == "variable":
+                base_sku = product.sku
+            # For simple products: use their own SKU
+            else:
+                base_sku = product.sku
+
+            # If base_sku is empty, use product family name to distinguish different products
+            # This prevents multiple product families from being grouped together
+            if not base_sku:
+                # Extract family name from product name (e.g., "Kelly, Design by..." -> "Kelly")
+                family_name = (
+                    product.name.split(",")[0].strip()
+                    if product.name
+                    else f"product-{i}"
+                )
+                base_sku = f"_empty_{family_name}"
+
+            # Group products by base_sku
+            if base_sku not in grouped:
+                grouped[base_sku] = []
+            grouped[base_sku].append(product)
+
+        return grouped
+
     def run_full_pipeline(
         self,
         manufacturer: str,
@@ -170,10 +208,10 @@ class ScraperOrchestrator:
         category_url: str | None = None,
         download_images: bool = True,
         ai_descriptions: bool = False,
-        translate_to_german: bool = False,
+        translate_to_german: bool = True,
         output_dir: str = "output",
-    ) -> tuple[list[ProductData], Path, Path]:
-        """Run complete scraping and export pipeline.
+    ) -> tuple[list[ProductData], list[Path], list[Path]]:
+        """Run complete scraping and export pipeline with per-product organization.
 
         Args:
             manufacturer: Manufacturer name
@@ -181,11 +219,15 @@ class ScraperOrchestrator:
             category_url: Category URL to discover products from (optional if skus provided)
             download_images: Whether to download images
             ai_descriptions: Whether to generate unique descriptions with AI
-            translate_to_german: Whether to translate content to German
-            output_dir: Output directory
+            translate_to_german: Whether to translate content to German (default: True)
+            output_dir: Base output directory
 
         Returns:
-            Tuple of (products, csv_path, excel_path)
+            Tuple of (all_products, list_of_csv_paths, list_of_excel_paths)
+
+        Note:
+            Creates separate folders per product: {output_dir}/{sku}/
+            Each folder contains: products.csv, products.xlsx, images/, datasheets/
         """
         logger.info("=" * 60)
         logger.info(f"Starting full pipeline for {manufacturer}")
@@ -197,32 +239,138 @@ class ScraperOrchestrator:
             logger.info("AI descriptions: ENABLED")
         logger.info("=" * 60)
 
-        # Step 1: Scrape products
+        # Step 1: Scrape products (without downloading assets yet)
         products = self.scrape_products(
             manufacturer,
             skus,
             category_url,
-            download_images,
-            ai_descriptions,
-            translate_to_german,
-            output_dir,
+            download_images=False,  # Assets will be downloaded per-product below
+            ai_descriptions=ai_descriptions,
+            translate_to_german=translate_to_german,
+            output_dir=output_dir,
         )
 
         if not products:
             logger.warning("No products were successfully scraped")
             raise ValueError("Scraping failed for all products")
 
-        # Step 2: Export to CSV and Excel
-        csv_path, excel_path = self.export_products(products, output_dir)
+        # Step 2: Group products by base SKU (parent + variations together)
+        grouped_products = self._group_products_by_base_sku(products)
+        logger.info(
+            f"Grouped {len(products)} products into {len(grouped_products)} product families"
+        )
+
+        # Step 3: Process each product group separately
+        csv_paths = []
+        excel_paths = []
+
+        for base_sku, product_group in grouped_products.items():
+            logger.info(
+                f"Processing product group: {base_sku} ({len(product_group)} products)"
+            )
+
+            # Generate folder name (handle empty base_sku with _empty_ prefix)
+            if base_sku.startswith("_empty_"):
+                # Extract family name from the _empty_ prefix
+                folder_name = base_sku[7:]  # Remove "_empty_" prefix
+            elif not base_sku:
+                # Shouldn't happen anymore, but keep as fallback
+                # Find first variation with non-empty SKU for folder name
+                folder_name = None
+                for product in product_group:
+                    if product.product_type == "variation" and product.sku:
+                        # Use first part of SKU before dash, or first 20 chars
+                        if "-" in product.sku:
+                            folder_name = product.sku.split("-")[0]
+                        else:
+                            folder_name = product.sku[:20]
+                        break
+                # Fallback: use product name or generic name
+                if not folder_name:
+                    if product_group[0].name:
+                        # Use first word of product name
+                        folder_name = product_group[0].name.split()[0]
+                    else:
+                        folder_name = "product"
+            else:
+                folder_name = str(base_sku)
+
+            # Create product-specific output folder
+            product_output_dir = Path(output_dir) / folder_name
+            product_output_dir.mkdir(parents=True, exist_ok=True)
+
+            # Step 3a: Download images and PDFs if requested
+            if download_images:
+                # Download images for all products in group
+                for product in product_group:
+                    if product.images:
+                        images_dir = str(product_output_dir / "images")
+                        for idx, image_url in enumerate(product.images):
+                            try:
+                                from src.downloaders.asset_downloader import (
+                                    download_image,
+                                )
+
+                                download_image(
+                                    image_url,
+                                    product.sku
+                                    or folder_name,  # Use folder_name if product.sku is empty
+                                    manufacturer,
+                                    output_dir=images_dir,
+                                    index=idx,
+                                    flat_structure=True,
+                                )
+                            except Exception as e:
+                                logger.warning(
+                                    f"Failed to download image {image_url}: {e}"
+                                )
+
+                # Download PDF for the product family (use first product with datasheet_url)
+                for product in product_group:
+                    logger.debug(
+                        f"Checking product {product.sku} for datasheet_url: {getattr(product, 'datasheet_url', 'NOT_FOUND')}"
+                    )
+                    if hasattr(product, "datasheet_url") and product.datasheet_url:
+                        datasheets_dir = str(product_output_dir / "datasheets")
+                        logger.info(
+                            f"Downloading PDF for {folder_name} from {product.datasheet_url}"
+                        )
+                        try:
+                            download_pdf(
+                                product.datasheet_url,
+                                folder_name,  # Use folder_name for PDF naming
+                                manufacturer,
+                                output_dir=datasheets_dir,
+                                flat_structure=True,
+                            )
+                            break  # Only download once per product family
+                        except Exception as e:
+                            logger.warning(
+                                f"Failed to download PDF for {folder_name}: {e}"
+                            )
+
+            # Step 3b: Export CSV and Excel for this product group
+            csv_path = export_to_woocommerce_csv(
+                product_group, str(product_output_dir / "products.csv")
+            )
+            excel_path = export_to_excel(
+                product_group, str(product_output_dir / "products.xlsx")
+            )
+
+            csv_paths.append(csv_path)
+            excel_paths.append(excel_path)
+
+            logger.info(f"✓ Exported {folder_name}: {csv_path}")
 
         logger.info("=" * 60)
-        logger.info(f"Pipeline complete!")
+        logger.info("Pipeline complete!")
         logger.info(f"Products scraped: {len(products)}")
-        logger.info(f"CSV: {csv_path}")
-        logger.info(f"Excel: {excel_path}")
+        logger.info(f"Product families: {len(grouped_products)}")
+        logger.info(f"CSV files: {len(csv_paths)}")
+        logger.info(f"Excel files: {len(excel_paths)}")
         logger.info("=" * 60)
 
-        return products, csv_path, excel_path
+        return products, csv_paths, excel_paths
 
 
 def scrape_and_export(
@@ -231,9 +379,9 @@ def scrape_and_export(
     category_url: str | None = None,
     download_images: bool = True,
     ai_descriptions: bool = False,
-    translate_to_german: bool = False,
+    translate_to_german: bool = True,
     output_dir: str = "output",
-) -> tuple[list[ProductData], Path, Path]:
+) -> tuple[list[ProductData], list[Path], list[Path]]:
     """Convenience function for running full scraping pipeline.
 
     Args:
@@ -242,11 +390,11 @@ def scrape_and_export(
         category_url: Category URL to discover products from (optional if skus provided)
         download_images: Whether to download product images
         ai_descriptions: Whether to generate unique descriptions with AI
-        translate_to_german: Whether to translate content to German
+        translate_to_german: Whether to translate content to German (default: True)
         output_dir: Output directory
 
     Returns:
-        Tuple of (products, csv_path, excel_path)
+        Tuple of (products, list_of_csv_paths, list_of_excel_paths)
     """
     orchestrator = ScraperOrchestrator()
     return orchestrator.run_full_pipeline(

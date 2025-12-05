@@ -1,25 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
-      "WebFetch(domain:woocommerce.com)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.stagehand.dev)",
-      "WebFetch(domain:www.stagehand.dev)",
-      "Bash(mkdir:*)",
-      "Bash(touch:*)",
-      "WebFetch(domain:www.lodes.com)",
-      "mcp__excalidraw__batch_create_elements",
-      "mcp__excalidraw__get_resource",
-      "mcp__excalidraw__query_elements",
-      "mcp__excalidraw__delete_element",
-      "mcp__MCP_DOCKER__browser_navigate",
-      "mcp__MCP_DOCKER__browser_take_screenshot",
-      "Bash(python:*)",
+      "Bash(findstr:*)",
       "Bash(dir:*)",
-      "mcp__MCP_DOCKER__browser_click",
-      "Bash(curl:*)",
-      "WebFetch(domain:slt.lighting)"
+      "Bash(ls:*)",
+      "Bash(python:*)",
+      "Bash(tr:*)",
+      "Bash(cut:*)",
+      "Bash(timeout /t 1)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

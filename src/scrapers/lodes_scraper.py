@@ -5,7 +5,6 @@ Based on lodes_structure.md selector mappings.
 """
 
 import re
-from typing import Optional
 
 from loguru import logger
 from playwright.sync_api import Page, TimeoutError as PlaywrightTimeout
@@ -15,12 +14,15 @@ from src.scrapers.attribute_parser import (
     clean_variant_header_name,
     extract_certifications_from_html,
     parse_designer_from_title,
+    parse_dimensions_from_text,
     parse_hills_from_text,
+    parse_kelvin_from_text,
     parse_table_header_attributes,
     parse_weight_from_text,
     parse_weight_to_float,
 )
-from src.types import EAN, SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
+from src.models import SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
+from src import lodes_price_list
 
 
 class LodesScraper(BaseScraper):
@@ -38,6 +40,35 @@ class LodesScraper(BaseScraper):
         "avatar",
         "placeholder",
     ]
+
+    # Product code pattern (format: "14126 1000" - 5 digits, space, 4 digits)
+    PRODUCT_CODE_PATTERN = r"^\d{5}\s+\d{4}$"
+
+    # Color name to code mapping (handles Italian/English/German names)
+    COLOR_NAME_TO_CODE = {
+        "bianco opaco": "1000",
+        "bianco": "1000",
+        "matte white": "1000",
+        "white": "1000",
+        "weiß matt": "1000",
+        "weiß": "1000",
+        "9010": "1000",
+        "nero opaco": "2000",
+        "nero": "2000",
+        "matte black": "2000",
+        "black": "2000",
+        "schwarz matt": "2000",
+        "schwarz": "2000",
+        "9005": "2000",
+        "bronzo ramato": "3500",
+        "coppery bronze": "3500",
+        "bronze": "3500",
+        "champagne opaco": "4500",
+        "matte champagne": "4500",
+        "champagne": "4500",
+        "champagner matt": "4500",
+        "champagner": "4500",
+    }
 
     def __init__(self):
         """Initialize Lodes scraper with default configuration."""
@@ -61,8 +92,12 @@ class LodesScraper(BaseScraper):
 
         Returns:
             Full product URL
+
+        Note:
+            German pages use "producten", English uses "products"
         """
-        return f"{self.config.base_url}/{language}/products/{sku}/"
+        product_path = "producten" if language == "de" else "products"
+        return f"{self.config.base_url}/{language}/{product_path}/{sku}/"
 
     def _ensure_browser(self) -> None:
         """Ensure browser is initialized and ready for use."""
@@ -176,6 +211,13 @@ class LodesScraper(BaseScraper):
 
         self._ensure_browser()
 
+        # Check if this product has price list data
+        price_list_products = lodes_price_list.get_product_by_slug(sku)
+        if price_list_products:
+            logger.info(
+                f"Found {len(price_list_products)} product(s) in price list for slug '{sku}'"
+            )
+
         # Try languages in priority order
         languages = self.config.language_priority or ["en"]
         last_error = None
@@ -232,6 +274,29 @@ class LodesScraper(BaseScraper):
                     )
                     weight_kg = None
 
+            # Parse dimensions from attributes
+            dimensions = None
+            if "Dimensions" in attributes:
+                dimensions = parse_dimensions_from_text(attributes["Dimensions"])
+                if dimensions:
+                    logger.info(f"Parsed dimensions: {dimensions}")
+
+            # Parse Kelvin from attributes
+            light_specs = None
+            if "Kelvin" in attributes:
+                light_specs = {"kelvin": attributes["Kelvin"]}
+                logger.info(f"Parsed Kelvin: {attributes['Kelvin']}")
+
+            # Extract installation manual URL
+            installation_manual = self._extract_installation_manual_url(self._page)
+            if installation_manual:
+                logger.info(f"Found installation manual: {installation_manual}")
+
+            # Extract cable length
+            cable_length = self._extract_cable_length(self._page)
+            if cable_length:
+                logger.info(f"Found cable length: {cable_length}")
+
             if not variants:
                 product = ProductData(
                     sku=sku,
@@ -242,6 +307,12 @@ class LodesScraper(BaseScraper):
                     attributes=attributes,
                     images=images,
                     weight=weight_kg,
+                    dimensions=dimensions,
+                    light_specs=light_specs,
+                    datasheet_url=attributes.get("Datasheet URL"),
+                    installation_manual_url=installation_manual,
+                    cable_length=cable_length,
+                    product_notes="Leuchtmittel nicht inkludiert.",
                     scraped_language=scraped_lang,
                 )
 
@@ -266,7 +337,12 @@ class LodesScraper(BaseScraper):
                 images=images,
                 variants=variants,
                 weight_kg=weight_kg,
+                dimensions=dimensions,
+                light_specs=light_specs,
+                installation_manual=installation_manual,
+                cable_length=cable_length,
                 scraped_lang=scraped_lang,
+                url_slug=sku,
             )
 
             logger.info(
@@ -345,9 +421,21 @@ class LodesScraper(BaseScraper):
         attributes.update(self._extract_designer(page))
         attributes.update(self._extract_table_attributes(page))
         attributes.update(self._extract_weight_from_pesi(page))
-        attributes.update(self._extract_from_secondary_info(page, attributes))
+
+        # Extract from secondary-info (fallback for weight, also has hills)
+        secondary_attrs = self._extract_from_secondary_info(page)
+        # Only use weight from secondary-info if not already found
+        if "Net weight" not in attributes and "Net weight" in secondary_attrs:
+            attributes["Net weight"] = secondary_attrs["Net weight"]
+        # Always add hills if found
+        if "Hills" in secondary_attrs:
+            attributes["Hills"] = secondary_attrs["Hills"]
+
         attributes.update(self._extract_certifications(page, attributes))
         attributes.update(self._extract_pdf_link(page))
+
+        # Extract dimensions and Kelvin from table cells
+        attributes.update(self._extract_dimensions_and_kelvin(page))
 
         return attributes
 
@@ -389,10 +477,12 @@ class LodesScraper(BaseScraper):
             logger.warning(f"Failed to extract weight from pesi div: {e}")
         return {}
 
-    def _extract_from_secondary_info(
-        self, page: Page, existing_attrs: dict[str, str]
-    ) -> dict[str, str]:
-        """Extract weight and hills from secondary-info as fallback."""
+    def _extract_from_secondary_info(self, page: Page) -> dict[str, str]:
+        """Extract weight and hills from secondary-info element.
+
+        Returns all found attributes. Caller decides whether to use them
+        based on what's already been extracted.
+        """
         try:
             secondary_info = page.query_selector("div.secondary-info")
             if secondary_info:
@@ -400,11 +490,9 @@ class LodesScraper(BaseScraper):
                 if info_text:
                     extracted = {}
 
-                    # Try weight if not already found
-                    if "Net weight" not in existing_attrs:
-                        weight = parse_weight_from_text(info_text)
-                        if weight:
-                            extracted["Net weight"] = weight
+                    weight = parse_weight_from_text(info_text)
+                    if weight:
+                        extracted["Net weight"] = weight
 
                     hills = parse_hills_from_text(info_text)
                     if hills:
@@ -433,19 +521,167 @@ class LodesScraper(BaseScraper):
             return {}
 
     def _extract_pdf_link(self, page: Page) -> dict[str, str]:
-        """Extract PDF datasheet link."""
+        """Extract PDF datasheet link from Spec Sheet button."""
         try:
-            # Try specific selector first, fallback to generic
-            pdf_link = page.query_selector("a.pdf-link") or page.query_selector(
-                'a[href$=".pdf"]'
-            )
-            if pdf_link:
-                href = pdf_link.get_attribute("href")
-                if href:
-                    return {"Datasheet URL": href}
+            # Lodes has download buttons with class "bottone white-button"
+            # Look for "Spec Sheet" / "Scheda prodotto" button
+            selectors = [
+                'a.bottone.white-button:has-text("Spec Sheet")',
+                'a[data-name="Scheda prodotto"]',
+                'a.bottone:has-text("Spec Sheet")',
+                'a:has-text("Spec Sheet")',
+                "a.pdf-link",
+                'a[href$=".pdf"]',
+                'a[href*="SpecSheet"]',
+                'a[href*="upload"]',
+            ]
+
+            for selector in selectors:
+                try:
+                    pdf_link = page.query_selector(selector)
+                    if pdf_link:
+                        href = pdf_link.get_attribute("href")
+                        if href:
+                            # Make absolute URL if relative
+                            if href.startswith("/"):
+                                href = f"https://www.lodes.com{href}"
+                            logger.info(f"Found PDF datasheet link: {href}")
+                            return {"Datasheet URL": href}
+                except Exception:
+                    continue
+
         except Exception as e:
             logger.warning(f"Failed to extract PDF link: {e}")
         return {}
+
+    def _extract_installation_manual_url(self, page: Page) -> str:
+        """Extract installation manual PDF URL (different from datasheet).
+
+        Looks for links containing:
+        - "Montageanleitung", "Installation", "Assembly"
+        - href patterns with "montage", "installation"
+
+        Returns:
+            Installation manual URL or empty string
+        """
+        selectors = [
+            'a:has-text("Montageanleitung")',
+            'a:has-text("Installation")',
+            'a:has-text("Assembly")',
+            'a[href*="montage"]',
+            'a[href*="installation"]',
+        ]
+
+        for selector in selectors:
+            try:
+                link = page.query_selector(selector)
+                if link:
+                    href = link.get_attribute("href")
+                    if href and ".pdf" in href.lower():
+                        if href.startswith("/"):
+                            href = f"https://www.lodes.com{href}"
+                        return href
+            except Exception:
+                continue
+
+        return ""
+
+    def _extract_cable_length(self, page: Page) -> str:
+        """Extract cable/rope length from product specifications.
+
+        Looks for patterns like:
+        - "max 250cm"
+        - "Seillänge: 300 cm"
+
+        Returns:
+            Cable length string (e.g., "max 250cm") or empty string
+        """
+        try:
+            # Check secondary info section
+            secondary = page.query_selector("div.secondary-info")
+            if secondary:
+                text = secondary.text_content()
+                # Look for patterns like "max 250cm", "Seillänge: 300 cm"
+                match = re.search(r"(?:max\s+)?(\d+)\s*cm", text, re.IGNORECASE)
+                if match:
+                    return f"max {match.group(1)}cm"
+
+            # Check all table cells for cable/rope length
+            tables = page.query_selector_all("table")
+            for table in tables:
+                cells = table.query_selector_all("td, th")
+                for cell in cells:
+                    text = cell.text_content()
+                    if "seil" in text.lower() or "cable" in text.lower():
+                        match = re.search(r"(?:max\s+)?(\d+)\s*cm", text, re.IGNORECASE)
+                        if match:
+                            return f"max {match.group(1)}cm"
+
+        except Exception as e:
+            logger.warning(f"Failed to extract cable length: {e}")
+
+        return ""
+
+    def _extract_dimensions_and_kelvin(self, page: Page) -> dict[str, str]:
+        """Extract dimensions and Kelvin temperature from variant table cells.
+
+        Searches table cells for:
+        - Dimensions (e.g., "910x60mm", "100x50x30cm")
+        - Kelvin temperature (e.g., "2700K", "3000°K")
+
+        Returns:
+            Dictionary with 'Dimensions' and 'Kelvin' keys if found
+        """
+        extracted = {}
+
+        try:
+            # Expand technical sheet dropdown to ensure table is visible
+            self._expand_technical_sheet_dropdown(page)
+
+            # Get all table cells (both headers and body cells)
+            variant_tables = page.query_selector_all("table.table-variante")
+
+            for table in variant_tables:
+                # Check all cells in the table
+                all_cells = table.query_selector_all("th, td")
+
+                for cell in all_cells:
+                    cell_text = cell.text_content()
+                    if not cell_text:
+                        continue
+
+                    cell_text = cell_text.strip()
+
+                    # Try to extract dimensions
+                    if "Dimensions" not in extracted:
+                        dimensions = parse_dimensions_from_text(cell_text)
+                        if dimensions:
+                            extracted["Dimensions"] = cell_text
+                            logger.info(f"Found dimensions: {cell_text}")
+
+                    # Try to extract Kelvin temperature
+                    # Look for cells containing "K" or "°K" with 4-digit numbers
+                    if "Kelvin" not in extracted:
+                        kelvin = parse_kelvin_from_text(cell_text)
+                        if kelvin:
+                            # Store the full text context, will be parsed later
+                            extracted["Kelvin"] = kelvin
+                            logger.info(f"Found Kelvin: {kelvin}")
+
+            # Also check secondary-info and description for dimensions
+            if "Dimensions" not in extracted:
+                secondary_info = page.query_selector("div.secondary-info")
+                if secondary_info:
+                    info_text = secondary_info.text_content()
+                    if info_text:
+                        dimensions = parse_dimensions_from_text(info_text)
+                        if dimensions:
+                            extracted["Dimensions"] = info_text.strip()
+
+        except Exception as e:
+            logger.warning(f"Failed to extract dimensions and Kelvin: {e}")
+
+        return extracted
 
     def _expand_technical_sheet_dropdown(self, page: Page) -> None:
         """Click dropdown to reveal technical specifications."""
@@ -505,6 +741,35 @@ class LodesScraper(BaseScraper):
 
         return categories if categories else ["Lighting"]
 
+    def _map_color_name_to_code(self, color_text: str) -> str | None:
+        """Map scraped color name to price list color code.
+
+        Args:
+            color_text: Color name or text (e.g., "Nero Opaco – 9005", "Bianco Opaco")
+
+        Returns:
+            Color code (e.g., "2000") or None if not found
+        """
+        if not color_text:
+            return None
+
+        # Clean and normalize the text
+        text_lower = color_text.lower().strip()
+        # Remove color code suffixes like "– 9005"
+        text_lower = re.sub(r"\s*[–-]\s*\d+", "", text_lower)
+
+        # Check exact match first
+        if text_lower in self.COLOR_NAME_TO_CODE:
+            return self.COLOR_NAME_TO_CODE[text_lower]
+
+        # Check partial matches (for phrases like "nero opaco" in longer text)
+        for color_name, code in self.COLOR_NAME_TO_CODE.items():
+            if color_name in text_lower:
+                return code
+
+        logger.warning(f"Could not map color name to code: {color_text}")
+        return None
+
     @staticmethod
     def _extract_variation_attribute_names(variants: list[dict[str, str]]) -> set[str]:
         """Extract attribute names that vary across product variants.
@@ -513,14 +778,152 @@ class LodesScraper(BaseScraper):
             variants: List of variant dictionaries
 
         Returns:
-            Set of attribute names (excluding "Code")
+            Set of attribute names (excluding "Code"/"Codice" fields)
         """
         variation_attr_names = set()
         for variant in variants:
             variation_attr_names.update(variant.keys())
 
-        variation_attr_names.discard("Code")
+        # Remove SKU/Code fields (case-insensitive)
+        attrs_to_remove = {
+            attr for attr in variation_attr_names if attr.lower() in ["code", "codice"]
+        }
+        variation_attr_names -= attrs_to_remove
+
         return variation_attr_names
+
+    def _find_matching_price_list_product(
+        self, url_slug: SKU, variants: list[dict[str, str]]
+    ) -> tuple[dict | None, SKU]:
+        """Find matching price list product for scraped variants.
+
+        Args:
+            url_slug: Original URL slug (e.g., "kelly")
+            variants: List of scraped variant dictionaries
+
+        Returns:
+            Tuple of (price_list_product, actual_parent_sku)
+            Returns (None, url_slug) if no price list match found
+        """
+        price_list_products = lodes_price_list.get_product_by_slug(url_slug)
+
+        if not price_list_products:
+            return None, url_slug
+
+        # For products with multiple sizes (e.g., Kelly dome 50/60/80),
+        # match based on size keywords in variant headers
+        size_keywords = {
+            "small": ["small", "50"],
+            "medium": ["medium", "60"],
+            "large": ["large", "80"],
+        }
+
+        for variant in variants:
+            for key in variant.keys():
+                key_lower = key.lower()
+                # Determine which size this variant represents
+                variant_size = None
+                for size_name, keywords in size_keywords.items():
+                    if any(kw in key_lower for kw in keywords):
+                        variant_size = size_name
+                        break
+
+                if not variant_size:
+                    continue
+
+                # Match to price list product with same size
+                for pl_product in price_list_products:
+                    product_name_lower = pl_product["product_name"].lower()
+                    # Check if product name contains the same size keywords
+                    size_match = any(
+                        kw in product_name_lower for kw in size_keywords[variant_size]
+                    )
+                    if size_match:
+                        actual_sku = SKU(pl_product["base_sku"])
+                        logger.info(
+                            f"Matched variant '{key}' to price list product '{pl_product['product_name']}'"
+                        )
+                        return pl_product, actual_sku
+
+        # No specific match found, use first price list product
+        pl_product = price_list_products[0]
+        actual_sku = SKU(pl_product["base_sku"])
+        logger.info(f"Using first price list product: {pl_product['product_name']}")
+        return pl_product, actual_sku
+
+    def _enrich_attributes_with_price_list(
+        self,
+        attributes: dict[str, str],
+        cable_length: str,
+        price_list_product: dict | None,
+    ) -> tuple[dict[str, str], str]:
+        """Enrich product attributes with price list data.
+
+        Args:
+            attributes: Existing product attributes
+            cable_length: Existing cable length (may be empty)
+            price_list_product: Price list product data or None
+
+        Returns:
+            Tuple of (enriched_attributes, cable_length)
+        """
+        if not price_list_product:
+            return attributes, cable_length
+
+        # Override cable_length from price list if not already set
+        if not cable_length and price_list_product.get("cable_length"):
+            cable_length = price_list_product["cable_length"]
+
+        # Add price list fields to attributes
+        enriched_attrs = attributes.copy()
+        if price_list_product.get("light_source"):
+            enriched_attrs["Light source"] = price_list_product["light_source"]
+        if price_list_product.get("dimmability"):
+            enriched_attrs["Dimmbarkeit"] = price_list_product["dimmability"]
+        if price_list_product.get("voltage"):
+            enriched_attrs["Voltage"] = price_list_product["voltage"]
+
+        return enriched_attrs, cable_length
+
+    def _map_variant_to_price_list(
+        self, variant: dict[str, str], price_list_product: dict | None
+    ) -> tuple[str | None, float | None]:
+        """Map scraped variant to price list SKU and price.
+
+        Args:
+            variant: Scraped variant data dictionary
+            price_list_product: Price list product data or None
+
+        Returns:
+            Tuple of (variant_sku, variant_price)
+            Returns (None, None) if no price list mapping found
+        """
+        if not price_list_product:
+            return None, None
+
+        # Find matching color in variant data
+        for attr_name, attr_value in variant.items():
+            if not attr_value:
+                continue
+
+            # Try to map this attribute to a color code
+            color_code = self._map_color_name_to_code(attr_value)
+            if not color_code:
+                continue
+
+            logger.info(f"Mapped '{attr_value}' to color code '{color_code}'")
+
+            # Find matching variant in price list
+            for pl_variant in price_list_product["variants"]:
+                if pl_variant["color_code"] == color_code:
+                    variant_sku = pl_variant["sku"]
+                    variant_price = pl_variant["price_eur"]
+                    logger.info(
+                        f"Matched to price list variant: {variant_sku} @ {variant_price} EUR"
+                    )
+                    return variant_sku, variant_price
+
+        return None, None
 
     @staticmethod
     def _build_parent_variation_attributes(
@@ -557,6 +960,8 @@ class LodesScraper(BaseScraper):
     ) -> str:
         """Build descriptive name for a product variation.
 
+        Uses Code if available, otherwise uses 1-2 key variation attributes.
+
         Args:
             base_name: Parent product name
             variant: Variant data dict
@@ -564,16 +969,41 @@ class LodesScraper(BaseScraper):
             idx: Variant index (for fallback naming)
 
         Returns:
-            Formatted variation name
+            Formatted variation name (e.g., "Kelly 14126 1000" or "Kelly Matte White")
         """
+        # Priority 1: Use Code/Codice if available
+        code = (
+            variant.get("Code")
+            or variant.get("Codice")
+            or variant.get("code")
+            or variant.get("codice")
+        )
+        if code:
+            return f"{base_name} {code}"
+
+        # Priority 2: Use first 1-2 meaningful attributes (excluding variant type/group names)
+        # Prioritize color/finish attributes like "Armatur", "Structure", "Diffusor"
+        priority_attrs = ["Armatur", "Structure", "Diffusor", "Color", "Finish"]
+
         variant_details = []
-        for attr_name in sorted(variation_attr_names):
+        for attr_name in priority_attrs:
             if attr_name in variant and variant[attr_name]:
                 variant_details.append(variant[attr_name])
+                if len(variant_details) >= 2:
+                    break
+
+        # If no priority attributes found, use any available attributes (max 2)
+        if not variant_details:
+            for attr_name in sorted(variation_attr_names):
+                if attr_name in variant and variant[attr_name]:
+                    variant_details.append(variant[attr_name])
+                    if len(variant_details) >= 2:
+                        break
 
         if variant_details:
-            return f"{base_name} - {' / '.join(variant_details)}"
-        return f"{base_name} - Variant {idx+1}"
+            return f"{base_name} {' '.join(variant_details)}"
+
+        return f"{base_name} Variant {idx+1}"
 
     def _build_variable_products(
         self,
@@ -585,7 +1015,12 @@ class LodesScraper(BaseScraper):
         images: list[ImageUrl],
         variants: list[dict[str, str]],
         weight_kg: float | None,
+        dimensions: dict[str, float] | None,
+        light_specs: dict[str, str] | None,
+        installation_manual: str,
+        cable_length: str,
         scraped_lang: str,
+        url_slug: SKU,
     ) -> list[ProductData]:
         """Build parent + child variation products from variant data.
 
@@ -598,7 +1033,12 @@ class LodesScraper(BaseScraper):
             images: Product images
             variants: List of variant dicts with Code, Structure, Diffusor, etc.
             weight_kg: Product weight in kg
+            dimensions: Product dimensions (length, width, height in cm)
+            light_specs: Light specifications (kelvin, wattage, lumen)
+            installation_manual: URL to installation manual
+            cable_length: Cable/rope length specification
             scraped_lang: Language code
+            url_slug: Original URL slug used to scrape product
 
         Returns:
             List with 1 parent + N child variation ProductData objects
@@ -606,14 +1046,36 @@ class LodesScraper(BaseScraper):
         if not variants:
             return []
 
+        # Find matching price list product
+        price_list_product, actual_parent_sku = self._find_matching_price_list_product(
+            url_slug, variants
+        )
+
+        # Enrich attributes with price list data
+        attributes, cable_length = self._enrich_attributes_with_price_list(
+            attributes, cable_length, price_list_product
+        )
+
         variation_attr_names = self._extract_variation_attribute_names(variants)
         parent_variation_attrs = self._build_parent_variation_attributes(
             variants, variation_attr_names
         )
 
+        # For price list products, aggregate all color names in German
+        available_colors = None
+        parent_name = name
+        if price_list_product:
+            available_colors = lodes_price_list.get_all_product_colors(price_list_product)
+            # Use price list product name for accurate naming (e.g., "Kelly small dome 50")
+            parent_name = price_list_product["product_name"]
+            # Use price list dimensions if available (more accurate than scraped)
+            if price_list_product.get("dimensions"):
+                dimensions = price_list_product["dimensions"]
+                logger.info(f"Using price list dimensions: {dimensions}")
+
         parent = ProductData(
-            sku=SKU(""),
-            name=name,
+            sku=actual_parent_sku,  # Use actual SKU from price list
+            name=parent_name,
             description=description,
             manufacturer=self.config.manufacturer,
             categories=categories,
@@ -621,15 +1083,37 @@ class LodesScraper(BaseScraper):
             images=images,
             product_type="variable",
             weight=weight_kg,
+            dimensions=dimensions,
+            light_specs=light_specs,
+            datasheet_url=attributes.get("Datasheet URL"),
+            installation_manual_url=installation_manual,
+            cable_length=cable_length,
+            available_colors=available_colors,
+            product_notes="Leuchtmittel nicht inkludiert.",
             scraped_language=scraped_lang,
             variation_attributes=parent_variation_attrs,
+            original_name=parent_name if price_list_product else None,
         )
 
         children = []
         for idx, variant in enumerate(variants):
-            variant_sku = variant.get("Code", f"{parent_sku}-{idx+1}")
+            # Map variant to price list SKU and price
+            variant_sku, variant_price = self._map_variant_to_price_list(
+                variant, price_list_product
+            )
+
+            # Fallback to scraped SKU if price list mapping failed
+            if not variant_sku:
+                variant_sku = (
+                    variant.get("Code")
+                    or variant.get("Codice")
+                    or variant.get("code")
+                    or variant.get("codice")
+                    or f"{actual_parent_sku}-{idx+1}"
+                )
+
             variant_name = self._build_variation_name(
-                name, variant, variation_attr_names, idx
+                parent_name, variant, variation_attr_names, idx
             )
 
             child_variation_attrs = {
@@ -647,10 +1131,17 @@ class LodesScraper(BaseScraper):
                 attributes={},
                 images=[],
                 product_type="variation",
-                parent_sku=parent_sku,
+                parent_sku=actual_parent_sku,
                 variation_attributes=child_variation_attrs,
+                regular_price=variant_price,  # Set price from price list
                 weight=weight_kg,
+                dimensions=dimensions,
+                light_specs=light_specs,
+                installation_manual_url=installation_manual,
+                cable_length=cable_length,
+                product_notes="Leuchtmittel nicht inkludiert.",
                 scraped_language=scraped_lang,
+                original_name=parent_name if price_list_product else None,
             )
             children.append(child)
 
@@ -664,6 +1155,7 @@ class LodesScraper(BaseScraper):
             Empty list if no variants found.
         """
         variants = []
+        seen_codes = set()  # Track seen product codes to avoid duplicates
 
         variant_tables = page.query_selector_all("table.table-variante")
 
@@ -674,6 +1166,18 @@ class LodesScraper(BaseScraper):
             for row in rows:
                 variant_data = self._parse_variant_row(row, header_map)
                 if variant_data:
+                    # Deduplicate by Code/Codice if present
+                    code = (
+                        variant_data.get("Code")
+                        or variant_data.get("Codice")
+                        or variant_data.get("code")
+                        or variant_data.get("codice")
+                    )
+                    if code:
+                        if code in seen_codes:
+                            continue  # Skip duplicate
+                        seen_codes.add(code)
+
                     variants.append(variant_data)
 
         # Also check div.variante sections for variant names
@@ -722,6 +1226,8 @@ class LodesScraper(BaseScraper):
     ) -> dict[str, str]:
         """Parse a variant table row into attribute dictionary.
 
+        Detects product codes (e.g., "14126 1000") and stores them as "Code".
+
         Args:
             row: Table row element containing td cells
             header_map: List of (cell_index, attribute_name) tuples
@@ -740,7 +1246,13 @@ class LodesScraper(BaseScraper):
             if cell_idx < len(cells):
                 attr_value = cells[cell_idx].text_content()
                 if attr_value:
-                    variant_data[attr_name] = attr_value.strip()
+                    cleaned_value = attr_value.strip()
+
+                    # Check if this value looks like a product code
+                    if re.match(self.PRODUCT_CODE_PATTERN, cleaned_value):
+                        variant_data["Code"] = cleaned_value
+                    else:
+                        variant_data[attr_name] = cleaned_value
 
         return variant_data
 

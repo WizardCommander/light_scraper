@@ -44,8 +44,19 @@ class ProductData:
     material: str | None = None  # Material (e.g., Aluminium, Marmor, Glas)
     ip_rating: str | None = None  # IP Rating (e.g., IP20, IP44, IP65)
     light_specs: dict[str, str] | None = None  # LED specs (wattage, lumen, kelvin)
+    datasheet_url: str | None = None  # URL to product datasheet/PDF
+    cable_length: str | None = None  # Cable/rope length (e.g., "max 250cm")
+    available_colors: str | None = (
+        None  # All available colors (e.g., "Weiß, Schwarz, Bronze, Champagner")
+    )
+    installation_manual_url: str | None = None  # URL to installation manual PDF
+    product_notes: str | None = (
+        None  # Product information notes (e.g., "Leuchtmittel nicht inkludiert.")
+    )
     scraped_language: str = "en"  # Language of scraped content
     translated_to_german: bool = False  # Whether content was AI-translated
+    short_description: str | None = None  # AI-generated short description (≤20 words)
+    original_name: str | None = None  # Original product name from price list (untranslated)
 
 
 @dataclass

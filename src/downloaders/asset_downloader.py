@@ -5,11 +5,10 @@ Following CLAUDE.md: pure, testable functions with clear responsibilities.
 
 import os
 from pathlib import Path
-from typing import Callable
 import requests
 from loguru import logger
 
-from src.types import ImageUrl, SKU, Manufacturer
+from src.models import ImageUrl, SKU, Manufacturer
 from src.utils.retry_handler import retry_with_backoff
 
 
@@ -19,6 +18,7 @@ def download_image(
     manufacturer: Manufacturer,
     output_dir: str = "output/images",
     index: int = 0,
+    flat_structure: bool = False,
 ) -> Path:
     """Download image and save to organized folder structure.
 
@@ -28,6 +28,7 @@ def download_image(
         manufacturer: Manufacturer name for folder organization
         output_dir: Base output directory
         index: Image index for naming (0 = featured image)
+        flat_structure: If True, save directly to output_dir without manufacturer/sku subdirs
 
     Returns:
         Path to downloaded image file
@@ -35,8 +36,13 @@ def download_image(
     Raises:
         requests.RequestException: If download fails after retries
     """
-    # Create directory structure: output/images/{manufacturer}/{sku}/
-    image_dir = Path(output_dir) / manufacturer / sku
+    # Create directory structure
+    if flat_structure:
+        # Direct to output_dir (e.g., output/{sku}/images/)
+        image_dir = Path(output_dir)
+    else:
+        # Legacy structure: output/images/{manufacturer}/{sku}/
+        image_dir = Path(output_dir) / manufacturer / sku
     image_dir.mkdir(parents=True, exist_ok=True)
 
     # Determine file extension from URL
@@ -63,6 +69,7 @@ def download_pdf(
     sku: SKU,
     manufacturer: Manufacturer,
     output_dir: str = "output/pdfs",
+    flat_structure: bool = False,
 ) -> Path:
     """Download PDF datasheet and save to organized folder structure.
 
@@ -71,6 +78,7 @@ def download_pdf(
         sku: Product SKU for naming
         manufacturer: Manufacturer name for folder organization
         output_dir: Base output directory
+        flat_structure: If True, save directly to output_dir without manufacturer subdir
 
     Returns:
         Path to downloaded PDF file
@@ -78,8 +86,13 @@ def download_pdf(
     Raises:
         requests.RequestException: If download fails after retries
     """
-    # Create directory structure: output/pdfs/{manufacturer}/
-    pdf_dir = Path(output_dir) / manufacturer
+    # Create directory structure
+    if flat_structure:
+        # Direct to output_dir (e.g., output/{sku}/datasheets/)
+        pdf_dir = Path(output_dir)
+    else:
+        # Legacy structure: output/pdfs/{manufacturer}/
+        pdf_dir = Path(output_dir) / manufacturer
     pdf_dir.mkdir(parents=True, exist_ok=True)
 
     filename = f"{sku}.pdf"

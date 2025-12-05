@@ -1,7 +1,7 @@
 """German translation module using Claude API.
 
 Translates product content to German for WooCommerce German stores.
-Uses caching to minimize API costs and improve performance.
+Uses caching and language detection to minimize API costs and improve performance.
 """
 
 import hashlib
@@ -9,10 +9,12 @@ import json
 from pathlib import Path
 from typing import Literal
 
+import httpx
 from anthropic import Anthropic
+from langdetect import detect, LangDetectException
 from loguru import logger
 
-from src.types import ProductData
+from src.models import ProductData
 
 CACHE_DIR = Path("output/.ai_cache/translations")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -23,12 +25,41 @@ FieldType = Literal[
 ]
 
 
+def _is_already_german(text: str, min_length: int = 20) -> bool:
+    """Detect if text is already in German to skip unnecessary translations.
+
+    Args:
+        text: Text to check
+        min_length: Minimum text length for reliable detection (default: 20 chars)
+
+    Returns:
+        True if text is already German, False otherwise
+    """
+    if not text or len(text.strip()) < min_length:
+        # For very short text, can't reliably detect - translate to be safe
+        return False
+
+    try:
+        detected_lang = detect(text)
+        is_german = detected_lang == "de"
+        if is_german:
+            logger.debug("Text already in German, skipping translation")
+        return is_german
+    except LangDetectException:
+        # If detection fails, assume not German (better to translate unnecessarily)
+        logger.debug("Language detection failed, will translate")
+        return False
+
+
 def translate_to_german(
     text: str,
     field_type: FieldType = "description",
     context: str = "lighting product",
 ) -> str:
     """Translate text to German using Claude with industry-specific terminology.
+
+    Uses language detection to skip translation if text is already German,
+    reducing API costs.
 
     Args:
         text: Text to translate
@@ -44,6 +75,11 @@ def translate_to_german(
     if not text or not text.strip():
         return text
 
+    # Check if already German (skip API call to save costs)
+    if _is_already_german(text):
+        logger.debug(f"Skipping translation for {field_type} - already German")
+        return text
+
     # Check cache first
     cache_key = _get_cache_key(text, field_type)
     cached_translation = _load_from_cache(cache_key)
@@ -55,7 +91,9 @@ def translate_to_german(
     prompt = _build_translation_prompt(text, field_type, context)
 
     try:
-        client = Anthropic()
+        # Initialize client without httpx proxy detection
+        http_client = httpx.Client()
+        client = Anthropic(http_client=http_client)
         message = client.messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=2000,
@@ -132,6 +170,19 @@ def translate_product_data(product: ProductData) -> ProductData:
         ean=product.ean,
         weight=product.weight,
         dimensions=product.dimensions,
+        installation_type=product.installation_type,
+        material=product.material,
+        ip_rating=product.ip_rating,
+        light_specs=product.light_specs,
+        datasheet_url=product.datasheet_url,
+        cable_length=product.cable_length,
+        available_colors=product.available_colors,
+        installation_manual_url=product.installation_manual_url,
+        product_notes=product.product_notes,
+        scraped_language="de",
+        translated_to_german=True,
+        short_description=product.short_description,
+        original_name=product.original_name,
     )
 
 

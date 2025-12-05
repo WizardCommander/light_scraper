@@ -6,6 +6,8 @@ WORK_SUMMARY.md
 # Secrets and notes
 *.env
 notes.txt
+CSV_import_test_10_import.csv
+CSV_import_test_10_import.xls
 
 # Python cache
 __pycache__/

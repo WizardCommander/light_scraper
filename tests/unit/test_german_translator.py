@@ -4,8 +4,6 @@ Following CLAUDE.md: parameterized inputs, test entire structure, strong asserti
 Tests use mocking to avoid API calls during testing.
 """
 
-import json
-from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
 
 import pytest
@@ -16,7 +14,7 @@ from src.ai.german_translator import (
     _build_translation_prompt,
     _get_cache_key,
 )
-from src.types import ProductData, SKU, ImageUrl, Manufacturer
+from src.models import ProductData, SKU, ImageUrl, Manufacturer
 
 
 @pytest.fixture
@@ -173,7 +171,8 @@ class TestTranslateProductData:
         assert result.sku == sample_product.sku
         assert result.images == sample_product.images
         assert result.manufacturer == sample_product.manufacturer
-        assert result.scraped_language == sample_product.scraped_language
+        assert result.scraped_language == "de"  # Language becomes German after translation
+        assert result.translated_to_german is True
 
     @pytest.mark.unit
     @patch("src.ai.german_translator.translate_to_german")
@@ -209,7 +208,7 @@ class TestTranslateProductData:
         )
 
         mock_translate.side_effect = ["Name", "Desc", "Cat", "Value1"]
-        result = translate_product_data(product)
+        translate_product_data(product)
 
         # Should only translate non-empty string values
         assert mock_translate.call_count == 4  # name, desc, category, Key1 value

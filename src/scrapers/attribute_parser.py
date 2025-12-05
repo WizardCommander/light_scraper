@@ -194,3 +194,120 @@ def extract_certifications_from_html(html: str) -> dict[str, str]:
             certifications[attr_name] = match.group(1).strip()
 
     return certifications
+
+
+def parse_kelvin_from_text(text: str) -> Optional[str]:
+    """Extract Kelvin temperature from text content.
+
+    Args:
+        text: Text containing Kelvin/temperature info (e.g., "2700°K", "3000K", "2700 K")
+
+    Returns:
+        Kelvin value normalized to format "2700K" or None
+    """
+    if not text:
+        return None
+
+    # Match patterns like: 2700°K, 2700K, 2700 K, 2700°, 2700
+    # Capture the number and normalize the format
+    match = re.search(r"(\d{4})(?:°?\s*K)?", text)
+    if match:
+        kelvin_value = match.group(1)
+        # Validate it's a reasonable Kelvin value for lighting (2000-6500K)
+        # This range covers typical lighting from warm (2000K) to daylight (6500K)
+        # and excludes product codes that might match the pattern
+        try:
+            kelvin_int = int(kelvin_value)
+            if 2000 <= kelvin_int <= 6500:
+                return f"{kelvin_value}K"
+        except ValueError:
+            pass
+
+    return None
+
+
+def parse_dimensions_from_text(text: str) -> Optional[dict[str, float]]:
+    """Extract dimensions (L×W×H) from text content.
+
+    Args:
+        text: Text containing dimensions in various formats:
+              - "910x60mm"
+              - "L×W×H: 100x50x30 cm"
+              - "Dimensions: 120 x 80 x 40"
+              - "dmxh= 910x60mm"
+
+    Returns:
+        Dictionary with keys 'length', 'width', 'height' (in cm) or None
+    """
+    if not text:
+        return None
+
+    # Skip if text contains light source indicators (to avoid parsing specs like "3x 25W")
+    light_source_indicators = [
+        "E27",
+        "LED",
+        "W B",
+        "max 12cm",
+        '4,72"',
+        "watt",
+        "lumen",
+    ]
+    if any(indicator in text for indicator in light_source_indicators):
+        return None
+
+    # Try various dimension patterns
+    # Pattern 1: "NUMBERxNUMBERxNUMBER" with optional spaces and units
+    match = re.search(
+        r"(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*([cm]m)?",
+        text,
+        re.IGNORECASE,
+    )
+    if match:
+        length_str = match.group(1).replace(",", ".")
+        width_str = match.group(2).replace(",", ".")
+        height_str = match.group(3).replace(",", ".")
+        unit = match.group(4) or "cm"  # Default to cm
+
+        try:
+            length = float(length_str)
+            width = float(width_str)
+            height = float(height_str)
+
+            # Convert mm to cm if needed
+            if unit.lower() == "mm":
+                length /= 10
+                width /= 10
+                height /= 10
+
+            return {"length": length, "width": width, "height": height}
+        except ValueError:
+            logger.debug(f"Failed to parse dimensions from: {text}")
+            return None
+
+    # Pattern 2: "NUMBERxNUMBER" (only 2 dimensions, height is missing)
+    match = re.search(
+        r"(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*([cm]m)?",
+        text,
+        re.IGNORECASE,
+    )
+    if match:
+        length_str = match.group(1).replace(",", ".")
+        width_str = match.group(2).replace(",", ".")
+        unit = match.group(3) or "cm"
+
+        try:
+            length = float(length_str)
+            width = float(width_str)
+
+            # Convert mm to cm if needed
+            if unit.lower() == "mm":
+                length /= 10
+                width /= 10
+
+            # Return without height key when only 2 dimensions found
+            return {"length": length, "width": width}
+        except ValueError:
+            logger.debug(f"Failed to parse 2D dimensions from: {text}")
+            return None
+
+    return None

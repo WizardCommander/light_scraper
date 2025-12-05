@@ -5,7 +5,7 @@ Following CLAUDE.md: parameterized inputs, test entire structure, no trivial ass
 
 import pytest
 
-from src.types import SKU, ImageUrl, Manufacturer
+from src.models import SKU, ImageUrl
 from src.scrapers.lodes_scraper import LodesScraper
 
 
@@ -51,15 +51,23 @@ class TestExtractSkuFromUrl:
 
 @pytest.mark.unit
 def test_build_product_url():
-    """Test product URL construction from SKU."""
+    """Test product URL construction from SKU with language support."""
     scraper = LodesScraper()
     sku = SKU("kelly")
 
-    url = scraper.build_product_url(sku)
+    # Test English URL (uses "products")
+    url_en = scraper.build_product_url(sku, language="en")
+    assert url_en == "https://www.lodes.com/en/products/kelly/"
+    assert "/products/" in url_en
 
-    assert url == "https://www.lodes.com/en/products/kelly/"
-    assert "/products/" in url
-    assert url.startswith("https://")
+    # Test German URL (uses "producten")
+    url_de = scraper.build_product_url(sku, language="de")
+    assert url_de == "https://www.lodes.com/de/producten/kelly/"
+    assert "/producten/" in url_de
+
+    # Test default (English)
+    url_default = scraper.build_product_url(sku)
+    assert url_default == "https://www.lodes.com/en/products/kelly/"
 
 
 @pytest.mark.unit
@@ -237,46 +245,68 @@ class TestBuildVariationName:
     """Test building variation product names."""
 
     def test_build_with_variation_attributes(self):
-        """Should append variation attributes to parent name."""
+        """Should use Code if available, otherwise attributes."""
         parent_name = "Kelly Ceiling Light"
-        variant = {"Code": "SKU1", "Structure": "Metal", "Diffusor": "Glass"}
+
+        # Test with Code - should use Code
+        variant_with_code = {
+            "Code": "14126 1000",
+            "Structure": "Metal",
+            "Diffusor": "Glass",
+        }
         variation_attr_names = {"Structure", "Diffusor"}
-        variant_index = 0
-
-        result = LodesScraper._build_variation_name(
-            parent_name, variant, variation_attr_names, variant_index
+        result_with_code = LodesScraper._build_variation_name(
+            parent_name, variant_with_code, variation_attr_names, 0
         )
+        assert result_with_code == "Kelly Ceiling Light 14126 1000"
 
-        assert parent_name in result
-        assert "Metal" in result
-        assert "Glass" in result
-        assert " - " in result
+        # Test without Code - should use attributes (max 2)
+        variant_no_code = {"Structure": "Metal", "Diffusor": "Glass"}
+        result_no_code = LodesScraper._build_variation_name(
+            parent_name, variant_no_code, variation_attr_names, 0
+        )
+        assert parent_name in result_no_code
+        assert "Metal" in result_no_code or "Glass" in result_no_code
+        assert " " in result_no_code
 
     def test_build_with_single_attribute(self):
-        """Should work with single variation attribute."""
+        """Should use Code if available, otherwise single attribute."""
         parent_name = "A-Tube Suspension"
-        variant = {"Code": "SKU1", "Structure": "Aluminum"}
+
+        # Without Code - should use attribute
+        variant_no_code = {"Structure": "Aluminum"}
         variation_attr_names = {"Structure"}
-        variant_index = 0
-
         result = LodesScraper._build_variation_name(
-            parent_name, variant, variation_attr_names, variant_index
+            parent_name, variant_no_code, variation_attr_names, 0
         )
+        assert result == "A-Tube Suspension Aluminum"
 
-        assert result == "A-Tube Suspension - Aluminum"
+        # With Code - should use Code
+        variant_with_code = {"Code": "AT-001", "Structure": "Aluminum"}
+        result_with_code = LodesScraper._build_variation_name(
+            parent_name, variant_with_code, variation_attr_names, 0
+        )
+        assert result_with_code == "A-Tube Suspension AT-001"
 
     def test_build_with_no_matching_attributes(self):
-        """Should fall back to variant index when no matching attributes."""
+        """Should use Code if available, otherwise fall back to variant index."""
         parent_name = "Test Product"
-        variant = {"Code": "SKU1", "Random": "Value"}
-        variation_attr_names = {"Structure", "Color"}
         variant_index = 2
 
-        result = LodesScraper._build_variation_name(
-            parent_name, variant, variation_attr_names, variant_index
+        # With Code but no matching attributes - should use Code
+        variant_with_code = {"Code": "SKU1", "Random": "Value"}
+        variation_attr_names = {"Structure", "Color"}
+        result_with_code = LodesScraper._build_variation_name(
+            parent_name, variant_with_code, variation_attr_names, variant_index
         )
+        assert result_with_code == "Test Product SKU1"
 
-        assert result == "Test Product - Variant 3"  # Index 2 -> Variant 3
+        # Without Code and no matching attributes - should use variant index
+        variant_no_code = {"Random": "Value"}
+        result_no_code = LodesScraper._build_variation_name(
+            parent_name, variant_no_code, variation_attr_names, variant_index
+        )
+        assert result_no_code == "Test Product Variant 3"  # Index 2 -> Variant 3
 
     def test_build_with_empty_variant(self):
         """Should use variant index when variant is empty."""
@@ -289,7 +319,7 @@ class TestBuildVariationName:
             parent_name, variant, variation_attr_names, variant_index
         )
 
-        assert result == "Test Product - Variant 1"
+        assert result == "Test Product Variant 1"
 
     @pytest.mark.parametrize(
         "variant_index,expected_suffix",
@@ -311,7 +341,7 @@ class TestBuildVariationName:
             parent_name, variant, variation_attr_names, variant_index
         )
 
-        assert result == f"Product - {expected_suffix}"
+        assert result == f"Product {expected_suffix}"
 
 
 @pytest.mark.unit
@@ -343,7 +373,12 @@ class TestBuildVariableProducts:
             images,
             variants,
             weight_kg,
-            scraped_lang,
+            dimensions=None,
+            light_specs=None,
+            installation_manual="",
+            cable_length="",
+            scraped_lang=scraped_lang,
+            url_slug=parent_sku,
         )
 
         # Should return parent + 2 children = 3 products
@@ -352,7 +387,7 @@ class TestBuildVariableProducts:
         # Check parent product
         parent = result[0]
         assert parent.product_type == "variable"
-        assert parent.sku == SKU("")  # Parent has no SKU
+        assert parent.sku == parent_sku  # Parent keeps the reference SKU
         assert parent.name == name
         assert parent.description == description
         assert parent.images == images
@@ -367,19 +402,19 @@ class TestBuildVariableProducts:
         child1 = result[1]
         assert child1.product_type == "variation"
         assert child1.sku == SKU("KELLY-METAL-GLASS")
-        assert child1.parent_sku == parent_sku
+        assert child1.parent_sku == parent_sku  # References parent SKU
         assert child1.variation_attributes == {
             "Structure": "Metal",
             "Diffusor": "Glass",
         }
-        assert "Metal" in child1.name
-        assert "Glass" in child1.name
+        # Name should use Code when available
+        assert child1.name == "Kelly Ceiling Light KELLY-METAL-GLASS"
 
         # Check second child variation
         child2 = result[2]
         assert child2.product_type == "variation"
         assert child2.sku == SKU("KELLY-WOOD-PLASTIC")
-        assert child2.parent_sku == parent_sku
+        assert child2.parent_sku == parent_sku  # References parent SKU
         assert child2.variation_attributes == {
             "Structure": "Wood",
             "Diffusor": "Plastic",
@@ -400,7 +435,12 @@ class TestBuildVariableProducts:
             [],
             variants,
             None,
-            "en",
+            dimensions=None,
+            light_specs=None,
+            installation_manual="",
+            cable_length="",
+            scraped_lang="en",
+            url_slug=parent_sku,
         )
 
         assert result == []
@@ -414,7 +454,20 @@ class TestBuildVariableProducts:
         ]
 
         result = scraper._build_variable_products(
-            parent_sku, "Test", "Desc", [], {}, [], variants, None, "en"
+            parent_sku,
+            "Test",
+            "Desc",
+            [],
+            {},
+            [],
+            variants,
+            None,
+            None,
+            None,
+            "",
+            "",
+            "en",
+            url_slug=parent_sku,
         )
 
         # Should have parent + 1 child

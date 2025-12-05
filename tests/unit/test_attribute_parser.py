@@ -9,7 +9,9 @@ from src.scrapers.attribute_parser import (
     clean_variant_header_name,
     extract_certifications_from_html,
     parse_designer_from_title,
+    parse_dimensions_from_text,
     parse_hills_from_text,
+    parse_kelvin_from_text,
     parse_table_header_attributes,
     parse_weight_from_text,
     parse_weight_to_float,
@@ -340,3 +342,119 @@ class TestCleanVariantHeaderName:
         """Should keep headers that are valid attribute names."""
         result = clean_variant_header_name(valid_header)
         assert result == valid_header
+
+
+@pytest.mark.unit
+class TestParseKelvinFromText:
+    """Test Kelvin temperature extraction from text."""
+
+    @pytest.mark.parametrize(
+        "text,expected_kelvin",
+        [
+            ("2700°K", "2700K"),
+            ("3000K", "3000K"),
+            ("2700 K", "2700K"),
+            ("4000°", "4000K"),
+            ("6500", "6500K"),
+            ("Some text 2700°K more text", "2700K"),
+            ("LED 3000K light", "3000K"),
+            ("Temperature: 4000 K", "4000K"),
+        ],
+    )
+    def test_parse_kelvin_from_valid_text(self, text: str, expected_kelvin: str):
+        """Test Kelvin extraction from various valid formats."""
+        result = parse_kelvin_from_text(text)
+        assert result == expected_kelvin
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "1000K",  # Below range
+            "1500K",  # Below range
+            "7000K",  # Above range
+            "9010K",  # Product code outside lighting range
+            "10000K",  # Above range
+            "No temperature here",
+            "",
+            None,
+            "123K",  # Too few digits
+            "12345K",  # Too many digits
+        ],
+    )
+    def test_parse_kelvin_from_invalid_text(self, text: str):
+        """Test Kelvin extraction returns None for invalid or out-of-range values."""
+        result = parse_kelvin_from_text(text)
+        assert result is None
+
+    def test_parse_kelvin_range_boundaries(self):
+        """Test Kelvin extraction at range boundaries."""
+        assert parse_kelvin_from_text("2000K") == "2000K"  # Lower bound
+        assert parse_kelvin_from_text("6500K") == "6500K"  # Upper bound
+        assert parse_kelvin_from_text("1999K") is None  # Just below range
+        assert parse_kelvin_from_text("6501K") is None  # Just above range
+
+
+@pytest.mark.unit
+class TestParseDimensionsFromText:
+    """Test dimension extraction from text."""
+
+    @pytest.mark.parametrize(
+        "text,expected_dimensions",
+        [
+            ("910x60x30mm", {"length": 91.0, "width": 6.0, "height": 3.0}),
+            ("100x50x30cm", {"length": 100.0, "width": 50.0, "height": 30.0}),
+            ("100 x 50 x 30 cm", {"length": 100.0, "width": 50.0, "height": 30.0}),
+            ("120×80×40", {"length": 120.0, "width": 80.0, "height": 40.0}),
+            ("dmxh= 910x60x30mm", {"length": 91.0, "width": 6.0, "height": 3.0}),
+            ("Size: 50x25x10cm", {"length": 50.0, "width": 25.0, "height": 10.0}),
+        ],
+    )
+    def test_parse_3d_dimensions_from_valid_text(
+        self, text: str, expected_dimensions: dict
+    ):
+        """Test extraction of 3D dimensions (L×W×H) from various formats."""
+        result = parse_dimensions_from_text(text)
+        assert result == expected_dimensions
+
+    @pytest.mark.parametrize(
+        "text,expected_dimensions",
+        [
+            ("910x60mm", {"length": 91.0, "width": 6.0}),
+            ("100x50cm", {"length": 100.0, "width": 50.0}),
+            ("100 x 50", {"length": 100.0, "width": 50.0}),
+            ("120×80", {"length": 120.0, "width": 80.0}),
+        ],
+    )
+    def test_parse_2d_dimensions_from_valid_text(
+        self, text: str, expected_dimensions: dict
+    ):
+        """Test extraction of 2D dimensions (L×W) without height."""
+        result = parse_dimensions_from_text(text)
+        assert result == expected_dimensions
+        assert "height" not in result  # Height should not be present
+
+    def test_parse_dimensions_with_comma_decimal(self):
+        """Test dimension extraction handles comma decimal separators."""
+        result = parse_dimensions_from_text("10,5x5,2x3,1cm")
+        assert result == {"length": 10.5, "width": 5.2, "height": 3.1}
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "No dimensions here",
+            "",
+            None,
+            "100 meters",
+            "Size: large",
+            "abc x def x ghi",  # Non-numeric
+        ],
+    )
+    def test_parse_dimensions_from_invalid_text(self, text: str):
+        """Test dimension extraction returns None for invalid input."""
+        result = parse_dimensions_from_text(text)
+        assert result is None
+
+    def test_parse_dimensions_mm_to_cm_conversion(self):
+        """Test millimeter to centimeter conversion."""
+        result = parse_dimensions_from_text("1000x500x250mm")
+        assert result == {"length": 100.0, "width": 50.0, "height": 25.0}
