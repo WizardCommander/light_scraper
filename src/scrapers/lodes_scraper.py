@@ -851,6 +851,55 @@ class LodesScraper(BaseScraper):
         logger.info(f"Using first price list product: {pl_product['product_name']}")
         return pl_product, actual_sku
 
+    @staticmethod
+    def _extract_color_code_from_sku(sku: str) -> str | None:
+        """Extract color code from product SKU.
+
+        Args:
+            sku: Full SKU (e.g., "14126 1000")
+
+        Returns:
+            Color code (e.g., "1000") or None if invalid format
+        """
+        if not sku:
+            return None
+
+        parts = sku.split()
+        return parts[1] if len(parts) >= 2 else None
+
+    def _filter_variants_by_base_sku(
+        self, variants: list[dict[str, str]], base_sku: str
+    ) -> list[dict[str, str]]:
+        """Filter variants to only include those matching base SKU.
+
+        When scraping products like "kelly", the page shows ALL Kelly products
+        (small dome 50, medium dome 60, large dome 80, etc.) with variant tables
+        for each. This filters to only variants belonging to the target product.
+
+        Args:
+            variants: All scraped variants from the page
+            base_sku: Base SKU to match (e.g., "14126")
+
+        Returns:
+            Filtered list of variants matching the base SKU
+        """
+        filtered_variants = []
+
+        for variant in variants:
+            variant_code = (
+                variant.get("Code")
+                or variant.get("Codice")
+                or variant.get("code")
+                or variant.get("codice")
+                or ""
+            )
+
+            # Include variant if its SKU starts with base_sku
+            if variant_code.startswith(base_sku):
+                filtered_variants.append(variant)
+
+        return filtered_variants
+
     def _enrich_attributes_with_price_list(
         self,
         attributes: dict[str, str],
@@ -901,7 +950,27 @@ class LodesScraper(BaseScraper):
         if not price_list_product:
             return None, None
 
-        # Find matching color in variant data
+        # First, try to extract color code directly from variant SKU (e.g., "14126 1000" -> "1000")
+        variant_code = (
+            variant.get("Code")
+            or variant.get("Codice")
+            or variant.get("code")
+            or variant.get("codice")
+        )
+        if variant_code:
+            color_code = self._extract_color_code_from_sku(variant_code)
+            if color_code:
+                # Find matching variant in price list
+                for pl_variant in price_list_product["variants"]:
+                    if pl_variant["color_code"] == color_code:
+                        variant_sku = pl_variant["sku"]
+                        variant_price = pl_variant["price_eur"]
+                        logger.info(
+                            f"Matched variant code {variant_code} to price list: {variant_sku} @ {variant_price} EUR"
+                        )
+                        return variant_sku, variant_price
+
+        # Fallback: Find matching color in variant data attributes
         for attr_name, attr_value in variant.items():
             if not attr_value:
                 continue
@@ -1051,6 +1120,25 @@ class LodesScraper(BaseScraper):
             url_slug, variants
         )
 
+        # Filter variants to only include those belonging to this specific product
+        # (e.g., when scraping "kelly", page shows 14126, 14127, 14128 variants,
+        # but we only want 14126 variants)
+        if actual_parent_sku:
+            filtered_variants = self._filter_variants_by_base_sku(
+                variants, str(actual_parent_sku)
+            )
+
+            if filtered_variants:
+                logger.info(
+                    f"Filtered {len(variants)} total variants to {len(filtered_variants)} "
+                    f"matching base SKU {actual_parent_sku}"
+                )
+                variants = filtered_variants
+            else:
+                logger.warning(
+                    f"No variants match base SKU {actual_parent_sku}, keeping all variants"
+                )
+
         # Enrich attributes with price list data
         attributes, cable_length = self._enrich_attributes_with_price_list(
             attributes, cable_length, price_list_product
@@ -1121,6 +1209,17 @@ class LodesScraper(BaseScraper):
                 for attr_name in variation_attr_names
                 if attr_name in variant and variant[attr_name]
             }
+
+            # Enrich variation attributes with color name from price list
+            if price_list_product and variant_sku:
+                color_code = self._extract_color_code_from_sku(variant_sku)
+                if color_code:
+                    # Find matching color in price list
+                    for pl_variant in price_list_product["variants"]:
+                        if pl_variant["color_code"] == color_code:
+                            # Add German color name to variation attributes
+                            child_variation_attrs["Farbe"] = pl_variant["color_name_de"]
+                            break
 
             child = ProductData(
                 sku=SKU(variant_sku),
