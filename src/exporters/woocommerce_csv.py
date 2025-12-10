@@ -863,8 +863,17 @@ def _map_woocommerce_attributes(product: ProductData) -> dict[str, Any]:
     is_parent_or_simple = product.product_type in ["simple", "variable"]
     sichtbar = 1 if is_parent_or_simple else ""
 
-    color_raw = _extract_color(product)
-    color_clean = translate_colors_to_german(color_raw) if color_raw else ""
+    # For parent products, use all available colors; for variations, use specific color
+    if is_parent_or_simple and product.available_colors:
+        color_clean = product.available_colors
+    else:
+        color_raw = _extract_color(product)
+        color_clean = translate_colors_to_german(color_raw) if color_raw else ""
+
+    # For Dimmbarkeit: parent should be empty, variations can have specific values
+    dimmbarkeit = ""
+    if not is_parent_or_simple:
+        dimmbarkeit = _extract_dimmability(product)
 
     return {
         "Attribut 1 Name": "Farbe",
@@ -876,7 +885,7 @@ def _map_woocommerce_attributes(product: ProductData) -> dict[str, Any]:
         "Attribut 2 Sichtbar": sichtbar,
         "Attribut 2 Global": "",
         "Attribut 3 Name": "Dimmbarkeit",
-        "Attribut 3 Wert(e)": _extract_dimmability(product),
+        "Attribut 3 Wert(e)": dimmbarkeit,
         "Attribut 3 Sichtbar": sichtbar,
         "Attribut 3 Global": "",
         "Attribut 4 Name": "Montage",
@@ -1009,9 +1018,9 @@ def _product_to_woocommerce_row(
         "Hinweis zum Kauf": "",
         "Angebotspreis": sale_price,
         "Regulärer Preis": regular_price,
-        "Übergkategorie": "",
-        "Kategorienstruktur": "",
-        "Schlagwörter": generate_tags(product),
+        "Übergkategorie": "",  # Will be populated below
+        "Kategorienstruktur": "",  # Will be populated below
+        "Schlagwörter": "",  # Will be populated below
         "Versandklasse": "",
         "Anzahl Fotos": count_product_images(product),
         "Bilder": images,
@@ -1080,22 +1089,40 @@ def _product_to_woocommerce_row(
         if "E27" in dims_text or "LED" in dims_text:
             lichtquelle = dims_text
 
-    # Seillänge: Use cable_length field or search attributes
-    seillange = product.cable_length or ""
-    if not seillange:
-        for key, value in attrs.items():
-            if "seil" in key.lower() or "cable" in key.lower():
-                seillange = value
-                break
+    # Seillänge: Use cable_length field or search attributes (only for parent/simple products)
+    seillange = ""
+    if product.product_type in ["simple", "variable"]:
+        seillange = product.cable_length or ""
+        if not seillange:
+            for key, value in attrs.items():
+                if "seil" in key.lower() or "cable" in key.lower():
+                    seillange = value
+                    break
 
-    # Information: Use product_notes field or default German text
-    information = product.product_notes or "Leuchtmittel nicht inkludiert."
+    # Information: Use product_notes field or default German text (only for parent/simple products)
+    information = ""
+    if product.product_type in ["simple", "variable"]:
+        information = product.product_notes or "Leuchtmittel nicht inkludiert."
 
     # Montageanleitung: Use installation_manual_url field
     montageanleitung = product.installation_manual_url or ""
 
-    # Kategorienstruktur: Build from categories with > separator
-    kategorienstruktur = ">".join(product.categories) if product.categories else ""
+    # Kategorienstruktur: Build from categories with > separator (only for parent/simple)
+    kategorienstruktur = ""
+    if product.product_type in ["simple", "variable"]:
+        kategorienstruktur = ">".join(product.categories) if product.categories else ""
+
+    # Übergkategorie: Extract parent categories (only for parent/simple)
+    ubergkategorie = ""
+    if product.product_type in ["simple", "variable"] and product.categories:
+        # Extract unique parent categories (first level of each hierarchy)
+        parent_cats = list(dict.fromkeys([cat.split(">")[0] for cat in product.categories]))
+        ubergkategorie = ",".join(parent_cats)
+
+    # Schlagwörter: Generate tags (only for parent/simple)
+    schlagworter = ""
+    if product.product_type in ["simple", "variable"]:
+        schlagworter = generate_tags(product)
 
     # Format IP rating with "IP" prefix
     ip_schutz = format_ip_rating(product.ip_rating or attrs.get("IP Rating", ""))
@@ -1124,7 +1151,9 @@ def _product_to_woocommerce_row(
         }
     )
 
-    # Also update Kategorienstruktur in main row (was being set to tags before)
+    # Update category and tag fields with conditional values
     row["Kategorienstruktur"] = kategorienstruktur
+    row["Übergkategorie"] = ubergkategorie
+    row["Schlagwörter"] = schlagworter
 
     return row

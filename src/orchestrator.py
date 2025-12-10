@@ -333,7 +333,7 @@ class ScraperOrchestrator:
                     if hasattr(product, "datasheet_url") and product.datasheet_url:
                         datasheets_dir = str(product_output_dir / "datasheets")
                         logger.info(
-                            f"Downloading PDF for {folder_name} from {product.datasheet_url}"
+                            f"Downloading datasheet for {folder_name} from {product.datasheet_url}"
                         )
                         try:
                             download_pdf(
@@ -346,7 +346,31 @@ class ScraperOrchestrator:
                             break  # Only download once per product family
                         except Exception as e:
                             logger.warning(
-                                f"Failed to download PDF for {folder_name}: {e}"
+                                f"Failed to download datasheet for {folder_name}: {e}"
+                            )
+
+                # Download installation manual for the product family
+                for product in product_group:
+                    if (
+                        hasattr(product, "installation_manual_url")
+                        and product.installation_manual_url
+                    ):
+                        manuals_dir = str(product_output_dir / "installation_manuals")
+                        logger.info(
+                            f"Downloading installation manual for {folder_name} from {product.installation_manual_url}"
+                        )
+                        try:
+                            download_pdf(
+                                product.installation_manual_url,
+                                f"{folder_name}_installation",  # Add suffix to differentiate
+                                manufacturer,
+                                output_dir=manuals_dir,
+                                flat_structure=True,
+                            )
+                            break  # Only download once per product family
+                        except Exception as e:
+                            logger.warning(
+                                f"Failed to download installation manual for {folder_name}: {e}"
                             )
 
             # Step 3b: Export CSV and Excel for this product group

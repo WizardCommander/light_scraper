@@ -24,6 +24,7 @@ output_*/
 logs/
 *.png
 *.jpg
+*.csv
 
 # Test files
 debug_*.py

@@ -558,18 +558,23 @@ class LodesScraper(BaseScraper):
         """Extract installation manual PDF URL (different from datasheet).
 
         Looks for links containing:
-        - "Montageanleitung", "Installation", "Assembly"
+        - "Istruzioni montaggio" (Italian)
+        - "Montageanleitung" (German)
+        - "Installation", "Assembly" (English)
         - href patterns with "montage", "installation"
 
         Returns:
             Installation manual URL or empty string
         """
         selectors = [
-            'a:has-text("Montageanleitung")',
+            'a[data-name="Istruzioni montaggio"]',  # Lodes-specific (Italian)
+            'a.bottone.white-button:has-text("Istruzioni")',
+            'a:has-text("Montageanleitung")',  # German
             'a:has-text("Installation")',
             'a:has-text("Assembly")',
             'a[href*="montage"]',
             'a[href*="installation"]',
+            'a[href*="istruzioni"]',  # Italian pattern
         ]
 
         for selector in selectors:
@@ -577,9 +582,11 @@ class LodesScraper(BaseScraper):
                 link = page.query_selector(selector)
                 if link:
                     href = link.get_attribute("href")
-                    if href and ".pdf" in href.lower():
+                    if href:
+                        # Make absolute URL if relative
                         if href.startswith("/"):
                             href = f"https://www.lodes.com{href}"
+                        logger.info(f"Found installation manual link: {href}")
                         return href
             except Exception:
                 continue
@@ -1226,7 +1233,7 @@ class LodesScraper(BaseScraper):
                 name=variant_name,
                 description="",
                 manufacturer=self.config.manufacturer,
-                categories=[],
+                categories=categories,  # Inherit parent's categories for Produkttyp inference
                 attributes={},
                 images=[],
                 product_type="variation",
