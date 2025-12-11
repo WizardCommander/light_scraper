@@ -977,11 +977,8 @@ def _product_to_woocommerce_row(
     # Determine if reviews should be enabled (1 for parent/simple, 0 for variations)
     allow_reviews = 1 if product.product_type in ["simple", "variable"] else 0
 
-    # Build enhanced description with attribute list
-    attribute_list = build_attribute_html_list(product)
+    # Use plain description (client will handle technical specs separately)
     full_description = product.description
-    if attribute_list:
-        full_description = f"{product.description}\n{attribute_list}"
 
     # Base WooCommerce columns (German names)
     row = {
@@ -1009,7 +1006,7 @@ def _product_to_woocommerce_row(
         "Geringe Lagermenge": "",
         "Lieferrückstande erlaubt?": 0,
         "Nur einzeln verkaufen?": 0,
-        "Lieferzeit": "ca-10-werktage",
+        "Lieferzeit": "",  # Client will fill manually (varies per product)
         "Gewicht (kg)": weight,
         "Länge (cm)": "",
         "Breite (cm)": "",
