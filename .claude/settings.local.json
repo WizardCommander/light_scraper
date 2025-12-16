@@ -8,7 +8,9 @@
       "Bash(tr:*)",
       "Bash(cut:*)",
       "Bash(timeout /t 1)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "WebFetch(domain:www.lodes.com)",
+      "Bash(timeout /t 30)"
     ],
     "deny": [],
     "ask": []

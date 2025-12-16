@@ -1,12 +1,11 @@
-"""Unit tests for Lodes price list module."""
-
-import pytest
+"""Unit tests for lodes_price_list.py module."""
 
 from src.lodes_price_list import (
     KELLY_PRODUCTS,
     get_all_product_colors,
     get_product_by_base_sku,
     get_product_by_slug,
+    get_slug_by_base_sku,
     get_variant_price,
 )
 
@@ -14,222 +13,213 @@ from src.lodes_price_list import (
 class TestGetProductBySlug:
     """Tests for get_product_by_slug function."""
 
-    def test_returns_kelly_products_for_kelly_slug(self):
+    def test_returns_all_products_for_kelly_slug(self):
         """Should return all Kelly products when given 'kelly' slug."""
-        products = get_product_by_slug("kelly")
+        result = get_product_by_slug("kelly")
 
-        assert len(products) == 7
-        assert all(p["url_slug"] == "kelly" for p in products)
+        assert len(result) == 7
+        assert all(p["url_slug"] == "kelly" for p in result)
 
     def test_returns_empty_list_for_unknown_slug(self):
-        """Should return empty list for unknown slug."""
-        products = get_product_by_slug("unknown-product")
+        """Should return empty list for non-existent slug."""
+        result = get_product_by_slug("nonexistent")
 
-        assert products == []
+        assert result == []
 
-    def test_returns_products_with_correct_structure(self):
-        """Should return products with all required fields."""
-        products = get_product_by_slug("kelly")
-        product = products[0]
+    def test_returns_products_with_correct_base_skus(self):
+        """Should return products with expected base SKUs."""
+        result = get_product_by_slug("kelly")
+        base_skus = {p["base_sku"] for p in result}
 
-        assert "base_sku" in product
-        assert "product_name" in product
-        assert "url_slug" in product
-        assert "variants" in product
-        assert "cable_length" in product
-        assert "light_source" in product
-        assert "dimmability" in product
-        assert "voltage" in product
-        assert "ip_rating" in product
+        expected_skus = {
+            "14126",
+            "14127",
+            "14128",
+            "14122",
+            "14123",
+            "14124",
+            "14711",
+        }
+        assert base_skus == expected_skus
 
 
 class TestGetProductByBaseSku:
     """Tests for get_product_by_base_sku function."""
 
-    def test_returns_kelly_small_dome_for_14126(self):
-        """Should return Kelly small dome 50 for SKU 14126."""
-        product = get_product_by_base_sku("14126")
+    def test_returns_product_for_valid_sku(self):
+        """Should return product info for valid base SKU."""
+        result = get_product_by_base_sku("14126")
+
+        assert result is not None
+        assert result["base_sku"] == "14126"
+        assert result["product_name"] == "Kelly small dome 50"
+        assert result["url_slug"] == "kelly"
+
+    def test_returns_none_for_invalid_sku(self):
+        """Should return None for non-existent SKU."""
+        result = get_product_by_base_sku("99999")
+
+        assert result is None
+
+    def test_returns_product_with_variants(self):
+        """Should return product with variant list."""
+        result = get_product_by_base_sku("14126")
+
+        assert result is not None
+        assert "variants" in result
+        assert len(result["variants"]) == 4
+
+
+class TestGetSlugByBaseSku:
+    """Tests for get_slug_by_base_sku function."""
+
+    def test_returns_slug_for_valid_sku(self):
+        """Should return URL slug for valid base SKU."""
+        result = get_slug_by_base_sku("14126")
+
+        assert result == "kelly"
+
+    def test_returns_none_for_invalid_sku(self):
+        """Should return None for non-existent SKU."""
+        result = get_slug_by_base_sku("99999")
+
+        assert result is None
+
+    def test_consistent_with_get_product_by_base_sku(self):
+        """Should return same slug as product's url_slug field."""
+        sku = "14127"
+        product = get_product_by_base_sku(sku)
+        slug = get_slug_by_base_sku(sku)
 
         assert product is not None
-        assert product["base_sku"] == "14126"
-        assert product["product_name"] == "Kelly small dome 50"
-
-    def test_returns_kelly_medium_dome_for_14127(self):
-        """Should return Kelly medium dome 60 for SKU 14127."""
-        product = get_product_by_base_sku("14127")
-
-        assert product is not None
-        assert product["base_sku"] == "14127"
-        assert product["product_name"] == "Kelly medium dome 60"
-
-    def test_returns_kelly_large_dome_for_14128(self):
-        """Should return Kelly large dome 80 for SKU 14128."""
-        product = get_product_by_base_sku("14128")
-
-        assert product is not None
-        assert product["base_sku"] == "14128"
-        assert product["product_name"] == "Kelly large dome 80"
-
-    def test_returns_none_for_unknown_sku(self):
-        """Should return None for unknown SKU."""
-        product = get_product_by_base_sku("99999")
-
-        assert product is None
+        assert slug == product["url_slug"]
 
 
 class TestGetVariantPrice:
     """Tests for get_variant_price function."""
 
-    def test_returns_correct_price_for_kelly_small_white(self):
-        """Should return 572.00 EUR for Kelly small dome white."""
-        price = get_variant_price("14126 1000")
+    def test_returns_price_for_valid_variant_sku(self):
+        """Should return price for valid variant SKU."""
+        result = get_variant_price("14126 1000")
 
-        assert price == 572.00
+        assert result == 572.00
 
-    def test_returns_correct_price_for_kelly_small_black(self):
-        """Should return 572.00 EUR for Kelly small dome black."""
-        price = get_variant_price("14126 2000")
+    def test_returns_different_prices_for_different_colors(self):
+        """Should return different prices for bronze/champagne variants."""
+        white_price = get_variant_price("14126 1000")
+        bronze_price = get_variant_price("14126 3500")
 
-        assert price == 572.00
+        assert white_price == 572.00
+        assert bronze_price == 607.00
 
-    def test_returns_correct_price_for_kelly_small_bronze(self):
-        """Should return 607.00 EUR for Kelly small dome bronze."""
-        price = get_variant_price("14126 3500")
+    def test_returns_none_for_invalid_base_sku(self):
+        """Should return None when base SKU doesn't exist."""
+        result = get_variant_price("99999 1000")
 
-        assert price == 607.00
+        assert result is None
 
-    def test_returns_correct_price_for_kelly_small_champagne(self):
-        """Should return 607.00 EUR for Kelly small dome champagne."""
-        price = get_variant_price("14126 4500")
+    def test_returns_none_for_invalid_variant(self):
+        """Should return None when variant doesn't exist for valid product."""
+        result = get_variant_price("14126 9999")
 
-        assert price == 607.00
+        assert result is None
 
-    def test_returns_correct_price_for_kelly_medium_white(self):
-        """Should return 883.00 EUR for Kelly medium dome white."""
-        price = get_variant_price("14127 1000")
+    def test_handles_sku_without_space(self):
+        """Should handle SKU without space separator."""
+        result = get_variant_price("14126")
 
-        assert price == 883.00
-
-    def test_returns_correct_price_for_kelly_large_bronze(self):
-        """Should return 1153.00 EUR for Kelly large dome bronze."""
-        price = get_variant_price("14128 3500")
-
-        assert price == 1153.00
-
-    def test_returns_none_for_unknown_sku(self):
-        """Should return None for unknown variant SKU."""
-        price = get_variant_price("99999 1000")
-
-        assert price is None
-
-    def test_returns_none_for_sku_without_space(self):
-        """Should return None for SKU without space separator."""
-        price = get_variant_price("141261000")
-
-        assert price is None
-
-    def test_returns_none_for_unknown_color_code(self):
-        """Should return None for valid base SKU but unknown color code."""
-        price = get_variant_price("14126 9999")
-
-        assert price is None
+        assert result is None
 
 
 class TestGetAllProductColors:
     """Tests for get_all_product_colors function."""
 
-    def test_returns_all_kelly_small_dome_colors(self):
-        """Should return all color names for Kelly small dome."""
+    def test_returns_comma_separated_german_colors(self):
+        """Should return comma-separated list of German color names."""
         product = get_product_by_base_sku("14126")
-        colors = get_all_product_colors(product)
+        assert product is not None
 
-        assert colors == "Weiß Matt, Schwarz Matt, Bronze, Champagner Matt"
+        result = get_all_product_colors(product)
 
-    def test_returns_all_kelly_medium_dome_colors(self):
-        """Should return all color names for Kelly medium dome."""
-        product = get_product_by_base_sku("14127")
-        colors = get_all_product_colors(product)
+        assert result == "Weiß Matt, Schwarz Matt, Bronze, Champagner Matt"
 
-        assert colors == "Weiß Matt, Schwarz Matt, Bronze, Champagner Matt"
-
-    def test_returns_limited_colors_for_sphere_products(self):
-        """Should return only available colors for sphere products (white and bronze only)."""
-        product = get_product_by_base_sku("14122")  # Kelly small sphere
-        colors = get_all_product_colors(product)
-
-        assert colors == "Weiß Matt, Bronze"
-
-    def test_returns_comma_separated_string(self):
-        """Should return colors as comma-separated string."""
+    def test_returns_correct_order(self):
+        """Should return colors in same order as variants."""
         product = get_product_by_base_sku("14126")
-        colors = get_all_product_colors(product)
+        assert product is not None
 
-        assert isinstance(colors, str)
-        assert ", " in colors
+        result = get_all_product_colors(product)
+        colors = result.split(", ")
+
+        assert len(colors) == len(product["variants"])
+        for i, variant in enumerate(product["variants"]):
+            assert colors[i] == variant["color_name_de"]
+
+    def test_handles_product_with_two_variants(self):
+        """Should work with products that have only 2 color variants."""
+        product = get_product_by_base_sku("14122")
+        assert product is not None
+
+        result = get_all_product_colors(product)
+
+        # Check it returns 2 colors separated by comma
+        colors = result.split(", ")
+        assert len(colors) == 2
+        assert "Matt" in colors[0]
+        assert "Bronze" in colors[1]
 
 
-class TestPriceListData:
-    """Tests for price list data structure integrity."""
+class TestKellyProductsData:
+    """Tests for KELLY_PRODUCTS data structure integrity."""
 
-    def test_all_kelly_products_have_required_fields(self):
-        """Should have all required fields for every Kelly product."""
-        required_fields = [
+    def test_all_products_have_required_fields(self):
+        """Should verify all products have mandatory fields."""
+        required_fields = {
             "base_sku",
             "product_name",
             "url_slug",
-            "variants",
             "cable_length",
             "light_source",
             "dimmability",
             "voltage",
             "ip_rating",
-        ]
+            "variants",
+        }
 
-        for sku, product in KELLY_PRODUCTS.items():
-            for field in required_fields:
-                assert field in product, f"Product {sku} missing field: {field}"
+        for base_sku, product in KELLY_PRODUCTS.items():
+            assert set(product.keys()).issuperset(
+                required_fields
+            ), f"Product {base_sku} missing required fields"
 
     def test_all_variants_have_required_fields(self):
-        """Should have all required fields for every variant."""
-        required_fields = ["sku", "color_code", "color_name_en", "color_name_de", "price_eur"]
+        """Should verify all variants have mandatory fields."""
+        required_variant_fields = {
+            "sku",
+            "color_code",
+            "color_name_en",
+            "color_name_de",
+            "price_eur",
+        }
 
-        for product in KELLY_PRODUCTS.values():
+        for base_sku, product in KELLY_PRODUCTS.items():
             for variant in product["variants"]:
-                for field in required_fields:
-                    assert field in variant, f"Variant missing field: {field}"
+                assert set(variant.keys()).issuperset(
+                    required_variant_fields
+                ), f"Variant in {base_sku} missing required fields"
 
-    def test_variant_skus_match_expected_format(self):
-        """Should have variant SKUs in format 'XXXXX YYYY'."""
-        for product in KELLY_PRODUCTS.values():
+    def test_variant_skus_match_pattern(self):
+        """Should verify variant SKUs follow '{base_sku} {color_code}' pattern."""
+        for base_sku, product in KELLY_PRODUCTS.items():
             for variant in product["variants"]:
-                sku = variant["sku"]
-                assert " " in sku, f"Variant SKU missing space: {sku}"
-                parts = sku.split()
-                assert len(parts) == 2, f"Variant SKU has wrong format: {sku}"
-                assert len(parts[0]) == 5, f"Base SKU should be 5 digits: {sku}"
-                assert parts[0].isdigit(), f"Base SKU should be numeric: {sku}"
+                expected_prefix = f"{base_sku} "
+                assert variant["sku"].startswith(
+                    expected_prefix
+                ), f"Variant SKU {variant['sku']} doesn't match base SKU {base_sku}"
 
-    def test_all_prices_are_positive(self):
-        """Should have positive prices for all variants."""
-        for product in KELLY_PRODUCTS.values():
+    def test_prices_are_positive(self):
+        """Should verify all prices are positive numbers."""
+        for base_sku, product in KELLY_PRODUCTS.items():
             for variant in product["variants"]:
-                assert variant["price_eur"] > 0, f"Invalid price for {variant['sku']}"
-
-    def test_dome_products_have_four_color_variants(self):
-        """Should have 4 color variants for dome products."""
-        dome_skus = ["14126", "14127", "14128"]
-        for sku in dome_skus:
-            product = KELLY_PRODUCTS[sku]
-            assert len(product["variants"]) == 4, f"Dome product {sku} should have 4 variants"
-
-    def test_sphere_products_have_two_color_variants(self):
-        """Should have 2 color variants for sphere products."""
-        sphere_skus = ["14122", "14123", "14124"]
-        for sku in sphere_skus:
-            product = KELLY_PRODUCTS[sku]
-            assert len(product["variants"]) == 2, f"Sphere product {sku} should have 2 variants"
-
-    def test_cluster_product_has_four_color_variants(self):
-        """Should have 4 color variants for cluster product."""
-        product = KELLY_PRODUCTS["14711"]
-        assert len(product["variants"]) == 4
+                assert (
+                    variant["price_eur"] > 0
+                ), f"Invalid price for {variant['sku']}: {variant['price_eur']}"

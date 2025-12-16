@@ -25,6 +25,32 @@ from src.models import SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
 from src import lodes_price_list
 
 
+def _is_numeric_sku(sku: str) -> bool:
+    """Check if SKU is in numeric format (pure function).
+
+    Matches both base SKUs and SKUs with color codes:
+    - "14126" (base SKU only)
+    - "09622 1000" (base SKU + color code)
+
+    Args:
+        sku: SKU string to check
+
+    Returns:
+        True if SKU is numeric (with optional color code), False otherwise
+
+    Examples:
+        >>> _is_numeric_sku("14126")
+        True
+        >>> _is_numeric_sku("09622 1000")
+        True
+        >>> _is_numeric_sku("kelly")
+        False
+        >>> _is_numeric_sku("14126-abc")
+        False
+    """
+    return bool(re.match(r"^\d+(\s+\d+)?$", sku))
+
+
 class LodesScraper(BaseScraper):
     """Scraper for Lodes.com product pages."""
 
@@ -193,26 +219,41 @@ class LodesScraper(BaseScraper):
         """Extract product data from Lodes product page with multi-language support.
 
         Args:
-            sku: Product SKU/name slug
+            sku: Product SKU (e.g., "14126") or URL slug (e.g., "kelly")
 
         Returns:
             Structured product data
 
         Raises:
-            ValueError: If SKU is invalid
+            ValueError: If SKU is invalid or not found
             Exception: If scraping fails or page not found in all languages
         """
-        # Validate SKU
+        # Validate input
         if not sku or not sku.strip():
             raise ValueError("SKU cannot be empty")
 
-        if not re.match(r"^[a-zA-Z0-9_-]+$", sku):
+        # Allow alphanumeric, hyphens, underscores, and spaces (for SKUs like "09622 1000")
+        if not re.match(r"^[a-zA-Z0-9_\s-]+$", sku):
             raise ValueError(f"SKU contains invalid characters: {sku}")
+
+        # Auto-detect if input is numeric SKU or slug
+        url_slug = sku  # Default: assume it's already a slug
+        if _is_numeric_sku(sku):
+            # It's a numeric SKU, look up the corresponding slug
+            logger.info(f"Detected numeric SKU '{sku}', looking up URL slug...")
+
+            # Extract base SKU (first part before space, if present)
+            base_sku = sku.split()[0] if " " in sku else sku
+
+            url_slug = lodes_price_list.get_slug_by_base_sku(base_sku)
+            if not url_slug:
+                raise ValueError(f"SKU '{sku}' (base: '{base_sku}') not found in price list")
+            logger.info(f"Found URL slug '{url_slug}' for SKU '{sku}'")
 
         self._ensure_browser()
 
-        # Check if this product has price list data
-        price_list_products = lodes_price_list.get_product_by_slug(sku)
+        # Check if this product has price list data (use url_slug for lookup)
+        price_list_products = lodes_price_list.get_product_by_slug(url_slug)
         if price_list_products:
             logger.info(
                 f"Found {len(price_list_products)} product(s) in price list for slug '{sku}'"
@@ -225,7 +266,7 @@ class LodesScraper(BaseScraper):
         url = None
 
         for lang in languages:
-            url = self.build_product_url(sku, language=lang)
+            url = self.build_product_url(url_slug, language=lang)
             logger.info(f"Trying to scrape Lodes product ({lang}): {url}")
 
             try:
@@ -1160,7 +1201,9 @@ class LodesScraper(BaseScraper):
         available_colors = None
         parent_name = name
         if price_list_product:
-            available_colors = lodes_price_list.get_all_product_colors(price_list_product)
+            available_colors = lodes_price_list.get_all_product_colors(
+                price_list_product
+            )
             # Use price list product name for accurate naming (e.g., "Kelly small dome 50")
             parent_name = price_list_product["product_name"]
             # Use price list dimensions if available (more accurate than scraped)
