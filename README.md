@@ -10,12 +10,51 @@ Modular Python-based web scraper for extracting product data from lighting manuf
 - 🔄 **Retry logic** - Exponential backoff for reliability
 - 🧪 **Type-safe** - Full Python type hints with branded types
 - ✅ **Test coverage** - Unit and integration tests
+- 🖥️ **Desktop App** - Electron-based GUI with automatic updates
 
 ## Supported Manufacturers
 
 - **Lodes** (lodes.com) - Fully implemented
 
-## Quick Start
+## Desktop Application
+
+For end users, we provide a desktop application with an easy-to-use interface:
+
+### Features
+- ✅ Easy SKU input (paste or load from file)
+- ✅ Configurable options via checkboxes
+- ✅ Real-time progress tracking
+- ✅ Automatic updates (no manual downloads)
+- ✅ Settings persistence
+
+### Installation
+
+Download the latest installer from the [Releases](https://github.com/your-username/lodes-scraper/releases) page:
+- **Windows**: `Lodes-Scraper-Setup-X.X.X.exe`
+
+The app will automatically check for updates and notify you when new versions are available.
+
+### Development Setup
+
+```bash
+# Install Node.js dependencies
+npm install
+
+# Install Python dependencies (see CLI section below)
+pip install -r requirements.txt
+playwright install chromium
+
+# Run in development mode
+npm run dev
+
+# Build for production
+npm run build
+npm run package:win
+```
+
+## Command-Line Interface (CLI)
+
+For developers and automation, the CLI provides full control:
 
 ### 1. Installation
 

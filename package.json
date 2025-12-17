@@ -1,0 +1,93 @@
+{
+  "name": "light-scraper",
+  "version": "1.0.0",
+  "description": "Desktop application for scraping lighting manufacturer product data",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "package": "electron-builder",
+    "package:win": "electron-builder --win",
+    "package:mac": "electron-builder --mac",
+    "package:linux": "electron-builder --linux",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint electron --ext .ts,.tsx"
+  },
+  "keywords": ["lighting", "scraper", "electron"],
+  "author": "",
+  "license": "PROPRIETARY",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "build": {
+    "appId": "com.lightscraper.app",
+    "productName": "Light Scraper",
+    "directories": {
+      "output": "dist-installer"
+    },
+    "files": ["dist/**/*"],
+    "extraResources": [
+      {
+        "from": "python-dist",
+        "to": "python"
+      }
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "electron/icon.ico"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "electron/icon.icns",
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Light Scraper"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Utility"
+    },
+    "publish": {
+      "provider": "github"
+    }
+  }
+}
