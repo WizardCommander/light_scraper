@@ -122,6 +122,8 @@ def generate_description(
             "name": product.name,
             "description": description,
         }
+        # Ensure parent directory exists (for SKUs with slashes like "0162/Z")
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
         with open(cache_file, "w", encoding="utf-8") as f:
             json.dump(cache_data, f, indent=2, ensure_ascii=False)
 
@@ -225,6 +227,8 @@ def generate_short_description(
             "short_description": short_desc,
             "word_count": len(short_desc.split()),
         }
+        # Ensure parent directory exists (for SKUs with slashes like "0162/Z")
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
         with open(cache_file, "w", encoding="utf-8") as f:
             json.dump(cache_data, f, indent=2, ensure_ascii=False)
 

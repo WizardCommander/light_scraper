@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import type { ScraperEvent } from './types'
+import { cleanLogMessage, getLogColor, removeDuplicates } from './logUtils'
+import { ToastContainer, useToast } from './Toast'
 
 export default function App() {
+  const toast = useToast()
+  const [manufacturer, setManufacturer] = useState('lodes')
   const [skus, setSkus] = useState('')
   const [skusFile, setSkusFile] = useState('')
   const [outputDir, setOutputDir] = useState('')
@@ -19,29 +23,41 @@ export default function App() {
     // Load saved settings
     loadSettings()
 
-    // Set up event listeners
-    window.electronAPI.onScraperLog((log) => {
+    // Set up event listeners with cleanup
+    const unsubscribeLog = window.electronAPI.onScraperLog((log) => {
       setLogs((prev) => [...prev, log])
     })
 
-    window.electronAPI.onScraperError((error) => {
+    const unsubscribeError = window.electronAPI.onScraperError((error) => {
       setLogs((prev) => [...prev, `ERROR: ${error}`])
     })
 
-    window.electronAPI.onScraperEvent((event: ScraperEvent) => {
+    const unsubscribeEvent = window.electronAPI.onScraperEvent((event: ScraperEvent) => {
       handleScraperEvent(event)
     })
 
-    window.electronAPI.onUpdateAvailable(() => {
+    const unsubscribeUpdateAvailable = window.electronAPI.onUpdateAvailable(() => {
       setUpdateAvailable(true)
     })
 
-    window.electronAPI.onUpdateDownloaded(() => {
-      alert('Update downloaded! It will be installed on next launch.')
+    const unsubscribeUpdateDownloaded = window.electronAPI.onUpdateDownloaded(() => {
+      toast.success('Update downloaded! It will be installed on next launch.')
     })
+
+    // Cleanup function
+    return () => {
+      unsubscribeLog()
+      unsubscribeError()
+      unsubscribeEvent()
+      unsubscribeUpdateAvailable()
+      unsubscribeUpdateDownloaded()
+    }
   }, [])
 
   const loadSettings = async () => {
+    const savedManufacturer = await window.electronAPI.getSetting('manufacturer')
+    if (savedManufacturer) setManufacturer(savedManufacturer)
+
     const savedOutputDir = await window.electronAPI.getSetting('outputDir')
     if (savedOutputDir) setOutputDir(savedOutputDir)
 
@@ -59,7 +75,12 @@ export default function App() {
       setProgress((prev) => ({ ...prev, current: prev.current + 1 }))
     } else if (event.type === 'scrape_complete') {
       setIsRunning(false)
-      alert(`Scraping complete! ${event.data.succeeded} succeeded, ${event.data.failed} failed`)
+      const message = `Scraping complete! ${event.data.succeeded} succeeded, ${event.data.failed} failed`
+      if (event.data.failed > 0) {
+        toast.info(message)
+      } else {
+        toast.success(message)
+      }
     }
   }
 
@@ -80,7 +101,7 @@ export default function App() {
 
   const handleStart = async () => {
     if (!skus && !skusFile) {
-      alert('Please enter SKUs or load from file')
+      toast.error('Please enter SKUs or load from file')
       return
     }
 
@@ -90,6 +111,7 @@ export default function App() {
 
     try {
       await window.electronAPI.startScraper({
+        manufacturer,
         skus: skus || undefined,
         skusFile: skusFile || undefined,
         outputDir: outputDir || undefined,
@@ -101,7 +123,7 @@ export default function App() {
       // Scraper completed successfully
       setIsRunning(false)
     } catch (error) {
-      alert(`Scraper failed: ${error}`)
+      toast.error(`Scraper failed: ${error}`)
       setIsRunning(false)
     }
   }
@@ -116,16 +138,43 @@ export default function App() {
     : 0
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px', gap: '20px' }}>
-      {updateAvailable && (
-        <div style={{ padding: '10px', background: '#4CAF50', color: 'white', borderRadius: '4px' }}>
-          Update available! It will be downloaded in the background.
-        </div>
-      )}
+    <>
+      <ToastContainer toasts={toast.toasts} onDismiss={toast.dismissToast} />
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px', gap: '20px' }}>
+        {updateAvailable && (
+          <div style={{ padding: '10px', background: '#4CAF50', color: 'white', borderRadius: '4px' }}>
+            Update available! It will be downloaded in the background.
+          </div>
+        )}
 
-      <h1 style={{ margin: 0 }}>Light Scraper</h1>
+        <h1 style={{ margin: 0 }}>Light Scraper</h1>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div>
+          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            Manufacturer
+          </label>
+          <select
+            value={manufacturer}
+            onChange={async (e) => {
+              const newManufacturer = e.target.value
+              setManufacturer(newManufacturer)
+              await window.electronAPI.setSetting('manufacturer', newManufacturer)
+            }}
+            disabled={isRunning}
+            style={{
+              width: '200px',
+              padding: '8px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              border: '1px solid #ccc'
+            }}
+          >
+            <option value="lodes">Lodes</option>
+            <option value="vibia">Vibia</option>
+          </select>
+        </div>
+
         <div>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
             Step 1: Enter Product SKUs
@@ -133,7 +182,10 @@ export default function App() {
           <textarea
             value={skus}
             onChange={(e) => setSkus(e.target.value)}
-            placeholder="kelly, megaphone, a-tube-suspension"
+            placeholder={manufacturer === 'lodes'
+              ? "kelly, megaphone, a-tube-suspension"
+              : "circus, aura, break"
+            }
             disabled={isRunning}
             style={{
               width: '100%',
@@ -232,7 +284,7 @@ export default function App() {
 
         <div style={{ display: 'flex', gap: '10px' }}>
           {!isRunning ? (
-            <button onClick={handleStart} style={{ ...buttonStyle, background: '#4CAF50', color: 'white' }}>
+            <button onClick={handleStart} style={{ ...buttonStyle, background: '#FF9800', color: 'white' }}>
               ▶ Start Scraping
             </button>
           ) : (
@@ -278,38 +330,20 @@ export default function App() {
             lineHeight: '1.4'
           }}
         >
-          {logs
-            .filter((log, i, arr) => {
-              // Remove duplicate consecutive logs
-              return i === 0 || log !== arr[i - 1]
-            })
-            .map((log, i) => {
-              // Clean up log formatting
-              let cleanLog = log
-                .replace(/\x1b\[[0-9;]*m/g, '') // Remove ANSI color codes
-                .replace(/^ERROR:\s+/g, '') // Remove ERROR: prefix first
-                .replace(/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d{3}\s+\|\s+/g, '') // Remove timestamp prefix
-                .replace(/\s+\|\s+INFO\s+\|\s+/g, ' | ') // Clean up log level separators
-                .replace(/\s+\|\s+SUCCESS\s+\|\s+/g, ' | ')
-                .replace(/\s+\|\s+ERROR\s+\|\s+/g, ' | ')
-                .trim()
+          {removeDuplicates(logs).map((log, i) => {
+            const cleanLog = cleanLogMessage(log)
+            if (!cleanLog) return null
 
-              // Skip empty logs
-              if (!cleanLog) return null
-
-              // Determine color based on content (only if explicitly marked)
-              const isSuccess = cleanLog.includes('SUCCESS') || cleanLog.includes('Successfully')
-              const isError = cleanLog.includes('ERROR') || cleanLog.includes('Failed') || cleanLog.includes('Error:')
-
-              const color = isSuccess ? '#51cf66' : isError ? '#ff6b6b' : '#ffffff'
-
-              return (
-                <div key={i} style={{ color, marginBottom: '2px' }}>{cleanLog}</div>
-              )
-            })}
+            return (
+              <div key={i} style={{ color: getLogColor(cleanLog), marginBottom: '2px' }}>
+                {cleanLog}
+              </div>
+            )
+          })}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

@@ -5,14 +5,15 @@ export interface ElectronAPI {
   setSetting: (key: string, value: any) => Promise<void>
   startScraper: (options: ScraperOptions) => Promise<{ success: boolean }>
   stopScraper: () => Promise<{ success: boolean; message?: string }>
-  onScraperLog: (callback: (log: string) => void) => void
-  onScraperError: (callback: (error: string) => void) => void
-  onScraperEvent: (callback: (event: ScraperEvent) => void) => void
-  onUpdateAvailable: (callback: () => void) => void
-  onUpdateDownloaded: (callback: () => void) => void
+  onScraperLog: (callback: (log: string) => void) => () => void
+  onScraperError: (callback: (error: string) => void) => () => void
+  onScraperEvent: (callback: (event: ScraperEvent) => void) => () => void
+  onUpdateAvailable: (callback: () => void) => () => void
+  onUpdateDownloaded: (callback: () => void) => () => void
 }
 
 export interface ScraperOptions {
+  manufacturer?: string
   skus?: string
   skusFile?: string
   outputDir?: string

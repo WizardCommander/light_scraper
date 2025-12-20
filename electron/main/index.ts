@@ -152,7 +152,9 @@ ipcMain.handle('start-scraper', (_event, options) => {
       args.length = 0
     }
 
-    args.push('--manufacturer', 'lodes')
+    // Use manufacturer from options, default to 'lodes' for backwards compatibility
+    const manufacturer = options.manufacturer || 'lodes'
+    args.push('--manufacturer', manufacturer)
 
     if (options.skus) {
       args.push('--skus', options.skus)

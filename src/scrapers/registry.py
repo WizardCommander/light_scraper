@@ -8,12 +8,13 @@ from typing import Type
 
 from src.scrapers.base_scraper import BaseScraper
 from src.scrapers.lodes_scraper import LodesScraper
+from src.scrapers.vibia_scraper import VibiaScraper
 
 # Registry of available scrapers
 SCRAPER_REGISTRY: dict[str, Type[BaseScraper]] = {
     "lodes": LodesScraper,
+    "vibia": VibiaScraper,
     # Future manufacturers added here:
-    # "vibia": VibiaScraper,
     # "flos": FlosScraper,
 }
 

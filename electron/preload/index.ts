@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
@@ -7,19 +7,31 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setSetting: (key: string, value: any) => ipcRenderer.invoke('set-setting', key, value),
   startScraper: (options: any) => ipcRenderer.invoke('start-scraper', options),
   stopScraper: () => ipcRenderer.invoke('stop-scraper'),
+
+  // Event listeners now return unsubscribe functions
   onScraperLog: (callback: (log: string) => void) => {
-    ipcRenderer.on('scraper-log', (_event, log) => callback(log))
+    const listener = (_event: IpcRendererEvent, log: string) => callback(log)
+    ipcRenderer.on('scraper-log', listener)
+    return () => ipcRenderer.removeListener('scraper-log', listener)
   },
   onScraperError: (callback: (error: string) => void) => {
-    ipcRenderer.on('scraper-error', (_event, error) => callback(error))
+    const listener = (_event: IpcRendererEvent, error: string) => callback(error)
+    ipcRenderer.on('scraper-error', listener)
+    return () => ipcRenderer.removeListener('scraper-error', listener)
   },
   onScraperEvent: (callback: (event: any) => void) => {
-    ipcRenderer.on('scraper-event', (_event, event) => callback(event))
+    const listener = (_event: IpcRendererEvent, event: any) => callback(event)
+    ipcRenderer.on('scraper-event', listener)
+    return () => ipcRenderer.removeListener('scraper-event', listener)
   },
   onUpdateAvailable: (callback: () => void) => {
-    ipcRenderer.on('update-available', callback)
+    const listener = () => callback()
+    ipcRenderer.on('update-available', listener)
+    return () => ipcRenderer.removeListener('update-available', listener)
   },
   onUpdateDownloaded: (callback: () => void) => {
-    ipcRenderer.on('update-downloaded', callback)
+    const listener = () => callback()
+    ipcRenderer.on('update-downloaded', listener)
+    return () => ipcRenderer.removeListener('update-downloaded', listener)
   }
 })
