@@ -182,11 +182,24 @@ ipcMain.handle('start-scraper', (_event, options) => {
       args.push('--verbose')
     }
 
+    // Load credentials from electron-store and set as environment variables
+    const vibiaEmail = store.get('vibiaEmail') as string | undefined
+    const vibiaPassword = store.get('vibiaPassword') as string | undefined
+    const anthropicApiKey = store.get('anthropicApiKey') as string | undefined
+
+    const processEnv = {
+      ...process.env,
+      ...(vibiaEmail && { VIBIA_EMAIL: vibiaEmail }),
+      ...(vibiaPassword && { VIBIA_PASSWORD: vibiaPassword }),
+      ...(anthropicApiKey && { ANTHROPIC_API_KEY: anthropicApiKey })
+    }
+
     // Spawn Python process
     scraperProcess = spawn(pythonExe, args, {
       cwd: process.env.NODE_ENV === 'development'
         ? path.join(__dirname, '../..')
-        : process.resourcesPath
+        : process.resourcesPath,
+      env: processEnv
     })
 
     scraperProcess.stdout?.on('data', (data) => {

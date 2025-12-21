@@ -30,6 +30,7 @@ logs/
 debug_*.py
 test_*.txt
 *_test/
+lodes_test_skus.txt
 
 # Config files (except pytest.ini)
 *.ini

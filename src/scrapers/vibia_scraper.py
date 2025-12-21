@@ -4,8 +4,11 @@ Following CLAUDE.md: manufacturer-specific logic only, inherits common functiona
 Vibia uses Next.js with JSON-LD embedded data, requiring different extraction approach than Lodes.
 """
 
+import os
 import re
-from typing import Any
+import zipfile
+from pathlib import Path
+from typing import Any, Optional
 
 from loguru import logger
 from playwright.sync_api import Page, TimeoutError as PlaywrightTimeout
@@ -13,6 +16,7 @@ from playwright.sync_api import Page, TimeoutError as PlaywrightTimeout
 from src.scrapers.base_scraper import BaseScraper
 from src.models import SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
 from src import vibia_price_list
+from src.auth import VibiaAuth
 
 
 class VibiaScraper(BaseScraper):
@@ -30,6 +34,7 @@ class VibiaScraper(BaseScraper):
             default_price=0.0,
         )
         super().__init__(config)
+        self.vibia_auth: Optional[VibiaAuth] = None
 
     def build_product_url(self, sku: SKU, language: str = "de") -> str:
         """Construct product URL from SKU with language support.
@@ -151,6 +156,30 @@ class VibiaScraper(BaseScraper):
                     logger.success(
                         f"Successfully scraped {len(products)} product(s) from {url}"
                     )
+
+                    # Download product files if credentials are available
+                    try:
+                        feature_props = (
+                            json_data.get("props", {})
+                            .get("pageProps", {})
+                            .get("featureProps", {})
+                        )
+
+                        if feature_props:
+                            # Use parent SKU as output directory name
+                            base_sku = products[0].sku if products else sku
+                            output_dir = Path("output") / str(base_sku)
+
+                            # Download files (manual and specSheet by default)
+                            self.download_product_files(
+                                feature_props=feature_props,
+                                output_dir=output_dir,
+                                download_types=["manual", "specSheet"],
+                            )
+                    except Exception as e:
+                        logger.warning(f"File download failed: {e}")
+                        # Continue anyway - downloads are optional
+
                     return products
 
             except PlaywrightTimeout as e:
@@ -577,3 +606,180 @@ class VibiaScraper(BaseScraper):
 
         logger.warning("Category scraping not yet implemented for Vibia")
         return []
+
+    def _extract_download_ids(
+        self, feature_props: dict[str, Any]
+    ) -> Optional[dict[str, Any]]:
+        """Extract IDs needed for downloading documents from Vibia API.
+
+        Args:
+            feature_props: featureProps object from __NEXT_DATA__
+
+        Returns:
+            Dictionary with catalogId, familyId, subFamilyId, applicationLocationId
+            or None if required fields are missing
+        """
+        try:
+            data = feature_props.get("data", {})
+            collection = feature_props.get("collection", {})
+
+            catalog_id = data.get("id")
+            if not catalog_id:
+                logger.warning("No catalog ID found in product data")
+                return None
+
+            # Extract IDs from collection data
+            family = collection.get("family", {})
+            sub_family = collection.get("subFamily", {})
+            applications_locations = collection.get("applicationsLocations", [])
+
+            family_id = family.get("id")
+            sub_family_id = sub_family.get("id")
+
+            # Use first application location if available
+            application_location_id = None
+            if applications_locations and len(applications_locations) > 0:
+                application_location_id = applications_locations[0].get("id")
+
+            if not all([family_id, sub_family_id, application_location_id]):
+                logger.warning(
+                    f"Missing required IDs: family={family_id}, "
+                    f"subFamily={sub_family_id}, appLocation={application_location_id}"
+                )
+                return None
+
+            return {
+                "catalog_id": str(catalog_id),
+                "model_id": str(catalog_id),
+                "family_id": family_id,
+                "sub_family_id": sub_family_id,
+                "application_location_id": application_location_id,
+            }
+
+        except Exception as e:
+            logger.error(f"Error extracting download IDs: {e}")
+            return None
+
+    def _extract_zip_safely(
+        self, zip_ref: zipfile.ZipFile, output_dir: Path
+    ) -> None:
+        """Safely extract ZIP file with security validation.
+
+        Protects against:
+        - Path traversal attacks (e.g., ../../etc/passwd)
+        - Zip bombs (excessive decompressed size)
+
+        Args:
+            zip_ref: Open ZipFile object
+            output_dir: Target extraction directory
+
+        Raises:
+            ValueError: If ZIP contains malicious content
+        """
+        output_dir_resolved = output_dir.resolve()
+        max_size = 500 * 1024 * 1024  # 500 MB max total size
+
+        total_size = 0
+        for file_info in zip_ref.filelist:
+            # Check for path traversal
+            member_path = (output_dir / file_info.filename).resolve()
+            if not str(member_path).startswith(str(output_dir_resolved)):
+                raise ValueError(
+                    f"ZIP contains unsafe path: {file_info.filename}"
+                )
+
+            # Check for zip bomb
+            total_size += file_info.file_size
+            if total_size > max_size:
+                raise ValueError(
+                    f"ZIP decompressed size exceeds limit ({max_size} bytes)"
+                )
+
+        # Extract all files (validated as safe)
+        zip_ref.extractall(output_dir)
+
+    def download_product_files(
+        self,
+        feature_props: dict[str, Any],
+        output_dir: Path,
+        download_types: list[str] = None,
+    ) -> bool:
+        """Download product files (manuals, datasheets, images) from Vibia.
+
+        Args:
+            feature_props: featureProps object from __NEXT_DATA__
+            output_dir: Directory to save downloaded files
+            download_types: List of file types to download
+                Valid types: "manual", "specSheet", "images"
+                If None, downloads manual and specSheet by default
+
+        Returns:
+            True if download successful, False otherwise
+        """
+        if download_types is None:
+            download_types = ["manual", "specSheet"]
+
+        # Initialize auth if not already done
+        if not self.vibia_auth:
+            email = os.getenv("VIBIA_EMAIL")
+            password = os.getenv("VIBIA_PASSWORD")
+
+            if not email or not password:
+                logger.warning(
+                    "Vibia credentials not found in environment. "
+                    "Skipping file downloads."
+                )
+                return False
+
+            self.vibia_auth = VibiaAuth(email=email, password=password)
+            if not self.vibia_auth.login():
+                logger.error("Failed to authenticate with Vibia")
+                return False
+
+        # Extract download IDs
+        ids = self._extract_download_ids(feature_props)
+        if not ids:
+            logger.error("Could not extract required IDs for download")
+            return False
+
+        try:
+            # Download documents
+            zip_content = self.vibia_auth.download_documents(
+                catalog_id=ids["catalog_id"],
+                model_id=ids["model_id"],
+                sub_family_id=ids["sub_family_id"],
+                application_location_id=ids["application_location_id"],
+                family_id=ids["family_id"],
+                document_types=download_types,
+                lang="en",
+            )
+
+            if not zip_content:
+                logger.warning("No files downloaded from Vibia")
+                return False
+
+            # Save and extract ZIP file
+            output_dir.mkdir(parents=True, exist_ok=True)
+            zip_path = output_dir / "vibia_documents.zip"
+
+            with open(zip_path, "wb") as f:
+                f.write(zip_content)
+
+            logger.info(f"Saved ZIP file to {zip_path}")
+
+            # Extract ZIP contents securely
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                # Validate ZIP contents before extraction (security check)
+                self._extract_zip_safely(zip_ref, output_dir)
+                logger.success(
+                    f"Extracted {len(zip_ref.namelist())} files to {output_dir}"
+                )
+
+            # Optionally remove ZIP file after extraction
+            zip_path.unlink()
+
+            return True
+
+        except Exception as e:
+            logger.error(f"Error downloading product files: {e}")
+            return False

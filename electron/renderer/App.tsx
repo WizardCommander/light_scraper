@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import type { ScraperEvent } from './types'
 import { cleanLogMessage, getLogColor, removeDuplicates } from './logUtils'
 import { ToastContainer, useToast } from './Toast'
+import Settings from './Settings'
 
 export default function App() {
   const toast = useToast()
@@ -18,6 +19,7 @@ export default function App() {
   const [logs, setLogs] = useState<string[]>([])
   const [progress, setProgress] = useState({ current: 0, total: 0 })
   const [updateAvailable, setUpdateAvailable] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     // Load saved settings
@@ -147,7 +149,22 @@ export default function App() {
           </div>
         )}
 
-        <h1 style={{ margin: 0 }}>Light Scraper</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ margin: 0 }}>Light Scraper</h1>
+          <button
+            onClick={() => setShowSettings(true)}
+            style={{
+              padding: '8px 16px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              background: 'white',
+              cursor: 'pointer'
+            }}
+          >
+            ⚙️ Settings
+          </button>
+        </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <div>
@@ -343,6 +360,8 @@ export default function App() {
         </div>
       </div>
       </div>
+
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </>
   )
 }
