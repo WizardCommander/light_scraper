@@ -113,7 +113,7 @@ def _call_vision_api(client: OpenAI, image_data: bytes, mime_type: str) -> str:
         Exception: If API call fails
     """
     base64_image = base64.b64encode(image_data).decode("utf-8")
-    
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         max_tokens=10,
@@ -262,7 +262,9 @@ def classify_image_url(
         return image_type
 
     except httpx.HTTPStatusError as e:
-        logger.error(f"HTTP error downloading image {image_url}: {e.response.status_code}")
+        logger.error(
+            f"HTTP error downloading image {image_url}: {e.response.status_code}"
+        )
         return "project"
     except Exception as e:
         logger.error(f"Image classification failed for {image_url}: {e}")

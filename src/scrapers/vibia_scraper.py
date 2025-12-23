@@ -479,8 +479,13 @@ class VibiaScraper(BaseScraper):
             filtered_variants = []
             for v in all_variants:
                 # Match control code (e.g., "9Z") - case-insensitive
-                control_match = v["control_code"].upper() == requested_control_code.upper() or \
-                               v["sku"].upper().endswith(f"/{requested_control_code.upper()}")
+                control_match = v[
+                    "control_code"
+                ].upper() == requested_control_code.upper() or v[
+                    "sku"
+                ].upper().endswith(
+                    f"/{requested_control_code.upper()}"
+                )
 
                 # Match surface code if specified (e.g., "24")
                 surface_match = True
@@ -606,8 +611,8 @@ class VibiaScraper(BaseScraper):
             # Map variation attributes to keys that CSV exporter recognizes
             variation_attrs = {
                 "Color": variant["surface_name_en"],  # Maps to "Farbe"
-                "Dali": variant["control_name_en"],   # Maps to "Dimmbarkeit"
-                "Mounting": "Aufbaubaldachin",        # Standard mounting type for pendant lights
+                "Dali": variant["control_name_en"],  # Maps to "Dimmbarkeit"
+                "Mounting": "Aufbaubaldachin",  # Standard mounting type for pendant lights
             }
 
             products.append(
@@ -732,9 +737,7 @@ class VibiaScraper(BaseScraper):
             logger.error(f"Error extracting download IDs: {e}")
             return None
 
-    def _extract_zip_safely(
-        self, zip_ref: zipfile.ZipFile, output_dir: Path
-    ) -> None:
+    def _extract_zip_safely(self, zip_ref: zipfile.ZipFile, output_dir: Path) -> None:
         """Safely extract ZIP file with security validation.
 
         Protects against:
@@ -756,9 +759,7 @@ class VibiaScraper(BaseScraper):
             # Check for path traversal
             member_path = (output_dir / file_info.filename).resolve()
             if not str(member_path).startswith(str(output_dir_resolved)):
-                raise ValueError(
-                    f"ZIP contains unsafe path: {file_info.filename}"
-                )
+                raise ValueError(f"ZIP contains unsafe path: {file_info.filename}")
 
             # Check for zip bomb
             total_size += file_info.file_size
@@ -804,7 +805,9 @@ class VibiaScraper(BaseScraper):
                 # Remove nested ZIP after extraction
                 nested_zip.unlink()
             except zipfile.BadZipFile:
-                logger.warning(f"Nested file {nested_zip.name} is not a valid ZIP, keeping as-is")
+                logger.warning(
+                    f"Nested file {nested_zip.name} is not a valid ZIP, keeping as-is"
+                )
             except Exception as e:
                 logger.warning(f"Failed to extract nested ZIP {nested_zip.name}: {e}")
 
@@ -827,7 +830,11 @@ class VibiaScraper(BaseScraper):
             new_name = None
             if "spec" in filename_lower or "technical" in filename_lower:
                 new_name = "spec_sheet.pdf"
-            elif "man" in filename_lower or "manual" in filename_lower or "instruction" in filename_lower:
+            elif (
+                "man" in filename_lower
+                or "manual" in filename_lower
+                or "instruction" in filename_lower
+            ):
                 new_name = "instruction_manual.pdf"
 
             # Rename if we identified the document type
@@ -839,6 +846,126 @@ class VibiaScraper(BaseScraper):
                 file_path.rename(new_path)
                 logger.debug(f"Renamed {file_path.name} → {new_name}")
 
+    def _find_image_files(self, directory: Path) -> list[Path]:
+        """Find all image files recursively in a directory.
+
+        Args:
+            directory: Directory to search
+
+        Returns:
+            List of image file paths
+        """
+        image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.webp"]
+        image_files = []
+        for ext in image_extensions:
+            image_files.extend(directory.rglob(ext))
+        return image_files
+
+    def _filter_unclassified_images(
+        self, image_files: list[Path], product_dir: Path, project_dir: Path
+    ) -> list[Path]:
+        """Filter out images that are already in classified directories.
+
+        Args:
+            image_files: List of all image files
+            product_dir: Product images directory
+            project_dir: Project images directory
+
+        Returns:
+            List of images that need classification
+        """
+        return [
+            img
+            for img in image_files
+            if not (img.parent == product_dir or img.parent == project_dir)
+        ]
+
+    def _is_duplicate_image(
+        self, image_path: Path, product_dir: Path, project_dir: Path
+    ) -> bool:
+        """Check if an image file already exists in destination directories.
+
+        Args:
+            image_path: Path to image file
+            product_dir: Product images directory
+            project_dir: Project images directory
+
+        Returns:
+            True if image with same name exists in either directory
+        """
+        return (product_dir / image_path.name).exists() or (
+            project_dir / image_path.name
+        ).exists()
+
+    def _move_classified_image(
+        self,
+        image_file: Path,
+        classification: str,
+        product_dir: Path,
+        project_dir: Path,
+    ) -> None:
+        """Move image to appropriate directory based on classification.
+
+        Args:
+            image_file: Path to image file
+            classification: Classification result ("product" or "project")
+            product_dir: Product images directory
+            project_dir: Project images directory
+
+        Raises:
+            FileNotFoundError: If image file doesn't exist
+            OSError: If move operation fails
+        """
+        if classification == "product":
+            dest = product_dir / image_file.name
+            image_file.rename(dest)
+            logger.info(f"✓ Product image: {image_file.name}")
+        elif classification == "project":
+            dest = project_dir / image_file.name
+            image_file.rename(dest)
+            logger.info(f"✓ Project image: {image_file.name}")
+        else:
+            # Fallback to product for unknown classifications
+            dest = product_dir / image_file.name
+            image_file.rename(dest)
+            logger.warning(
+                f"Unknown classification '{classification}', "
+                f"defaulting to product: {image_file.name}"
+            )
+
+    def _cleanup_leftover_files(
+        self, output_dir: Path, product_dir: Path, project_dir: Path
+    ) -> None:
+        """Clean up leftover ZIP files and empty directories.
+
+        Args:
+            output_dir: Root output directory
+            product_dir: Product images directory (preserved)
+            project_dir: Project images directory (preserved)
+        """
+        # Remove leftover ZIP files
+        for zip_file in output_dir.rglob("*.zip"):
+            try:
+                zip_file.unlink()
+                logger.debug(f"Removed leftover ZIP: {zip_file.name}")
+            except (OSError, PermissionError) as e:
+                logger.debug(f"Could not remove ZIP {zip_file.name}: {e}")
+
+        # Remove empty directories (preserve images/ subdirs)
+        images_dir = output_dir / "images"
+        preserved_dirs = {product_dir, project_dir, images_dir}
+
+        for subdir in sorted(output_dir.rglob("*"), reverse=True):
+            if not subdir.is_dir() or subdir in preserved_dirs:
+                continue
+
+            try:
+                if not any(subdir.iterdir()):  # Directory is empty
+                    subdir.rmdir()
+                    logger.debug(f"Removed empty directory: {subdir.name}")
+            except (OSError, PermissionError) as e:
+                logger.debug(f"Could not remove directory {subdir.name}: {e}")
+
     def _classify_and_organize_images(self, output_dir: Path) -> None:
         """Classify downloaded images as product or project using AI and organize into subdirectories.
 
@@ -846,31 +973,26 @@ class VibiaScraper(BaseScraper):
             output_dir: Directory containing extracted files
         """
         import time
+
         # Import here to avoid circular dependency
-        from src.ai.image_classifier import classify_image_file, ImageType
+        from src.ai.image_classifier import classify_image_file
 
-        # Find all image files (recursively, including from extracted subdirectories)
-        image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.webp"]
-        image_files = []
-        for ext in image_extensions:
-            # Use rglob for recursive search
-            image_files.extend(output_dir.rglob(ext))
-
+        # Find all image files
+        image_files = self._find_image_files(output_dir)
         if not image_files:
             logger.debug("No images found in downloaded files")
             return
 
-        # Create subdirectories
+        # Create output directories
         product_dir = output_dir / "images" / "product"
         project_dir = output_dir / "images" / "project"
         product_dir.mkdir(parents=True, exist_ok=True)
         project_dir.mkdir(parents=True, exist_ok=True)
 
-        # Filter out images already in product/project dirs to avoid duplicates
-        images_to_classify = [
-            img for img in image_files
-            if not (img.parent == product_dir or img.parent == project_dir)
-        ]
+        # Filter out already-classified images
+        images_to_classify = self._filter_unclassified_images(
+            image_files, product_dir, project_dir
+        )
 
         if len(images_to_classify) < len(image_files):
             skipped = len(image_files) - len(images_to_classify)
@@ -885,66 +1007,43 @@ class VibiaScraper(BaseScraper):
         # Classify and move each image
         for image_file in images_to_classify:
             try:
-                # Check if file with same name already exists in destination
-                dest_product = product_dir / image_file.name
-                dest_project = project_dir / image_file.name
-
-                if dest_product.exists() or dest_project.exists():
+                # Skip duplicates
+                if self._is_duplicate_image(image_file, product_dir, project_dir):
                     logger.debug(f"Skipping duplicate: {image_file.name}")
-                    # Delete the duplicate source file
                     image_file.unlink()
                     continue
 
-                # Use AI to classify the image
+                # Classify and move
                 classification = classify_image_file(str(image_file))
+                time.sleep(0.5)  # Rate limiting prevention
+                self._move_classified_image(
+                    image_file, classification, product_dir, project_dir
+                )
 
-                # Small delay to avoid rate limiting (OpenAI has 200k tokens/min limit)
-                time.sleep(0.5)
-
-                # Move to appropriate directory
-                if classification == "product":
-                    image_file.rename(dest_product)
-                    logger.info(f"✓ Product image: {image_file.name}")
-                elif classification == "project":
-                    image_file.rename(dest_project)
-                    logger.info(f"✓ Project image: {image_file.name}")
-                else:
-                    # Fallback to product (shouldn't happen)
-                    image_file.rename(dest_product)
-                    logger.warning(f"Unknown classification '{classification}', defaulting to product: {image_file.name}")
-
-            except Exception as e:
-                logger.warning(f"Failed to classify image {image_file.name}: {e}")
-                # Try to move to product dir as fallback
+            except (FileNotFoundError, OSError) as e:
+                logger.warning(f"Failed to process image {image_file.name}: {e}")
+                # Fallback: try to move to product dir
                 try:
                     dest = product_dir / image_file.name
-                    if not dest.exists():
+                    if not dest.exists() and image_file.exists():
                         image_file.rename(dest)
-                    else:
-                        # If destination exists, just delete the source
+                    elif image_file.exists():
                         image_file.unlink()
-                except Exception:
-                    pass
+                except (OSError, PermissionError):
+                    logger.debug(f"Could not recover from error for {image_file.name}")
 
-        # Clean up any leftover ZIP files
-        for zip_file in output_dir.rglob("*.zip"):
-            try:
-                zip_file.unlink()
-                logger.debug(f"Removed leftover ZIP: {zip_file.name}")
-            except Exception:
-                pass
-
-        # Clean up empty directories
-        for subdir in sorted(output_dir.rglob("*"), reverse=True):
-            if subdir.is_dir() and subdir != product_dir and subdir != project_dir and subdir != output_dir / "images":
+            except Exception as e:
+                logger.error(f"Unexpected error classifying {image_file.name}: {e}")
+                # Try to clean up the file
                 try:
-                    if not any(subdir.iterdir()):  # Directory is empty
-                        subdir.rmdir()
-                        logger.debug(f"Removed empty directory: {subdir.name}")
-                except Exception:
+                    if image_file.exists():
+                        image_file.unlink()
+                except (OSError, PermissionError):
                     pass
 
-        logger.info(f"Organized images into product and project directories")
+        # Clean up leftover files
+        self._cleanup_leftover_files(output_dir, product_dir, project_dir)
+        logger.info("Organized images into product and project directories")
 
     def _login_and_inject_cookies(self) -> bool:
         """Login via API and inject cookies into Playwright browser.
@@ -985,12 +1084,14 @@ class VibiaScraper(BaseScraper):
                 if not domain or "vibia.com" in domain:
                     domain = ".vibia.com"
 
-                cookies.append({
-                    "name": cookie.name,
-                    "value": cookie.value,
-                    "domain": domain,
-                    "path": cookie.path or "/",
-                })
+                cookies.append(
+                    {
+                        "name": cookie.name,
+                        "value": cookie.value,
+                        "domain": domain,
+                        "path": cookie.path or "/",
+                    }
+                )
 
             if not cookies:
                 logger.warning("No cookies obtained from API login")
@@ -1004,7 +1105,9 @@ class VibiaScraper(BaseScraper):
             context = self._page.context
             context.add_cookies(cookies)
 
-            logger.success(f"Successfully logged in and injected {len(cookies)} cookies")
+            logger.success(
+                f"Successfully logged in and injected {len(cookies)} cookies"
+            )
             return True
 
         except Exception as e:
@@ -1059,7 +1162,9 @@ class VibiaScraper(BaseScraper):
 
             # First, click the Download button to open the modal
             # Based on screenshot: button[data-qa="download-popup-open-inspirational"]
-            download_trigger = self._page.locator('button[data-qa="download-popup-open-inspirational"], button.vib-link:has-text("Download")')
+            download_trigger = self._page.locator(
+                'button[data-qa="download-popup-open-inspirational"], button.vib-link:has-text("Download")'
+            )
 
             if download_trigger.count() == 0:
                 logger.error("Download trigger button not found on page")
@@ -1074,7 +1179,10 @@ class VibiaScraper(BaseScraper):
 
             # Wait specifically for one of the checkboxes to appear (indicates modal is fully loaded)
             try:
-                self._page.wait_for_selector('input[name="specSheet"], input[name="manual"], input[name="images"]', timeout=5000)
+                self._page.wait_for_selector(
+                    'input[name="specSheet"], input[name="manual"], input[name="images"]',
+                    timeout=5000,
+                )
                 logger.debug("Checkboxes detected in modal")
             except Exception:
                 logger.warning("Checkboxes not found after 5s wait, proceeding anyway")
@@ -1110,7 +1218,9 @@ class VibiaScraper(BaseScraper):
             logger.info("Clicking Download button in modal...")
 
             # Wait for download button to be visible and enabled
-            download_button = self._page.locator('#downloadArticle, button[data-qa="downloadArticle"]')
+            download_button = self._page.locator(
+                '#downloadArticle, button[data-qa="downloadArticle"]'
+            )
             download_button.wait_for(state="visible", timeout=10000)
 
             # Check if button is disabled and wait for it to become enabled
@@ -1120,7 +1230,7 @@ class VibiaScraper(BaseScraper):
                         const btn = document.querySelector('#downloadArticle, button[data-qa="downloadArticle"]');
                         return btn && !btn.disabled;
                     }""",
-                    timeout=10000
+                    timeout=10000,
                 )
                 logger.debug("Download button is enabled")
             except Exception:

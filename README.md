@@ -15,6 +15,7 @@ Modular Python-based web scraper for extracting product data from lighting manuf
 ## Supported Manufacturers
 
 - **Lodes** (lodes.com) - Fully implemented
+- **Vibia** (vibia.com) - Fully implemented with AI-powered image classification
 
 ## Desktop Application
 
@@ -94,7 +95,64 @@ python -m src.cli --manufacturer lodes --skus kelly --output my_output
 python -m src.cli --manufacturer lodes --skus kelly -v
 ```
 
-### 3. Output
+### 3. Vibia-Specific Features
+
+The Vibia scraper includes advanced features for handling the manufacturer's unique image delivery system:
+
+#### Automatic Modal Image Downloads
+
+Vibia serves high-resolution product images through a secure download modal requiring authentication. The scraper:
+
+1. **Authenticates automatically** using Playwright browser automation
+2. **Downloads ZIP archives** from the modal interface
+3. **Extracts nested ZIPs** (supports up to 2 levels of nesting)
+4. **Prevents ZIP bombs** with path traversal security checks
+
+#### AI-Powered Image Classification
+
+Downloaded images are automatically classified using GPT-4 Vision API:
+
+- **Product images**: Studio shots with neutral backgrounds → `images/product/`
+- **Project images**: Environmental/lifestyle shots → `images/project/`
+
+**Prerequisites:**
+```bash
+# Set your OpenAI API key
+export OPENAI_API_KEY="sk-..."  # Mac/Linux
+set OPENAI_API_KEY=sk-...       # Windows
+```
+
+**Configuration:**
+- Classification uses GPT-4o-mini for cost efficiency
+- Results are cached to avoid redundant API calls
+- 0.5s delay between calls prevents rate limiting
+- Duplicate images are automatically detected and removed
+
+**Output Structure:**
+```
+output/
+└── vibia/
+    └── 0162/           # Base SKU (e.g., Circus family)
+        ├── 1/          # Variant SKU
+        │   └── images/
+        │       ├── product/    # AI-classified product shots
+        │       │   ├── image1.jpg
+        │       │   └── image2.jpg
+        │       └── project/    # AI-classified lifestyle shots
+        │           ├── scene1.jpg
+        │           └── scene2.jpg
+        └── 9Z/         # Another variant
+            └── images/
+                ├── product/
+                └── project/
+```
+
+**Troubleshooting:**
+- **Rate limiting (429 errors)**: OpenAI has a 200k tokens/min limit. The scraper automatically adds delays, but for large batches consider upgrading your API tier.
+- **Duplicate file warnings**: When scraping multiple SKUs from the same product family, images are shared. The scraper detects and removes duplicates automatically.
+- **Authentication failures**: The scraper uses cached Playwright auth. If downloads fail, delete the browser cache and retry.
+
+### 4. Output
 
 The scraper generates:
 
@@ -103,13 +161,18 @@ output/
 ├── products.csv          # WooCommerce import-ready CSV
 ├── products.xlsx         # Excel master data file
 └── images/
-    └── lodes/
-        ├── kelly/
-        │   ├── featured.jpg
-        │   ├── 01.jpg
-        │   └── 02.jpg
-        └── megaphone/
-            └── featured.jpg
+    ├── lodes/
+    │   ├── kelly/
+    │   │   ├── featured.jpg
+    │   │   ├── 01.jpg
+    │   │   └── 02.jpg
+    │   └── megaphone/
+    │       └── featured.jpg
+    └── vibia/
+        └── 0162/         # Base SKU
+            └── images/
+                ├── product/    # AI-classified
+                └── project/    # AI-classified
 ```
 
 ## Project Structure
