@@ -99,7 +99,13 @@ def download_image(
     file_path = image_dir / filename
 
     def _download() -> None:
-        response = requests.get(image_url, timeout=30, stream=True)
+        # Add headers to avoid 403 Forbidden from CDNs (especially Vibia)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Referer": "https://www.vibia.com/" if "vibia.com" in image_url else "https://www.lodes.com/",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        }
+        response = requests.get(image_url, timeout=30, stream=True, headers=headers)
         response.raise_for_status()
 
         with open(file_path, "wb") as f:

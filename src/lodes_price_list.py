@@ -435,7 +435,14 @@ def get_product_by_slug(slug: str) -> list[ProductInfo]:
     Returns:
         List of matching ProductInfo dictionaries
     """
-    return [p for p in ALL_PRODUCTS.values() if p["url_slug"] == slug]
+    matches = []
+    slug = slug.lower()
+    for p in ALL_PRODUCTS.values():
+        p_slug = p["url_slug"].lower()
+        # Direct match or one is a sub-slug of the other (for family matching)
+        if p_slug == slug or (slug in p_slug) or (p_slug in slug):
+            matches.append(p)
+    return matches
 
 
 def get_product_by_base_sku(base_sku: str) -> ProductInfo | None:
@@ -481,7 +488,7 @@ def get_variant_price(sku: str) -> float | None:
     # Extract base SKU (first part before space)
     base_sku = sku.split()[0] if " " in sku else sku
 
-    product = KELLY_PRODUCTS.get(base_sku)
+    product = ALL_PRODUCTS.get(base_sku)
     if not product:
         return None
 

@@ -34,7 +34,6 @@ class VibiaScraper(BaseScraper):
             default_price=0.0,
         )
         super().__init__(config)
-        self.vibia_auth: Optional[VibiaAuth] = None
 
     def build_product_url(self, sku: SKU, language: str = "de") -> str:
         """Construct product URL from SKU with language support.
@@ -109,7 +108,9 @@ class VibiaScraper(BaseScraper):
     def _ensure_browser(self) -> None:
         """Ensure browser is initialized and ready for use."""
         if self._page is None:
-            self.setup_browser()
+            # Check for HEADLESS env var (default: True)
+            headless = os.getenv("HEADLESS", "true").lower() != "false"
+            self.setup_browser(headless=headless)
         assert self._page is not None
 
     def scrape_product(self, sku: SKU) -> list[ProductData]:
@@ -170,12 +171,8 @@ class VibiaScraper(BaseScraper):
                             base_sku = products[0].sku if products else sku
                             output_dir = Path("output") / str(base_sku)
 
-                            # Download files (manual and specSheet by default)
-                            self.download_product_files(
-                                feature_props=feature_props,
-                                output_dir=output_dir,
-                                download_types=["manual", "specSheet"],
-                            )
+                            # Download files (manual and specSheet)
+                            self.download_product_files(output_dir=output_dir)
                     except Exception as e:
                         logger.warning(f"File download failed: {e}")
                         # Continue anyway - downloads are optional
@@ -257,11 +254,10 @@ class VibiaScraper(BaseScraper):
             # Get the main product data
             product_data = feature_props.get("data", {})
 
-            # Get product info from price list
-            slug = self._extract_slug_from_sku(sku)
-            price_list_products = (
-                vibia_price_list.get_product_by_slug(slug) if slug else []
-            )
+            # Get product info from price list - filter to specific model
+            base_sku = self._get_base_sku(sku)
+            price_list_product = vibia_price_list.get_product_by_model(base_sku)
+            price_list_products = [price_list_product] if price_list_product else []
 
             # Parse name from JSON or use price list
             name = self._extract_product_name(product_data, price_list_products)
@@ -452,10 +448,57 @@ class VibiaScraper(BaseScraper):
         """Create ProductData objects with variant support."""
         products: list[ProductData] = []
 
+        # Check if user requested a specific variant (e.g., "0162 24/9Z" or "0162/9Z")
+        requested_surface_code = None
+        requested_control_code = None
+        if "/" in sku:
+            # Parse SKU format: "0162 24/9Z" or "0162/9Z"
+            # Format: model [surface]/control
+            parts = sku.split("/")
+            if len(parts) == 2:
+                requested_control_code = parts[1].strip()  # "9Z"
+
+                # Extract surface code if present (appears before /)
+                before_slash = parts[0].strip()  # "0162 24" or "0162"
+                model_and_surface = before_slash.split()
+                if len(model_and_surface) == 2:
+                    requested_surface_code = model_and_surface[1]  # "24"
+
+                logger.debug(
+                    f"Filtering to variant - surface: {requested_surface_code or 'any'}, "
+                    f"control: {requested_control_code}"
+                )
+
         # Get variants from price list
         all_variants = []
         for price_product in price_list_products:
             all_variants.extend(price_product["variants"])
+
+        # Filter variants if specific one was requested
+        if requested_control_code:
+            filtered_variants = []
+            for v in all_variants:
+                # Match control code (e.g., "9Z") - case-insensitive
+                control_match = v["control_code"].upper() == requested_control_code.upper() or \
+                               v["sku"].upper().endswith(f"/{requested_control_code.upper()}")
+
+                # Match surface code if specified (e.g., "24")
+                surface_match = True
+                if requested_surface_code:
+                    surface_match = v["surface_code"] == requested_surface_code
+
+                if control_match and surface_match:
+                    filtered_variants.append(v)
+
+            if not filtered_variants:
+                logger.warning(
+                    f"Requested variant (surface={requested_surface_code}, control={requested_control_code}) "
+                    f"not found in price list"
+                )
+            else:
+                logger.info(f"Filtered to {len(filtered_variants)} variant(s)")
+
+            all_variants = filtered_variants
 
         # Extract dimensions and other data from price list
         dimensions = None
@@ -501,6 +544,35 @@ class VibiaScraper(BaseScraper):
                     images=images,
                     product_type="simple",
                     regular_price=self.config.default_price,
+                    dimensions=dimensions,
+                    cable_length=cable_length,
+                    ip_rating=ip_rating,
+                )
+            )
+            return products
+
+        # If user requested a specific variant and we found exactly one, return it as simple product
+        if requested_control_code and len(all_variants) == 1:
+            variant = all_variants[0]
+            variant_name = f"{name} - {variant['led_name_en']}"
+
+            variation_attrs = {
+                "Color": variant["surface_name_en"],
+                "Dali": variant["control_name_en"],
+                "Mounting": "Aufbaubaldachin",
+            }
+
+            products.append(
+                ProductData(
+                    sku=SKU(variant["sku"]),
+                    name=variant_name,
+                    description=description,
+                    manufacturer=self.config.manufacturer,
+                    categories=categories,
+                    attributes={**attributes, **variation_attrs},  # Merge variant attrs
+                    images=images,
+                    product_type="simple",  # Simple product, not variation
+                    regular_price=variant["price_eur"],
                     dimensions=dimensions,
                     cable_length=cable_length,
                     ip_rating=ip_rating,
@@ -698,88 +770,396 @@ class VibiaScraper(BaseScraper):
         # Extract all files (validated as safe)
         zip_ref.extractall(output_dir)
 
-    def download_product_files(
-        self,
-        feature_props: dict[str, Any],
-        output_dir: Path,
-        download_types: list[str] = None,
-    ) -> bool:
-        """Download product files (manuals, datasheets, images) from Vibia.
+    def _extract_and_process_zip(self, zip_path: Path, output_dir: Path) -> int:
+        """Extract ZIP file and handle nested ZIPs.
 
         Args:
-            feature_props: featureProps object from __NEXT_DATA__
+            zip_path: Path to ZIP file to extract
+            output_dir: Directory to extract files to
+
+        Returns:
+            Total number of files extracted (including from nested ZIPs)
+        """
+        total_files = 0
+
+        # Extract main ZIP
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            filenames = zip_ref.namelist()
+            self._extract_zip_safely(zip_ref, output_dir)
+            total_files += len(filenames)
+
+        # Delete the main ZIP file to avoid finding it when searching for nested ZIPs
+        zip_path.unlink()
+
+        # Check for nested ZIPs and extract them
+        nested_zips = list(output_dir.glob("*.zip"))
+        for nested_zip in nested_zips:
+            logger.debug(f"Found nested ZIP: {nested_zip.name}")
+            try:
+                with zipfile.ZipFile(nested_zip, "r") as nested_ref:
+                    self._extract_zip_safely(nested_ref, output_dir)
+                    nested_count = len(nested_ref.namelist())
+                    total_files += nested_count
+                    logger.debug(f"Extracted {nested_count} files from nested ZIP")
+                # Remove nested ZIP after extraction
+                nested_zip.unlink()
+            except zipfile.BadZipFile:
+                logger.warning(f"Nested file {nested_zip.name} is not a valid ZIP, keeping as-is")
+            except Exception as e:
+                logger.warning(f"Failed to extract nested ZIP {nested_zip.name}: {e}")
+
+        return total_files
+
+    def _rename_extracted_documents(self, output_dir: Path) -> None:
+        """Rename extracted documents based on their type.
+
+        Renames files to standardized names:
+        - Spec sheets → spec_sheet.pdf
+        - Manuals → instruction_manual.pdf
+
+        Args:
+            output_dir: Directory containing extracted files
+        """
+        for file_path in output_dir.glob("*.pdf"):
+            filename_lower = file_path.name.lower()
+
+            # Determine new name based on file content indicators
+            new_name = None
+            if "spec" in filename_lower or "technical" in filename_lower:
+                new_name = "spec_sheet.pdf"
+            elif "man" in filename_lower or "manual" in filename_lower or "instruction" in filename_lower:
+                new_name = "instruction_manual.pdf"
+
+            # Rename if we identified the document type
+            if new_name:
+                new_path = output_dir / new_name
+                # If target already exists, remove it first
+                if new_path.exists():
+                    new_path.unlink()
+                file_path.rename(new_path)
+                logger.debug(f"Renamed {file_path.name} → {new_name}")
+
+    def _classify_and_organize_images(self, output_dir: Path) -> None:
+        """Classify downloaded images as product or project using AI and organize into subdirectories.
+
+        Args:
+            output_dir: Directory containing extracted files
+        """
+        import time
+        # Import here to avoid circular dependency
+        from src.ai.image_classifier import classify_image_file, ImageType
+
+        # Find all image files (recursively, including from extracted subdirectories)
+        image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.webp"]
+        image_files = []
+        for ext in image_extensions:
+            # Use rglob for recursive search
+            image_files.extend(output_dir.rglob(ext))
+
+        if not image_files:
+            logger.debug("No images found in downloaded files")
+            return
+
+        # Create subdirectories
+        product_dir = output_dir / "images" / "product"
+        project_dir = output_dir / "images" / "project"
+        product_dir.mkdir(parents=True, exist_ok=True)
+        project_dir.mkdir(parents=True, exist_ok=True)
+
+        # Filter out images already in product/project dirs to avoid duplicates
+        images_to_classify = [
+            img for img in image_files
+            if not (img.parent == product_dir or img.parent == project_dir)
+        ]
+
+        if len(images_to_classify) < len(image_files):
+            skipped = len(image_files) - len(images_to_classify)
+            logger.debug(f"Skipping {skipped} already-classified images")
+
+        if not images_to_classify:
+            logger.debug("All images already classified")
+            return
+
+        logger.info(f"Classifying {len(images_to_classify)} images using AI...")
+
+        # Classify and move each image
+        for image_file in images_to_classify:
+            try:
+                # Check if file with same name already exists in destination
+                dest_product = product_dir / image_file.name
+                dest_project = project_dir / image_file.name
+
+                if dest_product.exists() or dest_project.exists():
+                    logger.debug(f"Skipping duplicate: {image_file.name}")
+                    # Delete the duplicate source file
+                    image_file.unlink()
+                    continue
+
+                # Use AI to classify the image
+                classification = classify_image_file(str(image_file))
+
+                # Small delay to avoid rate limiting (OpenAI has 200k tokens/min limit)
+                time.sleep(0.5)
+
+                # Move to appropriate directory
+                if classification == "product":
+                    image_file.rename(dest_product)
+                    logger.info(f"✓ Product image: {image_file.name}")
+                elif classification == "project":
+                    image_file.rename(dest_project)
+                    logger.info(f"✓ Project image: {image_file.name}")
+                else:
+                    # Fallback to product (shouldn't happen)
+                    image_file.rename(dest_product)
+                    logger.warning(f"Unknown classification '{classification}', defaulting to product: {image_file.name}")
+
+            except Exception as e:
+                logger.warning(f"Failed to classify image {image_file.name}: {e}")
+                # Try to move to product dir as fallback
+                try:
+                    dest = product_dir / image_file.name
+                    if not dest.exists():
+                        image_file.rename(dest)
+                    else:
+                        # If destination exists, just delete the source
+                        image_file.unlink()
+                except Exception:
+                    pass
+
+        # Clean up any leftover ZIP files
+        for zip_file in output_dir.rglob("*.zip"):
+            try:
+                zip_file.unlink()
+                logger.debug(f"Removed leftover ZIP: {zip_file.name}")
+            except Exception:
+                pass
+
+        # Clean up empty directories
+        for subdir in sorted(output_dir.rglob("*"), reverse=True):
+            if subdir.is_dir() and subdir != product_dir and subdir != project_dir and subdir != output_dir / "images":
+                try:
+                    if not any(subdir.iterdir()):  # Directory is empty
+                        subdir.rmdir()
+                        logger.debug(f"Removed empty directory: {subdir.name}")
+                except Exception:
+                    pass
+
+        logger.info(f"Organized images into product and project directories")
+
+    def _login_and_inject_cookies(self) -> bool:
+        """Login via API and inject cookies into Playwright browser.
+
+        Returns:
+            True if login successful, False otherwise
+        """
+        email = os.getenv("VIBIA_EMAIL")
+        password = os.getenv("VIBIA_PASSWORD")
+
+        if not email or not password:
+            logger.warning("Vibia credentials not found in environment")
+            return False
+
+        try:
+            logger.info(f"Logging in to Vibia as {email} via API...")
+
+            # Login via API to get cookies
+            vibia_auth = VibiaAuth(email=email, password=password)
+            if not vibia_auth.login():
+                logger.error("Failed to authenticate with Vibia API")
+                return False
+
+            # Extract cookies from httpx client and prepare for Playwright
+            if not vibia_auth.client:
+                logger.error("VibiaAuth client not initialized after login")
+                return False
+
+            cookies = []
+            for cookie in vibia_auth.client.cookies.jar:
+                # Skip cookies without name or value
+                if not cookie.name or not cookie.value:
+                    continue
+
+                # Set domain to work across Vibia subdomains (www, app, api)
+                # Default to .vibia.com if domain is None or doesn't contain vibia.com
+                domain = cookie.domain or ""
+                if not domain or "vibia.com" in domain:
+                    domain = ".vibia.com"
+
+                cookies.append({
+                    "name": cookie.name,
+                    "value": cookie.value,
+                    "domain": domain,
+                    "path": cookie.path or "/",
+                })
+
+            if not cookies:
+                logger.warning("No cookies obtained from API login")
+                return False
+
+            # Inject cookies into Playwright browser
+            self._ensure_browser()
+            assert self._page is not None
+
+            # Get browser context from page
+            context = self._page.context
+            context.add_cookies(cookies)
+
+            logger.success(f"Successfully logged in and injected {len(cookies)} cookies")
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to login and inject cookies: {e}")
+            return False
+
+    def download_product_files(self, output_dir: Path) -> bool:
+        """Download product files using Playwright browser automation.
+
+        Downloads technical information and instruction manual by default.
+
+        Args:
             output_dir: Directory to save downloaded files
-            download_types: List of file types to download
-                Valid types: "manual", "specSheet", "images"
-                If None, downloads manual and specSheet by default
 
         Returns:
             True if download successful, False otherwise
         """
-        if download_types is None:
-            download_types = ["manual", "specSheet"]
+        self._ensure_browser()
+        assert self._page is not None
 
-        # Initialize auth if not already done
-        if not self.vibia_auth:
-            email = os.getenv("VIBIA_EMAIL")
-            password = os.getenv("VIBIA_PASSWORD")
+        # Save current product page URL before login
+        product_url = self._page.url
 
-            if not email or not password:
-                logger.warning(
-                    "Vibia credentials not found in environment. "
-                    "Skipping file downloads."
-                )
-                return False
-
-            self.vibia_auth = VibiaAuth(email=email, password=password)
-            if not self.vibia_auth.login():
-                logger.error("Failed to authenticate with Vibia")
-                return False
-
-        # Extract download IDs
-        ids = self._extract_download_ids(feature_props)
-        if not ids:
-            logger.error("Could not extract required IDs for download")
+        # Login via API and inject cookies into browser
+        if not self._login_and_inject_cookies():
+            logger.warning("Skipping file downloads - login failed")
             return False
 
-        try:
-            # Download documents
-            zip_content = self.vibia_auth.download_documents(
-                catalog_id=ids["catalog_id"],
-                model_id=ids["model_id"],
-                sub_family_id=ids["sub_family_id"],
-                application_location_id=ids["application_location_id"],
-                family_id=ids["family_id"],
-                document_types=download_types,
-                lang="en",
-            )
+        # Navigate to product page with authenticated session
+        logger.info(f"Navigating to product page: {product_url}")
+        self._page.goto(product_url, wait_until="networkidle")
+        self._page.wait_for_timeout(2000)  # Give page time to load
 
-            if not zip_content:
-                logger.warning("No files downloaded from Vibia")
+        # Dismiss cookie banner if present
+        cookie_selectors = [
+            "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll",
+            "#CybotCookiebotDialogBodyButtonAccept",
+            'button:has-text("Accept all")',
+            'button:has-text("Allow all")',
+        ]
+        for selector in cookie_selectors:
+            try:
+                self._page.click(selector, timeout=2000)
+                logger.debug("Dismissed cookie banner")
+                self._page.wait_for_timeout(500)
+                break
+            except Exception:
+                continue
+
+        try:
+            logger.info("Looking for download trigger button...")
+
+            # First, click the Download button to open the modal
+            # Based on screenshot: button[data-qa="download-popup-open-inspirational"]
+            download_trigger = self._page.locator('button[data-qa="download-popup-open-inspirational"], button.vib-link:has-text("Download")')
+
+            if download_trigger.count() == 0:
+                logger.error("Download trigger button not found on page")
                 return False
 
-            # Save and extract ZIP file
+            logger.info("Clicking Download button to open modal...")
+            download_trigger.first.scroll_into_view_if_needed()
+            download_trigger.first.click()
+
+            # Wait for modal to appear and checkboxes to be ready
+            logger.info("Download modal should now be open")
+
+            # Wait specifically for one of the checkboxes to appear (indicates modal is fully loaded)
+            try:
+                self._page.wait_for_selector('input[name="specSheet"], input[name="manual"], input[name="images"]', timeout=5000)
+                logger.debug("Checkboxes detected in modal")
+            except Exception:
+                logger.warning("Checkboxes not found after 5s wait, proceeding anyway")
+
+            # Select checkboxes for documents and images
+            # Based on screenshot: name="specSheet", name="manual", name="images"
+            checkboxes_to_select = [
+                ('input[name="specSheet"]', "Technical information"),
+                ('input[name="manual"]', "Instruction manual"),
+                ('input[name="images"]', "Images (HD)"),
+            ]
+
+            checked_count = 0
+            for selector, label in checkboxes_to_select:
+                checkbox = self._page.locator(selector)
+                if checkbox.count() > 0:
+                    checkbox.first.check(force=True)  # Force click even if obscured
+                    checked_count += 1
+                    logger.info(f"✓ {label} selected")
+                else:
+                    logger.debug(f"Checkbox not found: {label}")
+
+            if checked_count == 0:
+                logger.warning("No checkboxes found - trying to download anyway")
+
+            # Wait for download package to be prepared (especially for large image packages)
+            logger.info("Waiting for download package to be prepared (5s)...")
+            self._page.wait_for_timeout(5000)
+
+            # Setup download handler and click Download button inside modal
             output_dir.mkdir(parents=True, exist_ok=True)
-            zip_path = output_dir / "vibia_documents.zip"
 
-            with open(zip_path, "wb") as f:
-                f.write(zip_content)
+            logger.info("Clicking Download button in modal...")
 
-            logger.info(f"Saved ZIP file to {zip_path}")
+            # Wait for download button to be visible and enabled
+            download_button = self._page.locator('#downloadArticle, button[data-qa="downloadArticle"]')
+            download_button.wait_for(state="visible", timeout=10000)
 
-            # Extract ZIP contents securely
-            with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                # Validate ZIP contents before extraction (security check)
-                self._extract_zip_safely(zip_ref, output_dir)
-                logger.success(
-                    f"Extracted {len(zip_ref.namelist())} files to {output_dir}"
+            # Check if button is disabled and wait for it to become enabled
+            try:
+                self._page.wait_for_function(
+                    """() => {
+                        const btn = document.querySelector('#downloadArticle, button[data-qa="downloadArticle"]');
+                        return btn && !btn.disabled;
+                    }""",
+                    timeout=10000
                 )
+                logger.debug("Download button is enabled")
+            except Exception:
+                logger.warning("Download button may still be disabled, trying anyway")
 
-            # Optionally remove ZIP file after extraction
-            zip_path.unlink()
+            # Increase timeout for image downloads (can be large)
+            with self._page.expect_download(timeout=180000) as download_info:
+                # Click the download button (don't force - let it fail if actually disabled)
+                download_button.click()
+
+            download = download_info.value
+
+            # Save the downloaded file
+            zip_path = output_dir / "vibia_documents.zip"
+            download.save_as(zip_path)
+
+            logger.success(f"Downloaded file to {zip_path}")
+
+            # Extract ZIP contents securely (handle nested ZIPs)
+            try:
+                extracted_count = self._extract_and_process_zip(zip_path, output_dir)
+                logger.success(f"Extracted {extracted_count} files to {output_dir}")
+
+                # Rename files based on document type
+                self._rename_extracted_documents(output_dir)
+
+                # Classify and organize images
+                self._classify_and_organize_images(output_dir)
+
+            except zipfile.BadZipFile:
+                logger.error("Downloaded file is not a valid ZIP")
+                return False
+            finally:
+                # Remove ZIP file after extraction
+                if zip_path.exists():
+                    zip_path.unlink()
 
             return True
 
         except Exception as e:
-            logger.error(f"Error downloading product files: {e}")
+            logger.error(f"Error downloading via browser: {e}")
             return False

@@ -42,11 +42,11 @@ class TestIsNumericSku:
 
         assert result is False
 
-    def test_returns_false_for_sku_with_space(self):
-        """Should return False for SKU with space."""
+    def test_returns_true_for_sku_with_space(self):
+        """Should return True for SKU with space (base SKU + color code)."""
         result = _is_numeric_sku("14126 1000")
 
-        assert result is False
+        assert result is True
 
     def test_returns_false_for_empty_string(self):
         """Should return False for empty string."""

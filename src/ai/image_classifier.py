@@ -5,12 +5,14 @@ Classifies product images into:
 - "project": Environment/lifestyle images showing product in context
 """
 
+import base64
 import hashlib
 import json
 import os
 from pathlib import Path
 from typing import Literal
 
+import httpx
 from loguru import logger
 from openai import OpenAI
 
@@ -96,12 +98,13 @@ def _save_to_cache(cache_key: str, image_type: ImageType, image_url: str) -> Non
         logger.warning(f"Failed to save to cache: {e}")
 
 
-def _call_vision_api(client: OpenAI, image_url: str) -> str:
+def _call_vision_api(client: OpenAI, image_data: bytes, mime_type: str) -> str:
     """Call GPT-4 Vision API to classify image (pure API logic).
 
     Args:
         client: Initialized OpenAI client
-        image_url: URL of the image to classify
+        image_data: Raw bytes of the image to classify
+        mime_type: The MIME type of the image (e.g., "image/jpeg")
 
     Returns:
         Raw response text from the API
@@ -109,6 +112,8 @@ def _call_vision_api(client: OpenAI, image_url: str) -> str:
     Raises:
         Exception: If API call fails
     """
+    base64_image = base64.b64encode(image_data).decode("utf-8")
+    
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         max_tokens=10,
@@ -119,7 +124,7 @@ def _call_vision_api(client: OpenAI, image_url: str) -> str:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_url,
+                            "url": f"data:{mime_type};base64,{base64_image}",
                         },
                     },
                     {
@@ -164,28 +169,69 @@ def _parse_classification_response(response_text: str) -> ImageType:
         return "project"
 
 
+def classify_image_file(
+    file_path: str,
+    api_key: str | None = None,
+) -> ImageType:
+    """Classify product image from local file using GPT-4 Vision API.
+
+    Reads the image file, converts to base64, and sends to the API.
+
+    Args:
+        file_path: Path to the local image file
+        api_key: Optional OpenAI API key (uses OPENAI_API_KEY env var if not provided)
+
+    Returns:
+        ImageType ("product" or "project")
+    """
+    # Check cache first (use file path as cache key)
+    cache_key = _get_cache_key(file_path)
+    cached_result = _load_from_cache(cache_key)
+    if cached_result:
+        logger.debug(f"Using cached classification for {file_path}: {cached_result}")
+        return cached_result
+
+    try:
+        # Read the image file
+        with open(file_path, "rb") as f:
+            image_data = f.read()
+
+        # Determine MIME type from file extension
+        ext = file_path.lower().split(".")[-1]
+        mime_type_map = {
+            "jpg": "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png": "image/png",
+            "webp": "image/webp",
+        }
+        mime_type = mime_type_map.get(ext, "image/jpeg")
+
+        # Initialize OpenAI client
+        client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
+
+        # Call API and parse response
+        response_text = _call_vision_api(client, image_data, mime_type)
+        image_type = _parse_classification_response(response_text)
+
+        # Cache the result
+        _save_to_cache(cache_key, image_type, file_path)
+
+        logger.info(f"Classified {file_path} as: {image_type}")
+        return image_type
+
+    except Exception as e:
+        logger.error(f"Failed to classify image {file_path}: {e}")
+        # Default to project on error
+        return "project"
+
+
 def classify_image_url(
     image_url: str,
     api_key: str | None = None,
 ) -> ImageType:
     """Classify product image from URL using GPT-4 Vision API.
 
-    Determines if image has white/neutral studio background (product image)
-    or environment/lifestyle background (project image).
-
-    Args:
-        image_url: URL of the image to classify
-        api_key: OpenAI API key (optional, reads from OPENAI_API_KEY environment)
-
-    Returns:
-        "product" if white/studio background, "project" if environment/lifestyle
-
-    Raises:
-        Exception: If API call fails
-
-    Examples:
-        >>> classify_image_url("https://www.lodes.com/.../kelly.jpg")
-        "product"
+    Downloads the image first, then sends the data to the API.
     """
     # Check cache first
     cache_key = _get_cache_key(image_url)
@@ -195,11 +241,18 @@ def classify_image_url(
         return cached_result
 
     try:
+        # Download the image
+        with httpx.Client() as http_client:
+            response = http_client.get(image_url, follow_redirects=True)
+            response.raise_for_status()  # Raise an exception for bad status codes
+            image_data = response.content
+            mime_type = response.headers.get("content-type", "image/jpeg")
+
         # Initialize OpenAI client
         client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
 
         # Call API and parse response
-        response_text = _call_vision_api(client, image_url)
+        response_text = _call_vision_api(client, image_data, mime_type)
         image_type = _parse_classification_response(response_text)
 
         # Cache the result
@@ -208,6 +261,9 @@ def classify_image_url(
         logger.info(f"Classified image as '{image_type}': {image_url}")
         return image_type
 
+    except httpx.HTTPStatusError as e:
+        logger.error(f"HTTP error downloading image {image_url}: {e.response.status_code}")
+        return "project"
     except Exception as e:
         logger.error(f"Image classification failed for {image_url}: {e}")
         # Default to "project" on error (more conservative)

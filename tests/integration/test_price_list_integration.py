@@ -23,6 +23,7 @@ class TestPriceListIntegration:
         product, sku = self.scraper._find_matching_price_list_product(SKU("kelly"), variants)
 
         assert product is not None
+        # JSON data (14126) matches because product_name contains "small dome 50"
         assert product["base_sku"] == "14126"
         assert product["product_name"] == "Kelly small dome 50"
         assert sku == "14126"
@@ -62,7 +63,8 @@ class TestPriceListIntegration:
         product, sku = self.scraper._find_matching_price_list_product(SKU("kelly"), variants)
 
         assert product is not None
-        assert product["base_sku"] == "14126"  # First Kelly product
+        # First product matching 'kelly' in ALL_PRODUCTS
+        assert product["base_sku"] == "14126"
         assert sku == "14126"
 
     def test_find_matching_price_list_product_returns_none_for_unknown_slug(self):

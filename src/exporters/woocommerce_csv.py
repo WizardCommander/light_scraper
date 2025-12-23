@@ -157,7 +157,7 @@ def extract_clean_product_name(product: ProductData) -> str:
         # For variations, append German color using _extract_color
         if product.product_type == "variation":
             color = _extract_color(product)
-            if color:
+            if color and color.lower() not in name.lower():
                 name = f"{name} {color}"
 
         return name
@@ -178,11 +178,15 @@ def extract_clean_product_name(product: ProductData) -> str:
                 name = parts[0].strip()
 
     # For variations, extract parent name and append German color
-    if product.product_type == "variation" and product.variation_attributes:
+    if product.product_type == "variation":
         # Get color attribute (German translation from WooCommerce attributes)
-        color = product.variation_attributes.get("Farbe")
+        color = _extract_color(product)
 
         if color:
+            # Check if color is already in the name to avoid "Kelly Weiß Weiß"
+            if color.lower() in name.lower():
+                return name
+
             # Extract parent product name by removing any existing color/code suffixes
             # Split on common delimiters and take the first meaningful parts
             # Remove Italian colors, codes, and numbers
@@ -192,6 +196,7 @@ def extract_clean_product_name(product: ProductData) -> str:
             # Stop when we hit color names, SKU codes, or "–" delimiter
             parent_parts = []
             for part in parts:
+                part_lower = part.lower()
                 # Stop at color codes (numbers like 9010, 14126, etc.)
                 if part.isdigit() and len(part) >= 4:
                     break
@@ -199,14 +204,18 @@ def extract_clean_product_name(product: ProductData) -> str:
                 if part in ["–", "-", "—"]:
                     break
                 # Stop at Italian color names
-                if part.lower() in ["bianco", "nero", "bronzo", "champagne", "opaco", "lucido", "ramato"]:
+                if part_lower in ["bianco", "nero", "bronzo", "champagne", "opaco", "lucido", "ramato"]:
+                    break
+                # Stop at already translated color
+                if color.lower() == part_lower:
                     break
                 parent_parts.append(part)
 
             if parent_parts:
                 name = " ".join(parent_parts) + f" {color}"
             else:
-                name = f"{name} {color}"
+                if color.lower() not in name.lower():
+                    name = f"{name} {color}"
 
     return name
 
@@ -743,13 +752,12 @@ def _extract_color(product: ProductData) -> str:
                     color = translate_colors_to_german(value.strip())
                     # For variations: extract only the FIRST color if multiple colors present
                     # (some variants list all available colors)
+                    # We want to keep "Matt" if it's there (e.g., "Weiß Matt")
                     parts = color.split()
                     if parts:
-                        # Take first word (the actual color), strip "Matt" suffix
-                        first_color = parts[0]
-                        # Check if second word is "Matt" - if so, exclude it for consistency
-                        # with client format (client uses "Weiß" not "Weiß Matt")
-                        return first_color
+                        if len(parts) >= 2 and parts[1].lower() == "matt":
+                            return f"{parts[0]} {parts[1]}"
+                        return parts[0]
                     return color
 
     # Check for standard names and Lodes Italian name "Struttura" (structure/material/color)
@@ -763,7 +771,8 @@ def _extract_color(product: ProductData) -> str:
         if product.product_type == "variation" and result:
             parts = result.split()
             if parts:
-                # Return first word only (strip "Matt" suffix)
+                if len(parts) >= 2 and parts[1].lower() == "matt":
+                    return f"{parts[0]} {parts[1]}"
                 return parts[0]
 
     return result

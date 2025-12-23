@@ -4,6 +4,8 @@ Handles login and session management for downloading datasheets and manuals.
 """
 
 import os
+import time
+import json
 from typing import Optional
 
 import httpx
@@ -50,14 +52,33 @@ class VibiaAuth:
         logger.info(f"Logging in to Vibia as {self.email}")
 
         try:
-            # Initialize HTTP client with cookie support
-            self.client = httpx.Client(follow_redirects=True)
+            # Define headers to mimic a real browser, based on user-provided cURL
+            browser_headers = {
+                "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36",
+                "accept": "*/*",
+                "accept-language": "en-US,en;q=0.9",
+                "origin": "https://vibia.com",
+                "referer": "https://vibia.com/",
+                "sec-ch-ua": '"Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
+                "sec-ch-ua-mobile": "?1",
+                "sec-ch-ua-platform": '"Android"',
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "same-site",
+            }
+
+            # Initialize HTTP client with headers, cookie support, and extended timeout
+            self.client = httpx.Client(
+                headers=browser_headers,
+                follow_redirects=True,
+                http2=True,  # Enable HTTP/2
+                timeout=httpx.Timeout(300.0, connect=10.0)
+            )
 
             # Authenticate with Vibia API
             response = self.client.post(
                 f"{self.base_url}/users/v1/auth/authenticate",
                 json={"email": self.email, "password": self.password},
-                headers={"Content-Type": "application/json"},
             )
 
             if response.status_code == 200:
@@ -122,13 +143,12 @@ class VibiaAuth:
         if family_id:
             params["familyId"] = family_id
 
-        # Build full request (API requires fields in both params and root)
+        # Build full request
         request = {
             "type": doc_type,
             "params": params,
             "productType": "regular",
             "subType": "REGULAR",
-            **params,  # Spread params into root level
         }
 
         return request
@@ -145,19 +165,7 @@ class VibiaAuth:
     ) -> Optional[bytes]:
         """Download documents from Vibia using authenticated session.
 
-        Args:
-            catalog_id: Product catalog ID (e.g., "809")
-            model_id: Model ID (usually same as catalog_id)
-            sub_family_id: Product sub-family ID
-            application_location_id: Application location ID
-            family_id: Product family ID (optional)
-            document_types: List of document types to download
-                (e.g., ["manual", "specSheet", "images"])
-                If None, downloads manual by default
-            lang: Language code (default: "en")
-
-        Returns:
-            Downloaded ZIP file bytes, or None if failed
+        This now includes a polling mechanism to handle async document generation.
         """
         if not self.client or not self.auth_token:
             logger.error("Not authenticated. Call login() first.")
@@ -167,7 +175,6 @@ class VibiaAuth:
             document_types = ["manual"]
 
         try:
-            # Build payload array - one request per document type
             payload = [
                 self._build_document_request(
                     doc_type=doc_type,
@@ -180,33 +187,66 @@ class VibiaAuth:
             ]
 
             logger.info(
-                f"Downloading {len(document_types)} document(s) for catalog {catalog_id}"
+                f"Requesting {len(document_types)} document(s) for catalog {catalog_id}"
             )
 
-            # Make download request
+            # Initial request to start document generation
             response = self.client.post(
                 f"{self.base_url}/v2/documents/docs-web/global-generate",
                 params={"catalogId": catalog_id, "lang": lang},
                 json=payload,
             )
 
-            if response.status_code == 200:
-                # Check if response is actually a ZIP file
-                content_type = response.headers.get("content-type", "")
-                if "zip" in content_type or len(response.content) > 0:
-                    logger.success(
-                        f"Successfully downloaded documents ({len(response.content)} bytes)"
-                    )
-                    return response.content
+            logger.debug(f"Initial download request status: {response.status_code}")
+
+            if response.status_code != 200:
+                logger.error(f"Failed to start document generation: {response.status_code}")
+                logger.debug(f"Response: {response.text}")
+                return None
+
+            # The response is now expected to be JSON with a URL for polling/downloading
+            try:
+                data = response.json()
+                # The response is a list containing a dictionary
+                if isinstance(data, list) and data:
+                    download_url = data[0].get("url")
                 else:
-                    logger.warning(
-                        f"Unexpected response format: {content_type}"
-                    )
+                    download_url = None
+
+                if not download_url:
+                    logger.error("API response did not contain a download URL.")
+                    logger.debug(f"Response JSON: {data}")
                     return None
-            else:
-                logger.error(
-                    f"Document download failed: {response.status_code}"
-                )
+
+                # Poll the download URL until the file is ready
+                max_retries = 15
+                retry_delay = 20  # seconds
+
+                for attempt in range(max_retries):
+                    logger.info(f"Downloading from {download_url} (attempt {attempt + 1}/{max_retries})...")
+                    try:
+                        file_response = self.client.get(download_url, follow_redirects=True)
+
+                        if file_response.status_code == 200 and "zip" in file_response.headers.get("content-type", ""):
+                            logger.success(f"Successfully downloaded ZIP file ({len(file_response.content)} bytes).")
+                            return file_response.content
+                        
+                        logger.warning(f"Download attempt {attempt + 1} failed with status {file_response.status_code}. Retrying in {retry_delay}s...")
+                        time.sleep(retry_delay)
+
+                    except httpx.ReadTimeout:
+                        logger.warning(f"Read timeout on attempt {attempt + 1}. Retrying in {retry_delay}s...")
+                        time.sleep(retry_delay)
+
+                logger.error("Max retries reached. Failed to download file.")
+                return None
+
+            except json.JSONDecodeError:
+                logger.error("Failed to decode JSON response from Vibia API.")
+                # If it's not JSON, it might be the file directly (old behavior)
+                if "zip" in response.headers.get("content-type", ""):
+                    logger.info("Response seems to be a ZIP file directly. Processing.")
+                    return response.content
                 return None
 
         except Exception as e:
