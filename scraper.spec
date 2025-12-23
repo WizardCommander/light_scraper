@@ -55,43 +55,24 @@ a = Analysis(
     noarchive=False,
 )
 
-# Collect all Playwright browser binaries
-from playwright.driver import compute_driver_executable, get_driver_env
-import os
-
-driver_executable = compute_driver_executable()
-driver_dir = os.path.dirname(driver_executable)
-
-# Add Playwright driver and browsers
-a.datas += Tree(driver_dir, prefix='playwright/driver')
-
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name='scraper',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
+    upx=False,  # Disable UPX - can cause issues
     console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='scraper',
 )

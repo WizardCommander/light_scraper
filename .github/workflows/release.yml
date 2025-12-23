@@ -24,14 +24,13 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Install Playwright browsers
-        run: playwright install chromium
-
       - name: Build Python executable with PyInstaller
-        run: pyinstaller scraper.spec
+        run: pyinstaller scraper.spec --onefile
 
       - name: Move Python dist to python-dist folder
-        run: mv dist/scraper python-dist
+        run: |
+          mkdir python-dist
+          move dist\scraper.exe python-dist\scraper.exe
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -76,14 +75,13 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Install Playwright browsers
-        run: playwright install chromium
-
       - name: Build Python executable with PyInstaller
-        run: pyinstaller scraper.spec
+        run: pyinstaller scraper.spec --onefile
 
       - name: Move Python dist to python-dist folder
-        run: mv dist/scraper python-dist
+        run: |
+          mkdir -p python-dist
+          mv dist/scraper python-dist/scraper
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
