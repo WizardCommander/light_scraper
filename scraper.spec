@@ -1,15 +1,18 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
 
 block_cipher = None
+
+# Build datas list - only include .env if it exists
+datas_list = [('src', 'src')]
+if os.path.exists('.env'):
+    datas_list.append(('.env', '.'))
 
 a = Analysis(
     ['src/cli.py'],
     pathex=[],
     binaries=[],
-    datas=[
-        ('src', 'src'),
-        ('.env', '.'),
-    ],
+    datas=datas_list,
     hiddenimports=[
         'anthropic',
         'playwright',
