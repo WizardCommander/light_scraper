@@ -25,7 +25,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build Python executable with PyInstaller
-        run: pyinstaller scraper.spec --onefile
+        run: pyinstaller scraper.spec
 
       - name: Move Python dist to python-dist folder
         run: |
@@ -76,7 +76,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build Python executable with PyInstaller
-        run: pyinstaller scraper.spec --onefile
+        run: pyinstaller scraper.spec
 
       - name: Move Python dist to python-dist folder
         run: |
