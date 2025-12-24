@@ -7,7 +7,7 @@ interface SettingsProps {
 export default function Settings({ onClose }: SettingsProps) {
   const [vibiaEmail, setVibiaEmail] = useState('')
   const [vibiaPassword, setVibiaPassword] = useState('')
-  const [anthropicApiKey, setAnthropicApiKey] = useState('')
+  const [openaiApiKey, setOpenaiApiKey] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -17,11 +17,11 @@ export default function Settings({ onClose }: SettingsProps) {
   const loadSettings = async () => {
     const savedVibiaEmail = await window.electronAPI.getSetting('vibiaEmail')
     const savedVibiaPassword = await window.electronAPI.getSetting('vibiaPassword')
-    const savedAnthropicApiKey = await window.electronAPI.getSetting('anthropicApiKey')
+    const savedOpenaiApiKey = await window.electronAPI.getSetting('openaiApiKey')
 
     if (savedVibiaEmail) setVibiaEmail(savedVibiaEmail)
     if (savedVibiaPassword) setVibiaPassword(savedVibiaPassword)
-    if (savedAnthropicApiKey) setAnthropicApiKey(savedAnthropicApiKey)
+    if (savedOpenaiApiKey) setOpenaiApiKey(savedOpenaiApiKey)
   }
 
   const handleSave = async () => {
@@ -29,7 +29,7 @@ export default function Settings({ onClose }: SettingsProps) {
 
     await window.electronAPI.setSetting('vibiaEmail', vibiaEmail)
     await window.electronAPI.setSetting('vibiaPassword', vibiaPassword)
-    await window.electronAPI.setSetting('anthropicApiKey', anthropicApiKey)
+    await window.electronAPI.setSetting('openaiApiKey', openaiApiKey)
 
     setIsSaving(false)
     onClose()
@@ -101,16 +101,16 @@ export default function Settings({ onClose }: SettingsProps) {
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ marginBottom: '12px', fontSize: '16px' }}>Anthropic API Key</h3>
+          <h3 style={{ marginBottom: '12px', fontSize: '16px' }}>OpenAI API Key</h3>
           <p style={{ fontSize: '13px', color: '#666', marginBottom: '12px' }}>
-            Required for AI-generated product descriptions (optional)
+            Required for AI features: product descriptions, translations, and image classification (optional)
           </p>
 
           <input
             type="password"
-            value={anthropicApiKey}
-            onChange={(e) => setAnthropicApiKey(e.target.value)}
-            placeholder="sk-ant-..."
+            value={openaiApiKey}
+            onChange={(e) => setOpenaiApiKey(e.target.value)}
+            placeholder="sk-proj-..."
             style={{
               width: '100%',
               padding: '8px',

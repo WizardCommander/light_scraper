@@ -1,4 +1,4 @@
-"""German translation module using Claude API.
+"""German translation module using OpenAI API.
 
 Translates product content to German for WooCommerce German stores.
 Uses caching and language detection to minimize API costs and improve performance.
@@ -9,10 +9,9 @@ import json
 from pathlib import Path
 from typing import Literal
 
-import httpx
-from anthropic import Anthropic
 from langdetect import detect, LangDetectException
 from loguru import logger
+from openai import OpenAI
 
 from src.models import ProductData
 
@@ -56,7 +55,7 @@ def translate_to_german(
     field_type: FieldType = "description",
     context: str = "lighting product",
 ) -> str:
-    """Translate text to German using Claude with industry-specific terminology.
+    """Translate text to German using OpenAI with industry-specific terminology.
 
     Uses language detection to skip translation if text is already German,
     reducing API costs.
@@ -91,17 +90,16 @@ def translate_to_german(
     prompt = _build_translation_prompt(text, field_type, context)
 
     try:
-        # Initialize client without httpx proxy detection
-        http_client = httpx.Client()
-        client = Anthropic(http_client=http_client)
-        message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+        # Initialize OpenAI client
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
             max_tokens=2000,
             temperature=0.3,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        translated_text = message.content[0].text.strip()
+        translated_text = response.choices[0].message.content.strip()
 
         # Cache the result
         _save_to_cache(cache_key, translated_text)

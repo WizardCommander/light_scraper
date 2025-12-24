@@ -8,9 +8,8 @@ import os
 from pathlib import Path
 from typing import Optional
 
-import anthropic
-import httpx
 from loguru import logger
+from openai import OpenAI
 
 from src.models import ProductData
 
@@ -60,15 +59,15 @@ Return ONLY the short description, no preamble or extra text."""
 def generate_description(
     product: ProductData,
     api_key: Optional[str] = None,
-    model: str = "claude-sonnet-4-20250514",
+    model: str = "gpt-4o-mini",
     cache_dir: str = "output/.ai_cache",
 ) -> str:
-    """Generate unique product description using Claude AI.
+    """Generate unique product description using OpenAI.
 
     Args:
         product: Product data to generate description for
-        api_key: Anthropic API key (uses ANTHROPIC_API_KEY env var if not provided)
-        model: Anthropic model to use (default: claude-sonnet-4-20250514)
+        api_key: OpenAI API key (uses OPENAI_API_KEY env var if not provided)
+        model: OpenAI model to use (default: gpt-4o-mini)
         cache_dir: Directory to cache AI responses
 
     Returns:
@@ -79,21 +78,21 @@ def generate_description(
         Exception: If AI generation fails
     """
     # Get API key from parameter or environment
-    api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+    api_key = api_key or os.getenv("OPENAI_API_KEY")
 
     if not api_key:
         raise ValueError(
-            "Anthropic API key required. Set ANTHROPIC_API_KEY environment variable "
+            "OpenAI API key required. Set OPENAI_API_KEY environment variable "
             "or pass api_key parameter."
         )
 
-    # Check cache first
+    # Check cache first (include model in cache key to avoid stale responses)
     cache_path = Path(cache_dir)
     cache_path.mkdir(parents=True, exist_ok=True)
 
-    cache_file = cache_path / f"{product.sku}_description.json"
+    cache_file = cache_path / f"{product.sku}_{model}_description.json"
     if cache_file.exists():
-        logger.info(f"Using cached description for {product.sku}")
+        logger.info(f"Using cached description for {product.sku} (model: {model})")
         with open(cache_file, "r", encoding="utf-8") as f:
             cache_data = json.load(f)
             return cache_data["description"]
@@ -102,24 +101,24 @@ def generate_description(
     logger.info(f"Generating AI description for {product.name}")
 
     try:
-        # Initialize client without httpx proxy detection
-        http_client = httpx.Client()
-        client = anthropic.Anthropic(api_key=api_key, http_client=http_client)
+        # Initialize OpenAI client
+        client = OpenAI(api_key=api_key)
 
         prompt = _build_prompt(product)
 
-        message = client.messages.create(
+        response = client.chat.completions.create(
             model=model,
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        description = message.content[0].text.strip()
+        description = response.choices[0].message.content.strip()
 
-        # Cache the result
+        # Cache the result (include model for transparency)
         cache_data = {
             "sku": product.sku,
             "name": product.name,
+            "model": model,
             "description": description,
         }
         # Ensure parent directory exists (for SKUs with slashes like "0162/Z")
@@ -162,7 +161,7 @@ def generate_short_description(
     product: ProductData,
     max_words: int = 20,
     api_key: Optional[str] = None,
-    model: str = "claude-sonnet-4-20250514",
+    model: str = "gpt-4o-mini",
     cache_dir: str = "output/.ai_cache",
 ) -> str:
     """Generate concise short description for product (max 20 words).
@@ -170,8 +169,8 @@ def generate_short_description(
     Args:
         product: Product data to generate short description for
         max_words: Maximum number of words (default: 20)
-        api_key: Anthropic API key (uses ANTHROPIC_API_KEY env var if not provided)
-        model: Anthropic model to use (default: claude-sonnet-4-20250514)
+        api_key: OpenAI API key (uses OPENAI_API_KEY env var if not provided)
+        model: OpenAI model to use (default: gpt-4o-mini)
         cache_dir: Directory to cache AI responses
 
     Returns:
@@ -182,21 +181,21 @@ def generate_short_description(
         Exception: If AI generation fails
     """
     # Get API key from parameter or environment
-    api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+    api_key = api_key or os.getenv("OPENAI_API_KEY")
 
     if not api_key:
         raise ValueError(
-            "Anthropic API key required. Set ANTHROPIC_API_KEY environment variable "
+            "OpenAI API key required. Set OPENAI_API_KEY environment variable "
             "or pass api_key parameter."
         )
 
-    # Check cache first
+    # Check cache first (include model in cache key to avoid stale responses)
     cache_path = Path(cache_dir)
     cache_path.mkdir(parents=True, exist_ok=True)
 
-    cache_file = cache_path / f"{product.sku}_short_description.json"
+    cache_file = cache_path / f"{product.sku}_{model}_short_description.json"
     if cache_file.exists():
-        logger.info(f"Using cached short description for {product.sku}")
+        logger.info(f"Using cached short description for {product.sku} (model: {model})")
         with open(cache_file, "r", encoding="utf-8") as f:
             cache_data = json.load(f)
             return cache_data["short_description"]
@@ -205,25 +204,25 @@ def generate_short_description(
     logger.info(f"Generating AI short description for {product.name}")
 
     try:
-        # Initialize client without httpx proxy detection
-        http_client = httpx.Client()
-        client = anthropic.Anthropic(api_key=api_key, http_client=http_client)
+        # Initialize OpenAI client
+        client = OpenAI(api_key=api_key)
 
         prompt = _build_short_description_prompt(product, max_words)
 
-        message = client.messages.create(
+        response = client.chat.completions.create(
             model=model,
             max_tokens=256,
             temperature=0.3,  # Lower temperature for consistency
             messages=[{"role": "user", "content": prompt}],
         )
 
-        short_desc = message.content[0].text.strip()
+        short_desc = response.choices[0].message.content.strip()
 
-        # Cache the result
+        # Cache the result (include model for transparency)
         cache_data = {
             "sku": product.sku,
             "name": product.name,
+            "model": model,
             "short_description": short_desc,
             "word_count": len(short_desc.split()),
         }

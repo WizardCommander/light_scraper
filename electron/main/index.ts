@@ -185,7 +185,6 @@ ipcMain.handle('start-scraper', (_event, options) => {
     // Load credentials from electron-store and set as environment variables
     const vibiaEmail = store.get('vibiaEmail') as string | undefined
     const vibiaPassword = store.get('vibiaPassword') as string | undefined
-    const anthropicApiKey = store.get('anthropicApiKey') as string | undefined
     const openaiApiKey = store.get('openaiApiKey') as string | undefined
 
     // Set path to bundled Playwright browsers
@@ -198,7 +197,6 @@ ipcMain.handle('start-scraper', (_event, options) => {
       PLAYWRIGHT_BROWSERS_PATH: browsersPath,
       ...(vibiaEmail && { VIBIA_EMAIL: vibiaEmail }),
       ...(vibiaPassword && { VIBIA_PASSWORD: vibiaPassword }),
-      ...(anthropicApiKey && { ANTHROPIC_API_KEY: anthropicApiKey }),
       ...(openaiApiKey && { OPENAI_API_KEY: openaiApiKey })
     }
 

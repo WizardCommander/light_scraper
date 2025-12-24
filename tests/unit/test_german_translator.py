@@ -36,13 +36,15 @@ def sample_product():
 
 
 @pytest.fixture
-def mock_anthropic_response():
-    """Mock Anthropic API response."""
+def mock_openai_response():
+    """Mock OpenAI API response."""
+    mock_response = Mock()
+    mock_choice = Mock()
     mock_message = Mock()
-    mock_content = Mock()
-    mock_content.text = "Deckenleuchte"
-    mock_message.content = [mock_content]
-    return mock_message
+    mock_message.content = "Deckenleuchte"
+    mock_choice.message = mock_message
+    mock_response.choices = [mock_choice]
+    return mock_response
 
 
 class TestTranslateToGerman:
@@ -50,34 +52,36 @@ class TestTranslateToGerman:
 
     @pytest.mark.unit
     @patch("src.ai.german_translator._load_from_cache")
-    @patch("src.ai.german_translator.Anthropic")
+    @patch("src.ai.german_translator.OpenAI")
     def test_translate_product_name(
-        self, mock_anthropic, mock_load_cache, mock_anthropic_response
+        self, mock_openai, mock_load_cache, mock_openai_response
     ):
         """Should translate product name to German."""
         mock_load_cache.return_value = None  # No cached value
         mock_client = MagicMock()
-        mock_client.messages.create.return_value = mock_anthropic_response
-        mock_anthropic.return_value = mock_client
+        mock_client.chat.completions.create.return_value = mock_openai_response
+        mock_openai.return_value = mock_client
 
         result = translate_to_german("Ceiling Light", field_type="product_name")
 
         assert result == "Deckenleuchte"
-        mock_client.messages.create.assert_called_once()
+        mock_client.chat.completions.create.assert_called_once()
 
     @pytest.mark.unit
     @patch("src.ai.german_translator._load_from_cache")
-    @patch("src.ai.german_translator.Anthropic")
-    def test_translate_description(self, mock_anthropic, mock_load_cache):
+    @patch("src.ai.german_translator.OpenAI")
+    def test_translate_description(self, mock_openai, mock_load_cache):
         """Should translate description to German."""
         mock_load_cache.return_value = None  # No cached value
         mock_client = MagicMock()
-        mock_content = Mock()
-        mock_content.text = "Eine schöne Deckenleuchte mit modernem Design."
+        mock_response = Mock()
+        mock_choice = Mock()
         mock_message = Mock()
-        mock_message.content = [mock_content]
-        mock_client.messages.create.return_value = mock_message
-        mock_anthropic.return_value = mock_client
+        mock_message.content = "Eine schöne Deckenleuchte mit modernem Design."
+        mock_choice.message = mock_message
+        mock_response.choices = [mock_choice]
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
 
         result = translate_to_german(
             "A beautiful ceiling light with modern design.",
@@ -94,10 +98,10 @@ class TestTranslateToGerman:
         assert translate_to_german("   ", field_type="product_name") == "   "
 
     @pytest.mark.unit
-    @patch("src.ai.german_translator.Anthropic")
-    def test_translate_api_failure_returns_original(self, mock_anthropic):
+    @patch("src.ai.german_translator.OpenAI")
+    def test_translate_api_failure_returns_original(self, mock_openai):
         """Should return original text when API fails."""
-        mock_anthropic.return_value.messages.create.side_effect = Exception("API Error")
+        mock_openai.return_value.chat.completions.create.side_effect = Exception("API Error")
 
         original_text = "Test Product"
         result = translate_to_german(original_text, field_type="product_name")
@@ -106,28 +110,28 @@ class TestTranslateToGerman:
 
     @pytest.mark.unit
     @patch("src.ai.german_translator._load_from_cache")
-    @patch("src.ai.german_translator.Anthropic")
-    def test_translate_uses_cache_when_available(self, mock_anthropic, mock_load_cache):
+    @patch("src.ai.german_translator.OpenAI")
+    def test_translate_uses_cache_when_available(self, mock_openai, mock_load_cache):
         """Should use cached translation without API call."""
         mock_load_cache.return_value = "Cached Deckenleuchte"
 
         result = translate_to_german("Ceiling Light", field_type="product_name")
 
         assert result == "Cached Deckenleuchte"
-        mock_anthropic.assert_not_called()
+        mock_openai.assert_not_called()
 
     @pytest.mark.unit
     @patch("src.ai.german_translator._load_from_cache")
     @patch("src.ai.german_translator._save_to_cache")
-    @patch("src.ai.german_translator.Anthropic")
+    @patch("src.ai.german_translator.OpenAI")
     def test_translate_saves_to_cache(
-        self, mock_anthropic, mock_save_cache, mock_load_cache, mock_anthropic_response
+        self, mock_openai, mock_save_cache, mock_load_cache, mock_openai_response
     ):
         """Should save translation to cache after API call."""
         mock_load_cache.return_value = None  # No cached value
         mock_client = MagicMock()
-        mock_client.messages.create.return_value = mock_anthropic_response
-        mock_anthropic.return_value = mock_client
+        mock_client.chat.completions.create.return_value = mock_openai_response
+        mock_openai.return_value = mock_client
 
         translate_to_german("Ceiling Light", field_type="product_name")
 
