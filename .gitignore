@@ -67,6 +67,7 @@ yarn-error.log*
 *.deb
 *.rpm
 .cache/
+browsers-local/
 
 # Mac files
 .DS_Store

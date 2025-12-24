@@ -51,6 +51,11 @@
       {
         "from": "python-dist",
         "to": "python"
+      },
+      {
+        "from": "browsers-local",
+        "to": "browsers",
+        "filter": ["**/*"]
       }
     ],
     "win": {

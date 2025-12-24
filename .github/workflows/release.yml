@@ -43,6 +43,15 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
+      - name: Install Playwright CLI
+        run: npm install -g playwright
+
+      - name: Download Playwright browsers to bundle
+        run: |
+          set PLAYWRIGHT_BROWSERS_PATH=browsers-local
+          playwright install chromium
+        shell: cmd
+
       - name: Build Electron app
         run: npm run build
 
@@ -93,6 +102,14 @@ jobs:
 
       - name: Install Node dependencies
         run: npm install
+
+      - name: Install Playwright CLI
+        run: npm install -g playwright
+
+      - name: Download Playwright browsers to bundle
+        run: |
+          export PLAYWRIGHT_BROWSERS_PATH=browsers-local
+          playwright install chromium
 
       - name: Build Electron app
         run: npm run build

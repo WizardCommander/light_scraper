@@ -38,43 +38,6 @@ function getPythonExecutablePath(): string {
   }
 }
 
-/**
- * Install Playwright browsers if not already installed
- */
-async function ensurePlaywrightBrowsers(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const pythonPath = getPythonExecutablePath()
-
-    console.log('Checking Playwright browsers...')
-
-    // Run playwright install chromium
-    const installProcess = spawn(pythonPath, ['-m', 'playwright', 'install', 'chromium'], {
-      stdio: 'pipe'
-    })
-
-    installProcess.stdout?.on('data', (data) => {
-      console.log('Playwright install:', data.toString())
-    })
-
-    installProcess.stderr?.on('data', (data) => {
-      console.error('Playwright install error:', data.toString())
-    })
-
-    installProcess.on('close', (code) => {
-      if (code === 0) {
-        console.log('Playwright browsers ready')
-        resolve()
-      } else {
-        reject(new Error(`Playwright install failed with code ${code}`))
-      }
-    })
-
-    installProcess.on('error', (error) => {
-      reject(error)
-    })
-  })
-}
-
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1000,
@@ -103,20 +66,8 @@ function createWindow(): void {
   })
 }
 
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   createWindow()
-
-  // Install Playwright browsers if needed (in background)
-  try {
-    await ensurePlaywrightBrowsers()
-  } catch (error) {
-    console.error('Failed to install Playwright browsers:', error)
-    // Show error to user
-    dialog.showErrorBox(
-      'Browser Installation Failed',
-      'Failed to install required browsers. Scraping may not work. Error: ' + error
-    )
-  }
 
   // Check for updates
   if (process.env.NODE_ENV !== 'development') {
@@ -235,12 +186,20 @@ ipcMain.handle('start-scraper', (_event, options) => {
     const vibiaEmail = store.get('vibiaEmail') as string | undefined
     const vibiaPassword = store.get('vibiaPassword') as string | undefined
     const anthropicApiKey = store.get('anthropicApiKey') as string | undefined
+    const openaiApiKey = store.get('openaiApiKey') as string | undefined
+
+    // Set path to bundled Playwright browsers
+    const browsersPath = process.env.NODE_ENV === 'development'
+      ? path.join(__dirname, '../../browsers-local')
+      : path.join(process.resourcesPath, 'browsers')
 
     const processEnv = {
       ...process.env,
+      PLAYWRIGHT_BROWSERS_PATH: browsersPath,
       ...(vibiaEmail && { VIBIA_EMAIL: vibiaEmail }),
       ...(vibiaPassword && { VIBIA_PASSWORD: vibiaPassword }),
-      ...(anthropicApiKey && { ANTHROPIC_API_KEY: anthropicApiKey })
+      ...(anthropicApiKey && { ANTHROPIC_API_KEY: anthropicApiKey }),
+      ...(openaiApiKey && { OPENAI_API_KEY: openaiApiKey })
     }
 
     // Spawn Python process
