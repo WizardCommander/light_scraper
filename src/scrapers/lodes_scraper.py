@@ -215,11 +215,12 @@ class LodesScraper(BaseScraper):
             return SKU(match.group(1))
         return None
 
-    def scrape_product(self, sku: SKU) -> list[ProductData]:
+    def scrape_product(self, sku: SKU, output_base: str = "output") -> list[ProductData]:
         """Extract product data from Lodes product page with multi-language support.
 
         Args:
             sku: Product SKU (e.g., "14126") or URL slug (e.g., "kelly")
+            output_base: Base output directory for downloaded files (default: "output")
 
         Returns:
             Structured product data

@@ -99,13 +99,14 @@ class BaseScraper(ABC):
         return downloaded_paths
 
     @abstractmethod
-    def scrape_product(self, sku: SKU) -> list[ProductData]:
+    def scrape_product(self, sku: SKU, output_base: str = "output") -> list[ProductData]:
         """Extract product data from manufacturer website.
 
         Must be implemented by each manufacturer scraper.
 
         Args:
             sku: Product SKU to scrape
+            output_base: Base output directory for downloaded files (default: "output")
 
         Returns:
             List of product data (single product or parent + variations)

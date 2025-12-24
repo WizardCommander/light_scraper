@@ -74,7 +74,7 @@ class ScraperOrchestrator:
             for sku_str in skus:
                 sku = SKU(sku_str)
                 try:
-                    scraped_products = scraper.scrape_product(sku)
+                    scraped_products = scraper.scrape_product(sku, output_base=output_dir)
 
                     for product in scraped_products:
                         if ai_descriptions:

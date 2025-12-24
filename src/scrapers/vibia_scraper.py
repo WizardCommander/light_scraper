@@ -113,7 +113,7 @@ class VibiaScraper(BaseScraper):
             self.setup_browser(headless=headless)
         assert self._page is not None
 
-    def scrape_product(self, sku: SKU) -> list[ProductData]:
+    def scrape_product(self, sku: SKU, output_base: str = "output") -> list[ProductData]:
         """Scrape product data from Vibia website.
 
         Args:
@@ -169,7 +169,7 @@ class VibiaScraper(BaseScraper):
                         if feature_props:
                             # Use parent SKU as output directory name
                             base_sku = products[0].sku if products else sku
-                            output_dir = Path("output") / str(base_sku)
+                            output_dir = Path(output_base) / str(base_sku)
 
                             # Download files (manual and specSheet)
                             self.download_product_files(output_dir=output_dir)
@@ -847,7 +847,7 @@ class VibiaScraper(BaseScraper):
                 logger.debug(f"Renamed {file_path.name} → {new_name}")
 
     def _find_image_files(self, directory: Path) -> list[Path]:
-        """Find all image files recursively in a directory.
+        """Find all image files recursively in a directory (case-insensitive).
 
         Args:
             directory: Directory to search
@@ -855,7 +855,13 @@ class VibiaScraper(BaseScraper):
         Returns:
             List of image file paths
         """
-        image_extensions = ["*.jpg", "*.jpeg", "*.png", "*.webp"]
+        # Use both lowercase and uppercase patterns for case-insensitive matching
+        image_extensions = [
+            "*.jpg", "*.JPG",
+            "*.jpeg", "*.JPEG",
+            "*.png", "*.PNG",
+            "*.webp", "*.WEBP"
+        ]
         image_files = []
         for ext in image_extensions:
             image_files.extend(directory.rglob(ext))
