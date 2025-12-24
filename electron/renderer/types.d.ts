@@ -10,6 +10,9 @@ export interface ElectronAPI {
   onScraperEvent: (callback: (event: ScraperEvent) => void) => () => void
   onUpdateAvailable: (callback: () => void) => () => void
   onUpdateDownloaded: (callback: () => void) => () => void
+  checkForUpdates: () => Promise<{ available: boolean; version?: string; message?: string; error?: string }>
+  installUpdate: () => Promise<void>
+  onUpdateStatus: (callback: (status: UpdateStatus) => void) => () => void
 }
 
 export interface ScraperOptions {
@@ -27,6 +30,13 @@ export interface ScraperEvent {
   type: string
   data: any
   timestamp: string
+}
+
+export interface UpdateStatus {
+  status: 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
+  message: string
+  version?: string
+  percent?: number
 }
 
 declare global {

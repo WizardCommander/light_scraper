@@ -261,15 +261,78 @@ ipcMain.handle('stop-scraper', () => {
   return { success: false, message: 'No scraper process running' }
 })
 
-// Auto-updater events
-autoUpdater.on('update-available', () => {
-  mainWindow?.webContents.send('update-available')
+// Manual update check handler
+ipcMain.handle('check-for-updates', async () => {
+  if (process.env.NODE_ENV === 'development') {
+    return {
+      available: false,
+      message: 'Updates are disabled in development mode'
+    }
+  }
+
+  try {
+    const result = await autoUpdater.checkForUpdates()
+    return {
+      available: result !== null,
+      version: result?.updateInfo?.version
+    }
+  } catch (error) {
+    console.error('Update check failed:', error)
+    return {
+      available: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }
+  }
 })
 
-autoUpdater.on('update-downloaded', () => {
-  mainWindow?.webContents.send('update-downloaded')
+// Install update and restart
+ipcMain.handle('install-update', () => {
+  autoUpdater.quitAndInstall()
+})
+
+// Auto-updater events
+autoUpdater.on('checking-for-update', () => {
+  mainWindow?.webContents.send('update-status', {
+    status: 'checking',
+    message: 'Checking for updates...'
+  })
+})
+
+autoUpdater.on('update-available', (info) => {
+  mainWindow?.webContents.send('update-status', {
+    status: 'available',
+    message: `Update v${info.version} available`,
+    version: info.version
+  })
+})
+
+autoUpdater.on('update-not-available', () => {
+  mainWindow?.webContents.send('update-status', {
+    status: 'not-available',
+    message: 'You are running the latest version'
+  })
+})
+
+autoUpdater.on('download-progress', (progress) => {
+  mainWindow?.webContents.send('update-status', {
+    status: 'downloading',
+    message: `Downloading... ${Math.round(progress.percent)}%`,
+    percent: progress.percent
+  })
+})
+
+autoUpdater.on('update-downloaded', (info) => {
+  mainWindow?.webContents.send('update-status', {
+    status: 'downloaded',
+    message: `Update v${info.version} ready to install`,
+    version: info.version
+  })
 })
 
 autoUpdater.on('error', (error) => {
   console.error('Auto-updater error:', error)
+  mainWindow?.webContents.send('update-status', {
+    status: 'error',
+    message: `Update error: ${error.message}`
+  })
 })
