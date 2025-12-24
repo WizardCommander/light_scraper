@@ -214,7 +214,7 @@ class TestCaseInsensitiveImageDetection:
     """Test Vibia scraper handles uppercase image extensions."""
 
     def test_find_image_files_detects_uppercase_extensions(self, tmp_path):
-        """Should find images with uppercase extensions (JPG, PNG, etc.)."""
+        """Should find images with uppercase extensions without duplicates."""
         # Create test images with various case extensions
         (tmp_path / "image1.jpg").touch()
         (tmp_path / "image2.JPG").touch()
@@ -226,14 +226,12 @@ class TestCaseInsensitiveImageDetection:
         scraper = VibiaScraper()
         found_images = scraper._find_image_files(tmp_path)
 
-        # Deduplicate results (Windows filesystem is case-insensitive)
-        unique_images = {img.resolve() for img in found_images}
-
-        # Should find all 6 images regardless of case
-        assert len(unique_images) == 6
+        # Method should return deduplicated list (no need for manual deduplication)
+        # On Windows, both *.jpg and *.JPG match the same file
+        assert len(found_images) == 6
 
         # Verify all images are present (case-insensitive check)
-        image_names_lower = {img.name.lower() for img in unique_images}
+        image_names_lower = {img.name.lower() for img in found_images}
         assert "image1.jpg" in image_names_lower
         assert "image2.jpg" in image_names_lower
         assert "image3.png" in image_names_lower
@@ -242,7 +240,7 @@ class TestCaseInsensitiveImageDetection:
         assert "image6.jpeg" in image_names_lower
 
     def test_find_image_files_works_recursively(self, tmp_path):
-        """Should find images in subdirectories."""
+        """Should find images in subdirectories without duplicates."""
         # Create nested structure
         subdir = tmp_path / "nested" / "deep"
         subdir.mkdir(parents=True)
@@ -254,14 +252,11 @@ class TestCaseInsensitiveImageDetection:
         scraper = VibiaScraper()
         found_images = scraper._find_image_files(tmp_path)
 
-        # Deduplicate results (Windows filesystem is case-insensitive)
-        unique_images = {img.resolve() for img in found_images}
-
-        # Should find all 3 images in nested structure
-        assert len(unique_images) == 3
+        # Method should return deduplicated list
+        assert len(found_images) == 3
 
         # Verify all images are present (case-insensitive check)
-        image_names_lower = {img.name.lower() for img in unique_images}
+        image_names_lower = {img.name.lower() for img in found_images}
         assert "root.jpg" in image_names_lower
         assert "middle.png" in image_names_lower
         assert "deep.jpeg" in image_names_lower

@@ -853,7 +853,7 @@ class VibiaScraper(BaseScraper):
             directory: Directory to search
 
         Returns:
-            List of image file paths
+            List of unique image file paths (deduplicated)
         """
         # Use both lowercase and uppercase patterns for case-insensitive matching
         image_extensions = [
@@ -865,7 +865,18 @@ class VibiaScraper(BaseScraper):
         image_files = []
         for ext in image_extensions:
             image_files.extend(directory.rglob(ext))
-        return image_files
+
+        # Deduplicate using resolved paths (Windows filesystem is case-insensitive)
+        # This prevents the same file from being found by both *.jpg and *.JPG patterns
+        seen_paths = set()
+        unique_files = []
+        for img in image_files:
+            resolved = img.resolve()
+            if resolved not in seen_paths:
+                seen_paths.add(resolved)
+                unique_files.append(img)
+
+        return unique_files
 
     def _filter_unclassified_images(
         self, image_files: list[Path], product_dir: Path, project_dir: Path
