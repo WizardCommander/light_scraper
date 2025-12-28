@@ -16,7 +16,11 @@ from openai import OpenAI
 from src.models import ProductData
 
 CACHE_DIR = Path("output/.ai_cache/translations")
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _ensure_cache_dir() -> None:
+    """Ensure cache directory exists (lazy creation)."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 FieldType = Literal[
@@ -289,6 +293,7 @@ def _save_to_cache(cache_key: str, translation: str) -> None:
         cache_key: Cache key hash
         translation: Translated text
     """
+    _ensure_cache_dir()  # Lazy cache directory creation
     cache_file = CACHE_DIR / f"{cache_key}.json"
     try:
         with open(cache_file, "w", encoding="utf-8") as f:

@@ -19,7 +19,11 @@ from openai import OpenAI
 ImageType = Literal["product", "project"]
 
 CACHE_DIR = Path("output/.ai_cache/image_classification")
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _ensure_cache_dir() -> None:
+    """Ensure cache directory exists (lazy creation)."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Classification prompt template
 CLASSIFICATION_PROMPT = """Analyze this product photograph and classify it as one of two types:
@@ -83,6 +87,7 @@ def _save_to_cache(cache_key: str, image_type: ImageType, image_url: str) -> Non
         image_type: Classification result
         image_url: Original image URL
     """
+    _ensure_cache_dir()  # Lazy cache directory creation
     cache_file = CACHE_DIR / f"{cache_key}.json"
     try:
         with open(cache_file, "w") as f:
