@@ -1,6 +1,6 @@
 {
   "name": "light-scraper",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "description": "Desktop application for scraping lighting manufacturer product data",
   "main": "dist/main/index.js",
   "scripts": {
