@@ -301,6 +301,33 @@ class ScraperOrchestrator:
 
             # Step 3a: Download images and PDFs if requested
             if download_images:
+                # Vibia-specific: Download documents and images from modal
+                if manufacturer.lower() == "vibia":
+                    logger.info(
+                        f"Attempting Vibia-specific document download for {folder_name}"
+                    )
+                    try:
+                        scraper_class = get_scraper_class(manufacturer)
+                        with scraper_class() as scraper:
+                            # Use first product's SKU to build the product URL
+                            first_product = product_group[0]
+                            success = scraper.download_product_files(
+                                sku=first_product.sku,
+                                output_dir=product_output_dir,
+                            )
+                            if success:
+                                logger.info(
+                                    f"Successfully downloaded Vibia documents for {folder_name}"
+                                )
+                            else:
+                                logger.warning(
+                                    f"Vibia document download failed for {folder_name}, falling back to URL-based downloads"
+                                )
+                    except Exception as e:
+                        logger.warning(
+                            f"Vibia document download error for {folder_name}: {e}, falling back to URL-based downloads"
+                        )
+
                 # Download images for all products in group
                 for product in product_group:
                     if product.images:

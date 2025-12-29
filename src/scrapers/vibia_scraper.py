@@ -18,6 +18,14 @@ from src.models import SKU, ImageUrl, Manufacturer, ProductData, ScraperConfig
 from src import vibia_price_list
 from src.auth import VibiaAuth
 
+# Download modal interaction timeouts (milliseconds)
+MODAL_OPEN_TIMEOUT = 10000  # Wait for modal dialog to appear
+MODAL_ANIMATION_DELAY = 2000  # Wait for modal animation to complete
+CHECKBOX_WAIT_TIMEOUT = 10000  # Wait for checkboxes to be visible
+CHECKBOX_INDIVIDUAL_TIMEOUT = 5000  # Wait for each checkbox to be ready
+CHECKBOX_CLICK_DELAY = 300  # Delay between checkbox clicks
+DOWNLOAD_PACKAGE_DELAY = 5000  # Wait for download package preparation
+
 
 class VibiaScraper(BaseScraper):
     """Scraper for Vibia.com product pages."""
@@ -1191,21 +1199,39 @@ class VibiaScraper(BaseScraper):
             download_trigger.first.scroll_into_view_if_needed()
             download_trigger.first.click()
 
-            # Wait for modal to appear and checkboxes to be ready
-            logger.info("Download modal should now be open")
+            # Wait for modal to appear and be fully rendered
+            logger.info("Waiting for download modal to fully load...")
 
-            # Wait specifically for one of the checkboxes to appear (indicates modal is fully loaded)
+            # Wait for modal dialog to be visible (gives time for animation)
             try:
                 self._page.wait_for_selector(
-                    'input[name="specSheet"], input[name="manual"], input[name="images"]',
-                    timeout=5000,
+                    'div[role="dialog"]',
+                    timeout=MODAL_OPEN_TIMEOUT,
+                    state="visible"
                 )
-                logger.debug("Checkboxes detected in modal")
-            except Exception:
-                logger.warning("Checkboxes not found after 5s wait, proceeding anyway")
+                logger.debug("Modal dialog is visible")
+            except PlaywrightTimeout:
+                logger.warning("Modal dialog not found within timeout")
+            except Exception as e:
+                logger.warning(f"Unexpected error waiting for modal: {e}")
+
+            # Give extra time for checkboxes to render and become interactive
+            self._page.wait_for_timeout(MODAL_ANIMATION_DELAY)
+
+            # Wait for checkboxes to be visible and attached to DOM
+            try:
+                self._page.wait_for_selector(
+                    'input.Vb-rf-checkbox[type="checkbox"]',
+                    timeout=CHECKBOX_WAIT_TIMEOUT,
+                    state="visible"
+                )
+                logger.debug("Checkboxes are visible in modal")
+            except PlaywrightTimeout:
+                logger.warning("Checkboxes not visible within timeout")
+            except Exception as e:
+                logger.warning(f"Unexpected error waiting for checkboxes: {e}")
 
             # Select checkboxes for documents and images
-            # Based on screenshot: name="specSheet", name="manual", name="images"
             checkboxes_to_select = [
                 ('input[name="specSheet"]', "Technical information"),
                 ('input[name="manual"]', "Instruction manual"),
@@ -1214,20 +1240,28 @@ class VibiaScraper(BaseScraper):
 
             checked_count = 0
             for selector, label in checkboxes_to_select:
-                checkbox = self._page.locator(selector)
-                if checkbox.count() > 0:
-                    checkbox.first.check(force=True)  # Force click even if obscured
+                try:
+                    checkbox = self._page.locator(selector)
+                    # Wait for specific checkbox to be visible
+                    checkbox.wait_for(state="visible", timeout=CHECKBOX_INDIVIDUAL_TIMEOUT)
+                    # Check the checkbox
+                    checkbox.check(force=True)
                     checked_count += 1
                     logger.info(f"✓ {label} selected")
-                else:
-                    logger.debug(f"Checkbox not found: {label}")
+                    # Small delay between clicks
+                    self._page.wait_for_timeout(CHECKBOX_CLICK_DELAY)
+                except PlaywrightTimeout:
+                    logger.warning(f"Checkbox not found within timeout: {label}")
+                except Exception as e:
+                    logger.warning(f"Failed to check {label}: {e}")
 
             if checked_count == 0:
-                logger.warning("No checkboxes found - trying to download anyway")
+                logger.error("No checkboxes were successfully checked!")
+                return False
 
             # Wait for download package to be prepared (especially for large image packages)
-            logger.info("Waiting for download package to be prepared (5s)...")
-            self._page.wait_for_timeout(5000)
+            logger.info("Waiting for download package to be prepared...")
+            self._page.wait_for_timeout(DOWNLOAD_PACKAGE_DELAY)
 
             # Setup download handler and click Download button inside modal
             output_dir.mkdir(parents=True, exist_ok=True)
