@@ -1,6 +1,6 @@
 {
   "name": "light-scraper",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Desktop application for scraping lighting manufacturer product data",
   "main": "dist/main/index.js",
   "scripts": {
@@ -64,7 +64,7 @@
       "icon": "electron/icon.ico"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": ["dmg", "zip"],
       "icon": "electron/icon.icns",
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
