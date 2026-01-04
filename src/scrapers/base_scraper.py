@@ -3,6 +3,9 @@
 Following CLAUDE.md: shared logic in base class, specific implementation in subclasses.
 """
 
+import glob
+import os
+import platform
 import time
 from abc import ABC, abstractmethod
 from typing import Optional
@@ -46,7 +49,23 @@ class BaseScraper(ABC):
             return self._page
 
         self._playwright = sync_playwright().start()
-        self._browser = self._playwright.chromium.launch(headless=headless)
+
+        # On Mac, Playwright needs explicit executable path within Chromium.app bundle
+        launch_options = {"headless": headless}
+        if os.getenv("PLAYWRIGHT_BROWSERS_PATH") and os.name != "nt":
+            # Mac/Linux: Chromium is packaged as .app bundle
+            if platform.system() == "Darwin":
+                browsers_path = os.getenv("PLAYWRIGHT_BROWSERS_PATH")
+                # Find the chromium directory
+                chromium_dirs = glob.glob(f"{browsers_path}/chromium-*")
+                if chromium_dirs:
+                    chromium_dir = chromium_dirs[0]
+                    executable_path = f"{chromium_dir}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
+                    if os.path.exists(executable_path):
+                        launch_options["executable_path"] = executable_path
+                        logger.debug(f"Using Mac Chromium executable: {executable_path}")
+
+        self._browser = self._playwright.chromium.launch(**launch_options)
         self._page = self._browser.new_page()
 
         logger.info(f"Browser initialized for {self.config.manufacturer}")

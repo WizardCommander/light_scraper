@@ -11,7 +11,11 @@
       "Bash(rm:*)",
       "WebFetch(domain:www.lodes.com)",
       "Bash(timeout /t 30)",
-      "WebFetch(domain:vibia.com)"
+      "WebFetch(domain:vibia.com)",
+      "Bash(if [ -f \"scripts/parsers/vibia_sku_mapping_auto.json\" ])",
+      "Bash(then python -c \"import json; f=open\\(''scripts/parsers/vibia_sku_mapping_auto.json'', encoding=''utf-8''\\); data=json.load\\(f\\); f.close\\(\\); print\\(f''Mapping has {len\\(data\\)} SKUs''\\); print\\(''Sample:''\\); [print\\(f''  {k}: {v}''\\) for k,v in list\\(data.items\\(\\)\\)[:5]]\")",
+      "Bash(else echo \"Mapping file not ready yet...\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

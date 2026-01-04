@@ -1,0 +1,522 @@
+{
+  "17371": {
+    "product_name": "Max 430 cm",
+    "url_slug": "max-cm"
+  },
+  "17820": {
+    "product_name": "Nero Opaco –9005",
+    "url_slug": "nero-opaco-9005"
+  },
+  "20621": {
+    "product_name": "Nero Opaco –9005",
+    "url_slug": "nero-opaco-9005"
+  },
+  "20622": {
+    "product_name": "Nero Opaco –9005",
+    "url_slug": "nero-opaco-9005"
+  },
+  "16924": {
+    "product_name": "Central canopy",
+    "url_slug": "central-canopy"
+  },
+  "14126": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "14127": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "14128": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "14122": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "14123": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "14124": {
+    "product_name": "Kelly small dome 50",
+    "url_slug": "kelly"
+  },
+  "22121": {
+    "product_name": "Clear",
+    "url_slug": "clear"
+  },
+  "22122": {
+    "product_name": "Clear",
+    "url_slug": "clear"
+  },
+  "22123": {
+    "product_name": "Clear",
+    "url_slug": "clear"
+  },
+  "22124": {
+    "product_name": "Clear",
+    "url_slug": "clear"
+  },
+  "14822": {
+    "product_name": "Sky–Fall medium a",
+    "url_slug": "skyfall"
+  },
+  "14821": {
+    "product_name": "Sky–Fall medium a",
+    "url_slug": "skyfall"
+  },
+  "14824": {
+    "product_name": "Sky–Fall medium a",
+    "url_slug": "skyfall"
+  },
+  "14823": {
+    "product_name": "Sky–Fall medium a",
+    "url_slug": "skyfall"
+  },
+  "19921": {
+    "product_name": "Tidal",
+    "url_slug": "tidal"
+  },
+  "19922": {
+    "product_name": "Tidal",
+    "url_slug": "tidal"
+  },
+  "19925": {
+    "product_name": "Tidal",
+    "url_slug": "tidal"
+  },
+  "19926": {
+    "product_name": "Tidal",
+    "url_slug": "tidal"
+  },
+  "18720": {
+    "product_name": "Bianco Lucido",
+    "url_slug": "bianco-lucido"
+  },
+  "19923": {
+    "product_name": "Bianco Lucido",
+    "url_slug": "bianco-lucido"
+  },
+  "19924": {
+    "product_name": "Bianco Lucido",
+    "url_slug": "bianco-lucido"
+  },
+  "19927": {
+    "product_name": "Bianco Lucido",
+    "url_slug": "bianco-lucido"
+  },
+  "19928": {
+    "product_name": "Bianco Lucido",
+    "url_slug": "bianco-lucido"
+  },
+  "09624": {
+    "product_name": "A–T ube",
+    "url_slug": "at-ube"
+  },
+  "09623": {
+    "product_name": "A–T ube",
+    "url_slug": "at-ube"
+  },
+  "09622": {
+    "product_name": "A–T ube",
+    "url_slug": "at-ube"
+  },
+  "15822": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15826": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15823": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15827": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15824": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15828": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "15825": {
+    "product_name": "A–Tube Nano small",
+    "url_slug": "atube-small"
+  },
+  "21010": {
+    "product_name": "Cono di Luce small",
+    "url_slug": "cono-di-luce"
+  },
+  "21011": {
+    "product_name": "Cono di Luce small",
+    "url_slug": "cono-di-luce"
+  },
+  "17810": {
+    "product_name": "Cono di Luce small",
+    "url_slug": "cono-di-luce"
+  },
+  "16821": {
+    "product_name": "Black Chrome",
+    "url_slug": "black-chrome"
+  },
+  "16822": {
+    "product_name": "Black Chrome",
+    "url_slug": "black-chrome"
+  },
+  "16921": {
+    "product_name": "Black Chrome",
+    "url_slug": "black-chrome"
+  },
+  "16922": {
+    "product_name": "Black Chrome",
+    "url_slug": "black-chrome"
+  },
+  "16923": {
+    "product_name": "Black Chrome",
+    "url_slug": "black-chrome"
+  },
+  "14711": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15413": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15416": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15412": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15415": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15414": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "15417": {
+    "product_name": "CRI 90",
+    "url_slug": "cri"
+  },
+  "21813": {
+    "product_name": "Oblò large",
+    "url_slug": "obl"
+  },
+  "21811": {
+    "product_name": "Oblò large",
+    "url_slug": "obl"
+  },
+  "21812": {
+    "product_name": "Oblò large",
+    "url_slug": "obl"
+  },
+  "15611": {
+    "product_name": "Oblò large",
+    "url_slug": "obl"
+  },
+  "15612": {
+    "product_name": "Oblò large",
+    "url_slug": "obl"
+  },
+  "16410": {
+    "product_name": "Random",
+    "url_slug": "random"
+  },
+  "17110": {
+    "product_name": "Random",
+    "url_slug": "random"
+  },
+  "17111": {
+    "product_name": "Random",
+    "url_slug": "random"
+  },
+  "17112": {
+    "product_name": "Random Solo 14",
+    "url_slug": "random-solo"
+  },
+  "17113": {
+    "product_name": "Random Solo 14",
+    "url_slug": "random-solo"
+  },
+  "17114": {
+    "product_name": "Random Solo 14",
+    "url_slug": "random-solo"
+  },
+  "17115": {
+    "product_name": "Random Solo 14",
+    "url_slug": "random-solo"
+  },
+  "16010": {
+    "product_name": "Spider a",
+    "url_slug": "spider"
+  },
+  "18711": {
+    "product_name": "Spider a",
+    "url_slug": "spider"
+  },
+  "18712": {
+    "product_name": "Spider a",
+    "url_slug": "spider"
+  },
+  "18713": {
+    "product_name": "Spider a",
+    "url_slug": "spider"
+  },
+  "09631": {
+    "product_name": "Wall lamps",
+    "url_slug": "wall-lamps"
+  },
+  "09632": {
+    "product_name": "Wall lamps",
+    "url_slug": "wall-lamps"
+  },
+  "09633": {
+    "product_name": "Wall lamps",
+    "url_slug": "wall-lamps"
+  },
+  "09634": {
+    "product_name": "Wall lamps",
+    "url_slug": "wall-lamps"
+  },
+  "15832": {
+    "product_name": "A–Tube Nano Swing small a",
+    "url_slug": "atube-swing"
+  },
+  "15833": {
+    "product_name": "A–Tube Nano Swing small a",
+    "url_slug": "atube-swing"
+  },
+  "15834": {
+    "product_name": "A–Tube Nano Swing small a",
+    "url_slug": "atube-swing"
+  },
+  "17550": {
+    "product_name": "Aile a",
+    "url_slug": "aile"
+  },
+  "16131": {
+    "product_name": "Aile a",
+    "url_slug": "aile"
+  },
+  "16132": {
+    "product_name": "Aile a",
+    "url_slug": "aile"
+  },
+  "16133": {
+    "product_name": "Aile a",
+    "url_slug": "aile"
+  },
+  "16134": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "03652": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "22731": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "22734": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "22733": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "22732": {
+    "product_name": "Dimming",
+    "url_slug": "dimming"
+  },
+  "16553": {
+    "product_name": "Nautilus  Dim–to–Warm",
+    "url_slug": "nautilus-dimtowarm"
+  },
+  "16550": {
+    "product_name": "Nautilus  Dim–to–Warm",
+    "url_slug": "nautilus-dimtowarm"
+  },
+  "16552": {
+    "product_name": "Nautilus Mini a",
+    "url_slug": "nautilus"
+  },
+  "16530": {
+    "product_name": "Nautilus Mini a",
+    "url_slug": "nautilus"
+  },
+  "16560": {
+    "product_name": "Nautilus Mini a",
+    "url_slug": "nautilus"
+  },
+  "15541": {
+    "product_name": "Nautilus Mini a",
+    "url_slug": "nautilus"
+  },
+  "14641": {
+    "product_name": "Puzzle single square a",
+    "url_slug": "puzzle-single"
+  },
+  "14642": {
+    "product_name": "Puzzle single square a",
+    "url_slug": "puzzle-single"
+  },
+  "14643": {
+    "product_name": "Puzzle single square a",
+    "url_slug": "puzzle-single"
+  },
+  "15941": {
+    "product_name": "Puzzle single square a",
+    "url_slug": "puzzle-single"
+  },
+  "15942": {
+    "product_name": "Puzzle single square a",
+    "url_slug": "puzzle-single"
+  },
+  "16746": {
+    "product_name": "Puzzle Mega round small",
+    "url_slug": "puzzle-mega"
+  },
+  "16748": {
+    "product_name": "Puzzle Mega round small",
+    "url_slug": "puzzle-mega"
+  },
+  "16747": {
+    "product_name": "Puzzle Mega round small",
+    "url_slug": "puzzle-mega"
+  },
+  "16749": {
+    "product_name": "Puzzle Mega round small",
+    "url_slug": "puzzle-mega"
+  },
+  "18340": {
+    "product_name": "Puzzle Mega extension",
+    "url_slug": "puzzle-mega-extension"
+  },
+  "19932": {
+    "product_name": "Tidal 75 a",
+    "url_slug": "tidal"
+  },
+  "19931": {
+    "product_name": "Tidal 75 a",
+    "url_slug": "tidal"
+  },
+  "19933": {
+    "product_name": "Tidal 75 a",
+    "url_slug": "tidal"
+  },
+  "21551": {
+    "product_name": "The light emission angle",
+    "url_slug": "the-light-emission-angle"
+  },
+  "21553": {
+    "product_name": "The light emission angle",
+    "url_slug": "the-light-emission-angle"
+  },
+  "21552": {
+    "product_name": "The light emission angle",
+    "url_slug": "the-light-emission-angle"
+  },
+  "21554": {
+    "product_name": "The light emission angle",
+    "url_slug": "the-light-emission-angle"
+  },
+  "18743": {
+    "product_name": "Volum 29",
+    "url_slug": "volum"
+  },
+  "18741": {
+    "product_name": "Volum 29",
+    "url_slug": "volum"
+  },
+  "18742": {
+    "product_name": "Volum 29",
+    "url_slug": "volum"
+  },
+  "18744": {
+    "product_name": "Volum 29",
+    "url_slug": "volum"
+  },
+  "19182": {
+    "product_name": "Flar medium",
+    "url_slug": "flar"
+  },
+  "19183": {
+    "product_name": "Flar medium",
+    "url_slug": "flar"
+  },
+  "19184": {
+    "product_name": "Flar medium",
+    "url_slug": "flar"
+  },
+  "19185": {
+    "product_name": "Flar medium",
+    "url_slug": "flar"
+  },
+  "17270": {
+    "product_name": "Flar medium",
+    "url_slug": "flar"
+  },
+  "18471": {
+    "product_name": "Chrome",
+    "url_slug": "chrome"
+  },
+  "18480": {
+    "product_name": "Chrome",
+    "url_slug": "chrome"
+  },
+  "17081": {
+    "product_name": "Easy Peasy Flamingo",
+    "url_slug": "easy-peasy-flamingo"
+  },
+  "21080": {
+    "product_name": "Easy Peasy Flamingo",
+    "url_slug": "easy-peasy-flamingo"
+  },
+  "18781": {
+    "product_name": "Volum 14 Volum 14",
+    "url_slug": "volum-volum"
+  },
+  "18782": {
+    "product_name": "Volum 14 Volum 14",
+    "url_slug": "volum-volum"
+  },
+  "18783": {
+    "product_name": "Volum 14 Volum 14",
+    "url_slug": "volum-volum"
+  },
+  "18784": {
+    "product_name": "Volum 14 Volum 14",
+    "url_slug": "volum-volum"
+  },
+  "18771": {
+    "product_name": "Volum short 29",
+    "url_slug": "volum-short"
+  },
+  "18773": {
+    "product_name": "Volum short 29",
+    "url_slug": "volum-short"
+  },
+  "18772": {
+    "product_name": "Volum short 29",
+    "url_slug": "volum-short"
+  },
+  "18774": {
+    "product_name": "Volum short 29",
+    "url_slug": "volum-short"
+  }
+}

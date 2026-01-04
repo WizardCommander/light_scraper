@@ -1,0 +1,2358 @@
+{
+  "0162": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0155": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0157": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0140": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0141": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0142": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0130": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0131": {
+    "product_name": "Vol 0,0017 m3",
+    "url_slug": "vol-0017-m3"
+  },
+  "0132": {
+    "product_name": "Vol 0,0017 m3",
+    "url_slug": "vol-0017-m3"
+  },
+  "0135": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0136": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0137": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "0151": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0152": {
+    "product_name": "Vol 0,0017 m 3",
+    "url_slug": "vol-0017-m"
+  },
+  "0153": {
+    "product_name": "Vol 0,0017 m 3",
+    "url_slug": "vol-0017-m"
+  },
+  "0185": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0187": {
+    "product_name": "Aufgebaut Eingebaut",
+    "url_slug": "aufgebaut-eingebaut"
+  },
+  "0193": {
+    "product_name": "Aufgebaut Eingebaut",
+    "url_slug": "aufgebaut-eingebaut"
+  },
+  "0182": {
+    "product_name": "Vol 0,0265 m 3",
+    "url_slug": "vol-0265-m"
+  },
+  "0196": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0176": {
+    "product_name": "Vol 0,0034 m 3",
+    "url_slug": "vol-0034-m"
+  },
+  "0178": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0177": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0171": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0172": {
+    "product_name": "Ohne driver",
+    "url_slug": "ohne-driver"
+  },
+  "0173": {
+    "product_name": "Circus Solo",
+    "url_slug": "circus-solo"
+  },
+  "0260": {
+    "product_name": "110~240V  50/60Hz",
+    "url_slug": "110240v-60hz"
+  },
+  "0270": {
+    "product_name": "Remote",
+    "url_slug": "remote"
+  },
+  "0275": {
+    "product_name": "Remote",
+    "url_slug": "remote"
+  },
+  "0280": {
+    "product_name": "Skan",
+    "url_slug": "skan"
+  },
+  "0282": {
+    "product_name": "Skan",
+    "url_slug": "skan"
+  },
+  "0299": {
+    "product_name": "Personalisieren Sie",
+    "url_slug": "personalisieren-sie"
+  },
+  "0300": {
+    "product_name": "Wireflow",
+    "url_slug": "wireflow"
+  },
+  "0301": {
+    "product_name": "Wireflow",
+    "url_slug": "wireflow"
+  },
+  "0302": {
+    "product_name": "Wireflow",
+    "url_slug": "wireflow"
+  },
+  "0303": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0309": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0310": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0311": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0312": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0320": {
+    "product_name": "Vol 0,0150 m 3",
+    "url_slug": "vol-0150-m"
+  },
+  "0325": {
+    "product_name": "Wireflow Lineal",
+    "url_slug": "wireflow-lineal"
+  },
+  "0330": {
+    "product_name": "Wireflow Lineal",
+    "url_slug": "wireflow-lineal"
+  },
+  "0338": {
+    "product_name": "Wireflow Lineal",
+    "url_slug": "wireflow-lineal"
+  },
+  "0345": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0347": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0361": {
+    "product_name": "Wireflow Free",
+    "url_slug": "wireflow-free"
+  },
+  "0315": {
+    "product_name": "Wireflow Chandelier",
+    "url_slug": "wireflow-chandelier"
+  },
+  "0374": {
+    "product_name": "Wireflow Chandelier",
+    "url_slug": "wireflow-chandelier"
+  },
+  "0375": {
+    "product_name": "Wireflow Chandelier",
+    "url_slug": "wireflow-chandelier"
+  },
+  "0376": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0377": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0378": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "0700": {
+    "product_name": "I.Cono",
+    "url_slug": "icono"
+  },
+  "0712": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0720": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0721": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0825": {
+    "product_name": "Personalisieren Sie",
+    "url_slug": "personalisieren-sie"
+  },
+  "0827": {
+    "product_name": "Personalisieren Sie",
+    "url_slug": "personalisieren-sie"
+  },
+  "0830": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0832": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0835": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0837": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0840": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0842": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0845": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0847": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0850": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0852": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0860": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0862": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0865": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0867": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0870": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0872": {
+    "product_name": "100~240V  50/60Hz",
+    "url_slug": "100240v-60hz"
+  },
+  "0875": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0877": {
+    "product_name": "Algorithm Grid",
+    "url_slug": "algorithm-grid"
+  },
+  "0820": {
+    "product_name": "Algorithm Free",
+    "url_slug": "algorithm-free"
+  },
+  "0920": {
+    "product_name": "Elektrischer Anschluss",
+    "url_slug": "elektrischer-anschluss"
+  },
+  "0917": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0931": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0933": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0937": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0935": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "0940": {
+    "product_name": "Vol 0,4420 m 3",
+    "url_slug": "vol-4420-m"
+  },
+  "1154": {
+    "product_name": "Vol 0,004 m 3",
+    "url_slug": "vol-004-m"
+  },
+  "1155": {
+    "product_name": "Vol 0,004 m 3",
+    "url_slug": "vol-004-m"
+  },
+  "1160": {
+    "product_name": "Vol 0,063 m 3",
+    "url_slug": "vol-063-m"
+  },
+  "1170": {
+    "product_name": "Vol 0,063 m 3",
+    "url_slug": "vol-063-m"
+  },
+  "1329": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "1510": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "1527": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "1530": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "1575": {
+    "product_name": "Flamingo Mini",
+    "url_slug": "flamingo-mini"
+  },
+  "1580": {
+    "product_name": "Bi-volt",
+    "url_slug": "bi-volt"
+  },
+  "1585": {
+    "product_name": "Bi-volt",
+    "url_slug": "bi-volt"
+  },
+  "1590": {
+    "product_name": "Flamingo Mini",
+    "url_slug": "flamingo-mini"
+  },
+  "1650": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1655": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1660": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1670": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1675": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1680": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1685": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1686": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1690": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1692": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1694": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1720": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1722": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1725": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1727": {
+    "product_name": "Vol 0,005 m 3",
+    "url_slug": "vol-005-m"
+  },
+  "1728": {
+    "product_name": "Vol 0,01218 m 3",
+    "url_slug": "vol-01218-m"
+  },
+  "1730": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1735": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1740": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1745": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1729": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1732": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1737": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1742": {
+    "product_name": "Vol 0,01218 m 3",
+    "url_slug": "vol-01218-m"
+  },
+  "1747": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1755": {
+    "product_name": "Vol 0,016 m 3",
+    "url_slug": "vol-016-m"
+  },
+  "1757": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1760": {
+    "product_name": "Rechts",
+    "url_slug": "rechts"
+  },
+  "1762": {
+    "product_name": "Rechts",
+    "url_slug": "rechts"
+  },
+  "1765": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1767": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1770": {
+    "product_name": "Vol 0,0013 m 3",
+    "url_slug": "vol-0013-m"
+  },
+  "1772": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1774": {
+    "product_name": "Offset",
+    "url_slug": "offset"
+  },
+  "1780": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "1800": {
+    "product_name": "Array",
+    "url_slug": "array"
+  },
+  "1805": {
+    "product_name": "Array",
+    "url_slug": "array"
+  },
+  "1810": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1815": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1820": {
+    "product_name": "Array",
+    "url_slug": "array"
+  },
+  "1825": {
+    "product_name": "Array",
+    "url_slug": "array"
+  },
+  "1830": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1835": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1840": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1845": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1850": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1855": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "1860": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1865": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1870": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1875": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "1880": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "2012": {
+    "product_name": "Funnel",
+    "url_slug": "funnel"
+  },
+  "2013": {
+    "product_name": "Vol 0,0441 m 3",
+    "url_slug": "vol-0441-m"
+  },
+  "2014": {
+    "product_name": "Vol 0,0441 m 3",
+    "url_slug": "vol-0441-m"
+  },
+  "2110": {
+    "product_name": "Komposition.",
+    "url_slug": "komposition"
+  },
+  "2111": {
+    "product_name": "Rhythm Horizontal",
+    "url_slug": "rhythm-horizontal"
+  },
+  "2112": {
+    "product_name": "Rhythm Horizontal",
+    "url_slug": "rhythm-horizontal"
+  },
+  "2113": {
+    "product_name": "Rhythm Horizontal",
+    "url_slug": "rhythm-horizontal"
+  },
+  "2120": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2121": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2122": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2155": {
+    "product_name": "Rhythm Horizontal",
+    "url_slug": "rhythm-horizontal"
+  },
+  "2141": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2142": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2165": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "2143": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "2167": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "2270": {
+    "product_name": "Guise",
+    "url_slug": "guise"
+  },
+  "2277": {
+    "product_name": "Vol 0,153 m 3",
+    "url_slug": "vol-153-m"
+  },
+  "2282": {
+    "product_name": "Vol 0,153 m 3",
+    "url_slug": "vol-153-m"
+  },
+  "2288": {
+    "product_name": "Vol 0,153 m 3",
+    "url_slug": "vol-153-m"
+  },
+  "2272": {
+    "product_name": "Vol 0,153 m 3",
+    "url_slug": "vol-153-m"
+  },
+  "2298": {
+    "product_name": "Guise",
+    "url_slug": "guise"
+  },
+  "2292": {
+    "product_name": "Guise",
+    "url_slug": "guise"
+  },
+  "2330": {
+    "product_name": "Halo Komposition.",
+    "url_slug": "halo-komposition"
+  },
+  "2331": {
+    "product_name": "Vol 0,0972 m 3",
+    "url_slug": "vol-0972-m"
+  },
+  "2332": {
+    "product_name": "Vol 0,0972 m 3",
+    "url_slug": "vol-0972-m"
+  },
+  "2333": {
+    "product_name": "Vol 0,0972 m 3",
+    "url_slug": "vol-0972-m"
+  },
+  "2340": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2341": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2342": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2343": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2360": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "2350": {
+    "product_name": "Vol 0,097 m 3",
+    "url_slug": "vol-097-m"
+  },
+  "2351": {
+    "product_name": "Vol 0,097 m 3",
+    "url_slug": "vol-097-m"
+  },
+  "2355": {
+    "product_name": "Halo Jewel",
+    "url_slug": "halo-jewel"
+  },
+  "2356": {
+    "product_name": "Halo Jewel",
+    "url_slug": "halo-jewel"
+  },
+  "2500": {
+    "product_name": "Vol 0,0180 m 3",
+    "url_slug": "vol-0180-m"
+  },
+  "2501": {
+    "product_name": "Vol 0,0970 m 3",
+    "url_slug": "vol-0970-m"
+  },
+  "2502": {
+    "product_name": "Vol 0,0970 m 3",
+    "url_slug": "vol-0970-m"
+  },
+  "2510": {
+    "product_name": "Vol 0,0970 m 3",
+    "url_slug": "vol-0970-m"
+  },
+  "2511": {
+    "product_name": "Cosmos",
+    "url_slug": "cosmos"
+  },
+  "2515": {
+    "product_name": "Cosmos",
+    "url_slug": "cosmos"
+  },
+  "2516": {
+    "product_name": "Cosmos",
+    "url_slug": "cosmos"
+  },
+  "2600": {
+    "product_name": "Vol 0,032 m 3",
+    "url_slug": "vol-032-m"
+  },
+  "2602": {
+    "product_name": "Vol 0,032 m 3",
+    "url_slug": "vol-032-m"
+  },
+  "2610": {
+    "product_name": "Vol 0,032 m 3",
+    "url_slug": "vol-032-m"
+  },
+  "2612": {
+    "product_name": "Vol 0,032 m 3",
+    "url_slug": "vol-032-m"
+  },
+  "2615": {
+    "product_name": "Structural",
+    "url_slug": "structural"
+  },
+  "2617": {
+    "product_name": "Structural",
+    "url_slug": "structural"
+  },
+  "2630": {
+    "product_name": "Vol 0,032 m 3",
+    "url_slug": "vol-032-m"
+  },
+  "2632": {
+    "product_name": "Structural",
+    "url_slug": "structural"
+  },
+  "2634": {
+    "product_name": "Structural",
+    "url_slug": "structural"
+  },
+  "2640": {
+    "product_name": "Structural",
+    "url_slug": "structural"
+  },
+  "2642": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "2645": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "2647": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "2800": {
+    "product_name": "Class",
+    "url_slug": "class"
+  },
+  "2805": {
+    "product_name": "Class",
+    "url_slug": "class"
+  },
+  "2810": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2815": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2820": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "2825": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "3225": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3230": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3235": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3300": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3303": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3306": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3310": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3313": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3316": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3320": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3323": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3326": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3330": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3333": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3336": {
+    "product_name": "Nussbaum",
+    "url_slug": "nussbaum"
+  },
+  "3350": {
+    "product_name": "Circle",
+    "url_slug": "circle"
+  },
+  "3353": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "3363": {
+    "product_name": "Circle",
+    "url_slug": "circle"
+  },
+  "3360": {
+    "product_name": "Circle",
+    "url_slug": "circle"
+  },
+  "3500": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3503": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3505": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3508": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3510": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3513": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3515": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3518": {
+    "product_name": "220~240V  50/60Hz",
+    "url_slug": "220240v-60hz"
+  },
+  "3530": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "3533": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "3535": {
+    "product_name": "Einbauleuchte.",
+    "url_slug": "einbauleuchte"
+  },
+  "3538": {
+    "product_name": "Einbauleuchte.",
+    "url_slug": "einbauleuchte"
+  },
+  "3540": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3543": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3550": {
+    "product_name": "Einbauleuchte.",
+    "url_slug": "einbauleuchte"
+  },
+  "3553": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "3555": {
+    "product_name": "Einbauleuchte.",
+    "url_slug": "einbauleuchte"
+  },
+  "3558": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3560": {
+    "product_name": "Vol 0,005 m 3",
+    "url_slug": "vol-005-m"
+  },
+  "3563": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3565": {
+    "product_name": "Vol 0,009 m 3",
+    "url_slug": "vol-009-m"
+  },
+  "3568": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3575": {
+    "product_name": "Einbauleuchte.",
+    "url_slug": "einbauleuchte"
+  },
+  "3578": {
+    "product_name": "TRIMLESS",
+    "url_slug": "trimless"
+  },
+  "3580": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3583": {
+    "product_name": "TRIMLESS",
+    "url_slug": "trimless"
+  },
+  "3585": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "3588": {
+    "product_name": "TRIMLESS",
+    "url_slug": "trimless"
+  },
+  "3605": {
+    "product_name": "Vol 0,009 m 3",
+    "url_slug": "vol-009-m"
+  },
+  "3608": {
+    "product_name": "Vol 0,009 m 3",
+    "url_slug": "vol-009-m"
+  },
+  "3610": {
+    "product_name": "Vol 0,047 m 3",
+    "url_slug": "vol-047-m"
+  },
+  "3613": {
+    "product_name": "Vol 0,047 m 3",
+    "url_slug": "vol-047-m"
+  },
+  "3706": {
+    "product_name": "Vol 0,0581 m 3",
+    "url_slug": "vol-0581-m"
+  },
+  "3704": {
+    "product_name": "Vol 0,0581 m 3",
+    "url_slug": "vol-0581-m"
+  },
+  "3702": {
+    "product_name": "Vol 0,0581 m 3",
+    "url_slug": "vol-0581-m"
+  },
+  "3714": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3716": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3718": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3720": {
+    "product_name": "Vol 0,0413 m 3",
+    "url_slug": "vol-0413-m"
+  },
+  "3724": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3726": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3728": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3734": {
+    "product_name": "Vol 0,1790 m 3",
+    "url_slug": "vol-1790-m"
+  },
+  "3735": {
+    "product_name": "Vol 0,1790 m 3",
+    "url_slug": "vol-1790-m"
+  },
+  "3736": {
+    "product_name": "Vol 0,1790 m 3",
+    "url_slug": "vol-1790-m"
+  },
+  "3730": {
+    "product_name": "Vol 0,1790 m 3",
+    "url_slug": "vol-1790-m"
+  },
+  "3760": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3764": {
+    "product_name": "Palma",
+    "url_slug": "palma"
+  },
+  "3900": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "3905": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "3910": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "3915": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "3920": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "3925": {
+    "product_name": "Bigger",
+    "url_slug": "bigger"
+  },
+  "3930": {
+    "product_name": "Bigger",
+    "url_slug": "bigger"
+  },
+  "3935": {
+    "product_name": "Vol 0,487 m 3",
+    "url_slug": "vol-487-m"
+  },
+  "4057": {
+    "product_name": "Außenleuchten",
+    "url_slug": "auenleuchten"
+  },
+  "4062": {
+    "product_name": "4 Kartons",
+    "url_slug": "4-kartons"
+  },
+  "4067": {
+    "product_name": "4 Kartons",
+    "url_slug": "4-kartons"
+  },
+  "4078": {
+    "product_name": "Vol 1,1300 m 3",
+    "url_slug": "vol-1300-m"
+  },
+  "4072": {
+    "product_name": "Vol 1,1300 m 3",
+    "url_slug": "vol-1300-m"
+  },
+  "4077": {
+    "product_name": "Vol 1,1300 m 3",
+    "url_slug": "vol-1300-m"
+  },
+  "4101": {
+    "product_name": "Break",
+    "url_slug": "break"
+  },
+  "4106": {
+    "product_name": "Break",
+    "url_slug": "break"
+  },
+  "4112": {
+    "product_name": "Break Plus",
+    "url_slug": "break-plus"
+  },
+  "4114": {
+    "product_name": "Break Plus",
+    "url_slug": "break-plus"
+  },
+  "4116": {
+    "product_name": "Vol 0,0120 m 3",
+    "url_slug": "vol-0120-m"
+  },
+  "4118": {
+    "product_name": "Vol 0,0120 m 3",
+    "url_slug": "vol-0120-m"
+  },
+  "4125": {
+    "product_name": "Empty",
+    "url_slug": "empty"
+  },
+  "4130": {
+    "product_name": "Empty",
+    "url_slug": "empty"
+  },
+  "4135": {
+    "product_name": "Concrete Grey",
+    "url_slug": "concrete-grey"
+  },
+  "4136": {
+    "product_name": "Concrete Grey",
+    "url_slug": "concrete-grey"
+  },
+  "4270": {
+    "product_name": "Out",
+    "url_slug": "out"
+  },
+  "4275": {
+    "product_name": "5 Kartons",
+    "url_slug": "5-kartons"
+  },
+  "4440": {
+    "product_name": "Vol 0,1377 m 3",
+    "url_slug": "vol-1377-m"
+  },
+  "4442": {
+    "product_name": "Vol 0,1377 m 3",
+    "url_slug": "vol-1377-m"
+  },
+  "4452": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "4454": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "4460": {
+    "product_name": "Körper: Aluminium.",
+    "url_slug": "krper-aluminium"
+  },
+  "4500": {
+    "product_name": "Vol 0,0150 m 3",
+    "url_slug": "vol-0150-m"
+  },
+  "4501": {
+    "product_name": "Origami",
+    "url_slug": "origami"
+  },
+  "4504": {
+    "product_name": "Origami",
+    "url_slug": "origami"
+  },
+  "4506": {
+    "product_name": "Origami",
+    "url_slug": "origami"
+  },
+  "4508": {
+    "product_name": "Vol 0,1100 m 3",
+    "url_slug": "vol-1100-m"
+  },
+  "4510": {
+    "product_name": "Palo Alto",
+    "url_slug": "palo-alto"
+  },
+  "4516": {
+    "product_name": "Palo Alto",
+    "url_slug": "palo-alto"
+  },
+  "4539": {
+    "product_name": "Vol 0,3570 m 3",
+    "url_slug": "vol-3570-m"
+  },
+  "4540": {
+    "product_name": "Vol 0,3570 m 3",
+    "url_slug": "vol-3570-m"
+  },
+  "4625": {
+    "product_name": "Brisa",
+    "url_slug": "brisa"
+  },
+  "4630": {
+    "product_name": "Vol 0,0409 m 3",
+    "url_slug": "vol-0409-m"
+  },
+  "4635": {
+    "product_name": "Vol 0,0409 m 3",
+    "url_slug": "vol-0409-m"
+  },
+  "4640": {
+    "product_name": "Vol 0,0409 m 3",
+    "url_slug": "vol-0409-m"
+  },
+  "4660": {
+    "product_name": "Vol 0,0062 m 3",
+    "url_slug": "vol-0062-m"
+  },
+  "4662": {
+    "product_name": "Vol 0,0062 m 3",
+    "url_slug": "vol-0062-m"
+  },
+  "4670": {
+    "product_name": "Vol 0,0062 m 3",
+    "url_slug": "vol-0062-m"
+  },
+  "4665": {
+    "product_name": "Vol 0,0062 m 3",
+    "url_slug": "vol-0062-m"
+  },
+  "4675": {
+    "product_name": "Vol 0,0062 m 3",
+    "url_slug": "vol-0062-m"
+  },
+  "4680": {
+    "product_name": "Dots Glass",
+    "url_slug": "dots-glass"
+  },
+  "4688": {
+    "product_name": "Dots Outdoor",
+    "url_slug": "dots-outdoor"
+  },
+  "4684": {
+    "product_name": "Dots Outdoor",
+    "url_slug": "dots-outdoor"
+  },
+  "4695": {
+    "product_name": "Außenleuchten",
+    "url_slug": "auenleuchten"
+  },
+  "4697": {
+    "product_name": "Außenleuchten",
+    "url_slug": "auenleuchten"
+  },
+  "4700": {
+    "product_name": "Dots Outdoor",
+    "url_slug": "dots-outdoor"
+  },
+  "4702": {
+    "product_name": "Dots Outdoor",
+    "url_slug": "dots-outdoor"
+  },
+  "4710": {
+    "product_name": "Meridiano",
+    "url_slug": "meridiano"
+  },
+  "4715": {
+    "product_name": "Meridiano",
+    "url_slug": "meridiano"
+  },
+  "4720": {
+    "product_name": "Vol 0,102 m 3",
+    "url_slug": "vol-102-m"
+  },
+  "4800": {
+    "product_name": "Bamboo",
+    "url_slug": "bamboo"
+  },
+  "4801": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4802": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4803": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4804": {
+    "product_name": "Bamboo",
+    "url_slug": "bamboo"
+  },
+  "4805": {
+    "product_name": "Bamboo",
+    "url_slug": "bamboo"
+  },
+  "4810": {
+    "product_name": "Bamboo",
+    "url_slug": "bamboo"
+  },
+  "4811": {
+    "product_name": "Bamboo",
+    "url_slug": "bamboo"
+  },
+  "4812": {
+    "product_name": "4 Kartons",
+    "url_slug": "4-kartons"
+  },
+  "4820": {
+    "product_name": "4 Kartons",
+    "url_slug": "4-kartons"
+  },
+  "4870": {
+    "product_name": "Duo",
+    "url_slug": "duo"
+  },
+  "4872": {
+    "product_name": "Vol 0,2025 m 3",
+    "url_slug": "vol-2025-m"
+  },
+  "4874": {
+    "product_name": "Vol 0,2025 m 3",
+    "url_slug": "vol-2025-m"
+  },
+  "4876": {
+    "product_name": "Vol 0,2025 m 3",
+    "url_slug": "vol-2025-m"
+  },
+  "4878": {
+    "product_name": "Vol 0,3682 m 3",
+    "url_slug": "vol-3682-m"
+  },
+  "4880": {
+    "product_name": "Vol 0,3682 m 3",
+    "url_slug": "vol-3682-m"
+  },
+  "4871": {
+    "product_name": "Vol 0,0815 m 3",
+    "url_slug": "vol-0815-m"
+  },
+  "4873": {
+    "product_name": "Vol 0,0815 m 3",
+    "url_slug": "vol-0815-m"
+  },
+  "4875": {
+    "product_name": "Vol 0,0815 m 3",
+    "url_slug": "vol-0815-m"
+  },
+  "4879": {
+    "product_name": "Duo Petra",
+    "url_slug": "duo-petra"
+  },
+  "4881": {
+    "product_name": "Duo Petra",
+    "url_slug": "duo-petra"
+  },
+  "4877": {
+    "product_name": "Duo Petra",
+    "url_slug": "duo-petra"
+  },
+  "4896": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4901": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4906": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4926": {
+    "product_name": "Vol 0,18 m 3",
+    "url_slug": "vol-18-m"
+  },
+  "4960": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4965": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4970": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "4987": {
+    "product_name": "Ghost",
+    "url_slug": "ghost"
+  },
+  "5189": {
+    "product_name": "18  Graphit",
+    "url_slug": "18-graphit"
+  },
+  "5190": {
+    "product_name": "18  Graphit",
+    "url_slug": "18-graphit"
+  },
+  "5191": {
+    "product_name": "18  Graphit",
+    "url_slug": "18-graphit"
+  },
+  "5192": {
+    "product_name": "18  Graphit",
+    "url_slug": "18-graphit"
+  },
+  "5970": {
+    "product_name": "Personalisieren Sie",
+    "url_slug": "personalisieren-sie"
+  },
+  "5472": {
+    "product_name": "Puck Wall Art",
+    "url_slug": "puck-wall-art"
+  },
+  "5471": {
+    "product_name": "Puck Wall Art",
+    "url_slug": "puck-wall-art"
+  },
+  "5476": {
+    "product_name": "Vol 0,1024 m3",
+    "url_slug": "vol-1024-m3"
+  },
+  "5474": {
+    "product_name": "Vol 0,1024 m3",
+    "url_slug": "vol-1024-m3"
+  },
+  "5481": {
+    "product_name": "Vol 0,0846 m3",
+    "url_slug": "vol-0846-m3"
+  },
+  "5480": {
+    "product_name": "Vol 0,0846 m3",
+    "url_slug": "vol-0846-m3"
+  },
+  "5486": {
+    "product_name": "Vol 0,2178 m3",
+    "url_slug": "vol-2178-m3"
+  },
+  "5485": {
+    "product_name": "Vol 0,2178 m3",
+    "url_slug": "vol-2178-m3"
+  },
+  "5487": {
+    "product_name": "Puck Wall Art",
+    "url_slug": "puck-wall-art"
+  },
+  "5491": {
+    "product_name": "Puck Wall Art",
+    "url_slug": "puck-wall-art"
+  },
+  "5495": {
+    "product_name": "Mayfair Mini",
+    "url_slug": "mayfair-mini"
+  },
+  "5496": {
+    "product_name": "Vol 0,033 m 3",
+    "url_slug": "vol-033-m"
+  },
+  "5497": {
+    "product_name": "Vol 0,033 m 3",
+    "url_slug": "vol-033-m"
+  },
+  "5500": {
+    "product_name": "Mayfair",
+    "url_slug": "mayfair"
+  },
+  "5505": {
+    "product_name": "Vol 0,0470 m 3",
+    "url_slug": "vol-0470-m"
+  },
+  "5510": {
+    "product_name": "Mayfair",
+    "url_slug": "mayfair"
+  },
+  "5515": {
+    "product_name": "Mayfair",
+    "url_slug": "mayfair"
+  },
+  "5520": {
+    "product_name": "Vol 0,0500 m 3",
+    "url_slug": "vol-0500-m"
+  },
+  "5525": {
+    "product_name": "Mayfair",
+    "url_slug": "mayfair"
+  },
+  "5580": {
+    "product_name": "Africa",
+    "url_slug": "africa"
+  },
+  "5585": {
+    "product_name": "Vol 0,0026  m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "5590": {
+    "product_name": "Vol 0,0026  m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "5595": {
+    "product_name": "Vol 0,0026  m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "5605": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5666": {
+    "product_name": "Höhe des Schirms",
+    "url_slug": "hhe-des-schirms"
+  },
+  "5620": {
+    "product_name": "Höhe des Schirms",
+    "url_slug": "hhe-des-schirms"
+  },
+  "5630": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5662": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "5660": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "5664": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5672": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5674": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5670": {
+    "product_name": "North",
+    "url_slug": "north"
+  },
+  "5720": {
+    "product_name": "Vol 0,21 m 3",
+    "url_slug": "vol-21-m"
+  },
+  "5725": {
+    "product_name": "Vol 0,277 m 3",
+    "url_slug": "vol-277-m"
+  },
+  "5730": {
+    "product_name": "Remote Micro",
+    "url_slug": "remote-micro"
+  },
+  "5756": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5757": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5758": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5760": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5761": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5759": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5762": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5764": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5763": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5767": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5766": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5765": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5770": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "5772": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "5774": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5776": {
+    "product_name": "Tempo",
+    "url_slug": "tempo"
+  },
+  "5778": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "5780": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "5905": {
+    "product_name": "Vol 0,0844 m 3",
+    "url_slug": "vol-0844-m"
+  },
+  "5910": {
+    "product_name": "Vol 0,0844 m 3",
+    "url_slug": "vol-0844-m"
+  },
+  "5920": {
+    "product_name": "Vol 0,0051 m 3",
+    "url_slug": "vol-0051-m"
+  },
+  "5922": {
+    "product_name": "Vol 0,0051 m 3",
+    "url_slug": "vol-0051-m"
+  },
+  "5924": {
+    "product_name": "Vol 0,0051 m 3",
+    "url_slug": "vol-0051-m"
+  },
+  "5930": {
+    "product_name": "Vol 0,4608 m3",
+    "url_slug": "vol-4608-m3"
+  },
+  "5935": {
+    "product_name": "Vol 0,4608 m3",
+    "url_slug": "vol-4608-m3"
+  },
+  "5940": {
+    "product_name": "Vol 0,4608 m3",
+    "url_slug": "vol-4608-m3"
+  },
+  "5945": {
+    "product_name": "Vol 0,0163 m 3",
+    "url_slug": "vol-0163-m"
+  },
+  "5955": {
+    "product_name": "Memoryfunktion)",
+    "url_slug": "memoryfunktion"
+  },
+  "5957": {
+    "product_name": "Memoryfunktion)",
+    "url_slug": "memoryfunktion"
+  },
+  "5965": {
+    "product_name": "Vol 0,0018 m 3",
+    "url_slug": "vol-0018-m"
+  },
+  "5972": {
+    "product_name": "Vol 0,0018 m 3",
+    "url_slug": "vol-0018-m"
+  },
+  "5975": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5977": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5979": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5981": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5983": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5985": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "5987": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5989": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5991": {
+    "product_name": "Vol 0,033 m 3",
+    "url_slug": "vol-033-m"
+  },
+  "5993": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "5995": {
+    "product_name": "Vol 0,015 m 3",
+    "url_slug": "vol-015-m"
+  },
+  "6006": {
+    "product_name": "Suite",
+    "url_slug": "suite"
+  },
+  "6007": {
+    "product_name": "6007 _ _  /15  Push",
+    "url_slug": "6007-15-push"
+  },
+  "6011": {
+    "product_name": "6007 _ _  /15  Push",
+    "url_slug": "6007-15-push"
+  },
+  "6012": {
+    "product_name": "6007 _ _  /15  Push",
+    "url_slug": "6007-15-push"
+  },
+  "6040": {
+    "product_name": "Suite",
+    "url_slug": "suite"
+  },
+  "6041": {
+    "product_name": "Suite",
+    "url_slug": "suite"
+  },
+  "6045": {
+    "product_name": "Vol 0,418 m 3",
+    "url_slug": "vol-418-m"
+  },
+  "6046": {
+    "product_name": "Vol 0,418 m 3",
+    "url_slug": "vol-418-m"
+  },
+  "6095": {
+    "product_name": "Tube Free",
+    "url_slug": "tube-free"
+  },
+  "6100": {
+    "product_name": "Vol 0,144 m 3",
+    "url_slug": "vol-144-m"
+  },
+  "6105": {
+    "product_name": "Vol 0,144 m 3",
+    "url_slug": "vol-144-m"
+  },
+  "6160": {
+    "product_name": "Total Vol 0,04 m3",
+    "url_slug": "total-vol-04-m3"
+  },
+  "6165": {
+    "product_name": "Total Vol 0,04 m3",
+    "url_slug": "total-vol-04-m3"
+  },
+  "6230": {
+    "product_name": "Leuchtentypen",
+    "url_slug": "leuchtentypen"
+  },
+  "6235": {
+    "product_name": "Leuchtentypen",
+    "url_slug": "leuchtentypen"
+  },
+  "6220": {
+    "product_name": "Semisphere",
+    "url_slug": "semisphere"
+  },
+  "6225": {
+    "product_name": "Semisphere",
+    "url_slug": "semisphere"
+  },
+  "6240": {
+    "product_name": "Plusminus",
+    "url_slug": "plusminus"
+  },
+  "6245": {
+    "product_name": "Plusminus",
+    "url_slug": "plusminus"
+  },
+  "6200": {
+    "product_name": "Spotlight",
+    "url_slug": "spotlight"
+  },
+  "6205": {
+    "product_name": "Spotlight",
+    "url_slug": "spotlight"
+  },
+  "6210": {
+    "product_name": "Push; 1-10V;",
+    "url_slug": "push-10v"
+  },
+  "6215": {
+    "product_name": "Push; 1-10V;",
+    "url_slug": "push-10v"
+  },
+  "6250": {
+    "product_name": "Linear diffuser",
+    "url_slug": "linear-diffuser"
+  },
+  "6255": {
+    "product_name": "Linear diffuser",
+    "url_slug": "linear-diffuser"
+  },
+  "6260": {
+    "product_name": "Plusminus",
+    "url_slug": "plusminus"
+  },
+  "6265": {
+    "product_name": "Vol 0,0050 m 3",
+    "url_slug": "vol-0050-m"
+  },
+  "6270": {
+    "product_name": "Vol 0,0050 m 3",
+    "url_slug": "vol-0050-m"
+  },
+  "6275": {
+    "product_name": "Plusminus",
+    "url_slug": "plusminus"
+  },
+  "6280": {
+    "product_name": "Vol 0,0050 m 3",
+    "url_slug": "vol-0050-m"
+  },
+  "6285": {
+    "product_name": "Vol 0,0050 m 3",
+    "url_slug": "vol-0050-m"
+  },
+  "2011": {
+    "product_name": "Textilband",
+    "url_slug": "textilband"
+  },
+  "6330": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6331": {
+    "product_name": "Vol 0,0046 m3",
+    "url_slug": "vol-0046-m3"
+  },
+  "6332": {
+    "product_name": "Vol 0,0046 m3",
+    "url_slug": "vol-0046-m3"
+  },
+  "6333": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6335": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6340": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6341": {
+    "product_name": "Vol 0,0326 m 3",
+    "url_slug": "vol-0326-m"
+  },
+  "6343": {
+    "product_name": "Vol 0,0326 m 3",
+    "url_slug": "vol-0326-m"
+  },
+  "6346": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6348": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6363": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6361": {
+    "product_name": "Plusminus Solo",
+    "url_slug": "plusminus-solo"
+  },
+  "6370": {
+    "product_name": "Vol 0,0482 m 3",
+    "url_slug": "vol-0482-m"
+  },
+  "6365": {
+    "product_name": "Vol 0,0482 m 3",
+    "url_slug": "vol-0482-m"
+  },
+  "6414": {
+    "product_name": "Kontorno",
+    "url_slug": "kontorno"
+  },
+  "6416": {
+    "product_name": "Kontorno",
+    "url_slug": "kontorno"
+  },
+  "6418": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "6444": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "6446": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "6434": {
+    "product_name": "Kontorno",
+    "url_slug": "kontorno"
+  },
+  "6436": {
+    "product_name": "Vol 0,122 m 3",
+    "url_slug": "vol-122-m"
+  },
+  "6438": {
+    "product_name": "Vol 0,122 m 3",
+    "url_slug": "vol-122-m"
+  },
+  "6474": {
+    "product_name": "Vol 0,122 m 3",
+    "url_slug": "vol-122-m"
+  },
+  "6476": {
+    "product_name": "Kontorno",
+    "url_slug": "kontorno"
+  },
+  "6500": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6504": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6520": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6524": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6528": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6525": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6529": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6510": {
+    "product_name": "6510  Schmal6510",
+    "url_slug": "6510"
+  },
+  "6514": {
+    "product_name": "6510  Schmal6510",
+    "url_slug": "6510"
+  },
+  "6530": {
+    "product_name": "6530  Schmal6530",
+    "url_slug": "6530"
+  },
+  "6534": {
+    "product_name": "6530  Schmal6530",
+    "url_slug": "6530"
+  },
+  "6538": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "6540": {
+    "product_name": "Vol 0,0176 m3",
+    "url_slug": "vol-0176-m3"
+  },
+  "6542": {
+    "product_name": "Vol 0,0176 m3",
+    "url_slug": "vol-0176-m3"
+  },
+  "6560": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6561": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6575": {
+    "product_name": "42 /_  _  Blue M1",
+    "url_slug": "42-blue-m1"
+  },
+  "6576": {
+    "product_name": "42 /_  _  Blue M1",
+    "url_slug": "42-blue-m1"
+  },
+  "6570": {
+    "product_name": "42 /_  _  Blue M1",
+    "url_slug": "42-blue-m1"
+  },
+  "6571": {
+    "product_name": "42 /_  _  Blue M1",
+    "url_slug": "42-blue-m1"
+  },
+  "6590": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6591": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6580": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6581": {
+    "product_name": "Vol 0,0418 m 3",
+    "url_slug": "vol-0418-m"
+  },
+  "6583": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "6584": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "6586": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "6587": {
+    "product_name": "Vol 0,01 m 3",
+    "url_slug": "vol-01-m"
+  },
+  "6600": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6604": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6654": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6650": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6658": {
+    "product_name": "CRI >90",
+    "url_slug": "cri-90"
+  },
+  "6610": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6614": {
+    "product_name": "Vol 0,0026 m3",
+    "url_slug": "vol-0026-m3"
+  },
+  "6630": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6634": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6660": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6664": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6668": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6684": {
+    "product_name": "On/ Off  (Remote)",
+    "url_slug": "on-off-remote"
+  },
+  "6680": {
+    "product_name": "On/ Off  (Remote)",
+    "url_slug": "on-off-remote"
+  },
+  "6688": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6620": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6624": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6640": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6644": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6670": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6674": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6678": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6694": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6690": {
+    "product_name": "Vol 0,0026 m 3",
+    "url_slug": "vol-0026-m"
+  },
+  "6698": {
+    "product_name": "Bind Solo",
+    "url_slug": "bind-solo"
+  },
+  "6700": {
+    "product_name": "Vol 0,0176 m 3",
+    "url_slug": "vol-0176-m"
+  },
+  "6702": {
+    "product_name": "Vol 0,0176 m 3",
+    "url_slug": "vol-0176-m"
+  },
+  "7400": {
+    "product_name": "Delicate elegance.",
+    "url_slug": "delicate-elegance"
+  },
+  "7402": {
+    "product_name": "7402 _ _  / 15  Push",
+    "url_slug": "7402-push"
+  },
+  "7404": {
+    "product_name": "7402 _ _  / 15  Push",
+    "url_slug": "7402-push"
+  },
+  "7415": {
+    "product_name": "7402 _ _  / 15  Push",
+    "url_slug": "7402-push"
+  },
+  "7450": {
+    "product_name": "Stoffschirm: PES FR.",
+    "url_slug": "stoffschirm-pes-fr"
+  },
+  "7455": {
+    "product_name": "Vol 0,119 m 3",
+    "url_slug": "vol-119-m"
+  },
+  "7460": {
+    "product_name": "Vol 0,119 m 3",
+    "url_slug": "vol-119-m"
+  },
+  "7475": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "7470": {
+    "product_name": "Micro",
+    "url_slug": "micro"
+  },
+  "7480": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "7485": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "7487": {
+    "product_name": "2 Kartons",
+    "url_slug": "2-kartons"
+  },
+  "7490": {
+    "product_name": "Vol 0,196 m 3",
+    "url_slug": "vol-196-m"
+  },
+  "7492": {
+    "product_name": "Vol 0,196 m 3",
+    "url_slug": "vol-196-m"
+  },
+  "7494": {
+    "product_name": "Vol 0,196 m 3",
+    "url_slug": "vol-196-m"
+  },
+  "7749": {
+    "product_name": "Vol 0,0071 m3",
+    "url_slug": "vol-0071-m3"
+  },
+  "7750": {
+    "product_name": "Vol 0,0071 m3",
+    "url_slug": "vol-0071-m3"
+  },
+  "7751": {
+    "product_name": "Vol 0,0071 m 3",
+    "url_slug": "vol-0071-m"
+  },
+  "7752": {
+    "product_name": "Vol 0,0071 m 3",
+    "url_slug": "vol-0071-m"
+  },
+  "7753": {
+    "product_name": "Vol 0,0071 m 3",
+    "url_slug": "vol-0071-m"
+  },
+  "7940": {
+    "product_name": "Alpha",
+    "url_slug": "alpha"
+  },
+  "7942": {
+    "product_name": "Vol 0,0055 m 3",
+    "url_slug": "vol-0055-m"
+  },
+  "0164": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "0167": {
+    "product_name": "Circus",
+    "url_slug": "circus"
+  },
+  "1540": {
+    "product_name": "Flamingo",
+    "url_slug": "flamingo"
+  },
+  "1550": {
+    "product_name": "Flamingo",
+    "url_slug": "flamingo"
+  },
+  "1560": {
+    "product_name": "Flamingo",
+    "url_slug": "flamingo"
+  },
+  "1570": {
+    "product_name": "Flamingo",
+    "url_slug": "flamingo"
+  }
+}
