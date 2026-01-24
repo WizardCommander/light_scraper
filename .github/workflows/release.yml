@@ -120,13 +120,14 @@ jobs:
 
       - name: Verify Mac browsers exist
         run: |
-          if ! ls -d browsers-local/chromium-*/chrome-mac 2>/dev/null; then
+          if ! ls -d browsers-local/chromium-*/chrome-mac* 2>/dev/null; then
             echo "ERROR: Mac Chromium not found in browsers-local!"
             echo "=== Full directory listing ==="
             ls -laR browsers-local/
             exit 1
           fi
-          echo "Mac Chromium found successfully"
+          echo "Mac Chromium found successfully (Intel or ARM)"
+          ls -d browsers-local/chromium-*/chrome-mac*
 
       - name: Build Electron app
         run: npm run build

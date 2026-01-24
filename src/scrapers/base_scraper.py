@@ -63,8 +63,16 @@ class BaseScraper(ABC):
                 chromium_dirs = glob.glob(f"{browsers_path}/chromium-*")
                 if chromium_dirs:
                     chromium_dir = chromium_dirs[0]
-                    executable_path = f"{chromium_dir}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
-                    if os.path.exists(executable_path):
+                    # Check for ARM Mac (chrome-mac-arm64) or Intel Mac (chrome-mac)
+                    chrome_mac_dirs = glob.glob(f"{chromium_dir}/chrome-mac*")
+                    if chrome_mac_dirs:
+                        chrome_mac_dir = chrome_mac_dirs[0]
+                        executable_path = (
+                            f"{chrome_mac_dir}/Chromium.app/Contents/MacOS/Chromium"
+                        )
+                    else:
+                        executable_path = None
+                    if executable_path and os.path.exists(executable_path):
                         launch_options["executable_path"] = executable_path
                         logger.debug(
                             f"Using Mac Chromium executable: {executable_path}"
@@ -142,15 +150,24 @@ class BaseScraper(ABC):
             # Re-check for browser after install
             chromium_dirs = glob.glob(f"{browsers_path}/chromium-*")
             if chromium_dirs:
-                executable_path = f"{chromium_dirs[0]}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
-                if os.path.exists(executable_path):
-                    logger.info(
-                        f"Successfully downloaded Mac Chromium to: {executable_path}"
+                # Check for ARM Mac (chrome-mac-arm64) or Intel Mac (chrome-mac)
+                chrome_mac_dirs = glob.glob(f"{chromium_dirs[0]}/chrome-mac*")
+                if chrome_mac_dirs:
+                    executable_path = (
+                        f"{chrome_mac_dirs[0]}/Chromium.app/Contents/MacOS/Chromium"
                     )
-                    return executable_path
+                    if os.path.exists(executable_path):
+                        logger.info(
+                            f"Successfully downloaded Mac Chromium to: {executable_path}"
+                        )
+                        return executable_path
+                    else:
+                        logger.error(
+                            f"Downloaded but executable not found at: {executable_path}"
+                        )
                 else:
                     logger.error(
-                        f"Downloaded but executable not found at: {executable_path}"
+                        f"No chrome-mac directory found in: {chromium_dirs[0]}"
                     )
             else:
                 logger.error(f"No chromium directory created in: {browsers_path}")
