@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'  # Triggers when you push v1.0.0, v1.0.1, etc.
+  workflow_dispatch:  # Allow manual trigger for testing
 
 permissions:
   contents: write
@@ -108,8 +109,24 @@ jobs:
 
       - name: Download Playwright browsers to bundle
         run: |
-          export PLAYWRIGHT_BROWSERS_PATH=browsers-local
+          export PLAYWRIGHT_BROWSERS_PATH="$(pwd)/browsers-local"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH"
           playwright install chromium
+          echo "=== Browser directory structure ==="
+          find browsers-local -type d | head -20
+          echo "=== Looking for Mac Chromium ==="
+          ls -la browsers-local/chromium-*/chrome-mac/ 2>/dev/null || echo "chrome-mac NOT FOUND"
+          ls -la browsers-local/chromium-*/chrome-win/ 2>/dev/null || echo "chrome-win NOT FOUND (expected on Mac)"
+
+      - name: Verify Mac browsers exist
+        run: |
+          if ! ls -d browsers-local/chromium-*/chrome-mac 2>/dev/null; then
+            echo "ERROR: Mac Chromium not found in browsers-local!"
+            echo "=== Full directory listing ==="
+            ls -laR browsers-local/
+            exit 1
+          fi
+          echo "Mac Chromium found successfully"
 
       - name: Build Electron app
         run: npm run build

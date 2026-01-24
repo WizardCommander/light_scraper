@@ -6,6 +6,7 @@ Following CLAUDE.md: shared logic in base class, specific implementation in subc
 import glob
 import os
 import platform
+import subprocess
 import time
 from abc import ABC, abstractmethod
 from typing import Optional
@@ -56,6 +57,8 @@ class BaseScraper(ABC):
             # Mac/Linux: Chromium is packaged as .app bundle
             if platform.system() == "Darwin":
                 browsers_path = os.getenv("PLAYWRIGHT_BROWSERS_PATH")
+                logger.debug(f"PLAYWRIGHT_BROWSERS_PATH: {browsers_path}")
+
                 # Find the chromium directory
                 chromium_dirs = glob.glob(f"{browsers_path}/chromium-*")
                 if chromium_dirs:
@@ -63,7 +66,31 @@ class BaseScraper(ABC):
                     executable_path = f"{chromium_dir}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
                     if os.path.exists(executable_path):
                         launch_options["executable_path"] = executable_path
-                        logger.debug(f"Using Mac Chromium executable: {executable_path}")
+                        logger.debug(
+                            f"Using Mac Chromium executable: {executable_path}"
+                        )
+                    else:
+                        # Mac browser not found - try runtime fallback
+                        logger.warning(
+                            f"Mac Chromium not found at: {executable_path}. "
+                            f"Contents of {chromium_dir}: {os.listdir(chromium_dir)}"
+                        )
+                        fallback_path = self._ensure_mac_browser_installed(
+                            browsers_path
+                        )
+                        if fallback_path:
+                            launch_options["executable_path"] = fallback_path
+                        else:
+                            logger.error(
+                                "Could not find or download Mac Chromium browser. "
+                                "The app bundle may be corrupted. Please reinstall."
+                            )
+                else:
+                    logger.warning(f"No chromium directory found in: {browsers_path}")
+                    # Try to download browser as fallback
+                    fallback_path = self._ensure_mac_browser_installed(browsers_path)
+                    if fallback_path:
+                        launch_options["executable_path"] = fallback_path
 
         self._browser = self._playwright.chromium.launch(**launch_options)
         self._page = self._browser.new_page()
@@ -89,6 +116,54 @@ class BaseScraper(ABC):
     def rate_limit(self) -> None:
         """Apply rate limiting between requests."""
         time.sleep(self.config.rate_limit_delay)
+
+    def _ensure_mac_browser_installed(self, browsers_path: str) -> Optional[str]:
+        """Attempt to install Mac Chromium if missing.
+
+        Args:
+            browsers_path: Path to Playwright browsers directory
+
+        Returns:
+            Path to Chromium executable if successful, None otherwise
+        """
+        logger.warning("Bundled Mac browser not found. Attempting to download...")
+        try:
+            env = os.environ.copy()
+            env["PLAYWRIGHT_BROWSERS_PATH"] = browsers_path
+            result = subprocess.run(
+                ["playwright", "install", "chromium"],
+                check=True,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+            logger.debug(f"Playwright install output: {result.stdout}")
+
+            # Re-check for browser after install
+            chromium_dirs = glob.glob(f"{browsers_path}/chromium-*")
+            if chromium_dirs:
+                executable_path = f"{chromium_dirs[0]}/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
+                if os.path.exists(executable_path):
+                    logger.info(
+                        f"Successfully downloaded Mac Chromium to: {executable_path}"
+                    )
+                    return executable_path
+                else:
+                    logger.error(
+                        f"Downloaded but executable not found at: {executable_path}"
+                    )
+            else:
+                logger.error(f"No chromium directory created in: {browsers_path}")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to download Chromium: {e.stderr}")
+        except FileNotFoundError:
+            logger.error(
+                "Playwright CLI not found. Cannot download browser. "
+                "Please install playwright: pip install playwright"
+            )
+        except Exception as e:
+            logger.error(f"Unexpected error downloading Chromium: {e}")
+        return None
 
     def download_product_images(
         self, product: ProductData, output_dir: str = "output/images"
@@ -118,7 +193,9 @@ class BaseScraper(ABC):
         return downloaded_paths
 
     @abstractmethod
-    def scrape_product(self, sku: SKU, output_base: str = "output") -> list[ProductData]:
+    def scrape_product(
+        self, sku: SKU, output_base: str = "output"
+    ) -> list[ProductData]:
         """Extract product data from manufacturer website.
 
         Must be implemented by each manufacturer scraper.
