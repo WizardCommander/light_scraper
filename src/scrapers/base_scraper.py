@@ -67,9 +67,16 @@ class BaseScraper(ABC):
                     chrome_mac_dirs = glob.glob(f"{chromium_dir}/chrome-mac*")
                     if chrome_mac_dirs:
                         chrome_mac_dir = chrome_mac_dirs[0]
-                        executable_path = (
-                            f"{chrome_mac_dir}/Chromium.app/Contents/MacOS/Chromium"
-                        )
+                        # Try different browser app names (Playwright changed from Chromium to Chrome for Testing)
+                        possible_paths = [
+                            f"{chrome_mac_dir}/Chromium.app/Contents/MacOS/Chromium",
+                            f"{chrome_mac_dir}/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+                        ]
+                        executable_path = None
+                        for path in possible_paths:
+                            if os.path.exists(path):
+                                executable_path = path
+                                break
                     else:
                         executable_path = None
                     if executable_path and os.path.exists(executable_path):
@@ -153,18 +160,21 @@ class BaseScraper(ABC):
                 # Check for ARM Mac (chrome-mac-arm64) or Intel Mac (chrome-mac)
                 chrome_mac_dirs = glob.glob(f"{chromium_dirs[0]}/chrome-mac*")
                 if chrome_mac_dirs:
-                    executable_path = (
-                        f"{chrome_mac_dirs[0]}/Chromium.app/Contents/MacOS/Chromium"
+                    chrome_mac_dir = chrome_mac_dirs[0]
+                    # Try different browser app names
+                    possible_paths = [
+                        f"{chrome_mac_dir}/Chromium.app/Contents/MacOS/Chromium",
+                        f"{chrome_mac_dir}/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+                    ]
+                    for path in possible_paths:
+                        if os.path.exists(path):
+                            logger.info(
+                                f"Successfully downloaded Mac browser to: {path}"
+                            )
+                            return path
+                    logger.error(
+                        f"Downloaded but executable not found. Checked: {possible_paths}"
                     )
-                    if os.path.exists(executable_path):
-                        logger.info(
-                            f"Successfully downloaded Mac Chromium to: {executable_path}"
-                        )
-                        return executable_path
-                    else:
-                        logger.error(
-                            f"Downloaded but executable not found at: {executable_path}"
-                        )
                 else:
                     logger.error(
                         f"No chrome-mac directory found in: {chromium_dirs[0]}"
