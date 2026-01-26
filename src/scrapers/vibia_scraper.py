@@ -21,10 +21,9 @@ from src.auth import VibiaAuth
 # Download modal interaction timeouts (milliseconds)
 MODAL_OPEN_TIMEOUT = 10000  # Wait for modal dialog to appear
 MODAL_ANIMATION_DELAY = 2000  # Wait for modal animation to complete
-CHECKBOX_WAIT_TIMEOUT = 10000  # Wait for checkboxes to be visible
-CHECKBOX_INDIVIDUAL_TIMEOUT = 5000  # Wait for each checkbox to be ready
-CHECKBOX_CLICK_DELAY = 300  # Delay between checkbox clicks
-DOWNLOAD_PACKAGE_DELAY = 5000  # Wait for download package preparation
+DOWNLOAD_BUTTON_TIMEOUT = 10000  # Wait for download buttons to be visible
+DOWNLOAD_CLICK_DELAY = 1000  # Delay between download clicks
+PAGE_LOAD_DELAY = 2000  # Wait for page to fully load after navigation
 
 
 class VibiaScraper(BaseScraper):
@@ -1139,10 +1138,66 @@ class VibiaScraper(BaseScraper):
             logger.error(f"Failed to login and inject cookies: {e}")
             return False
 
+    def _dismiss_region_modal(self) -> None:
+        """Dismiss the region selection modal if present."""
+        assert self._page is not None
+
+        # Region modal selectors - the "Willkommen bei Vibia" popup
+        region_modal_close_selectors = [
+            'div.vib-modal__overlay + div button.vib-modal__close',
+            'button[aria-label="Schließen"]',
+            'button[aria-label="Close"]',
+            '.vib-modal__close',
+        ]
+
+        for selector in region_modal_close_selectors:
+            try:
+                close_btn = self._page.locator(selector).first
+                if close_btn.is_visible(timeout=1000):
+                    close_btn.click()
+                    logger.debug("Dismissed region selection modal")
+                    self._page.wait_for_timeout(500)
+                    return
+            except Exception:
+                continue
+
+        # Alternative: click "Website betreten" button to dismiss
+        try:
+            enter_btn = self._page.locator('button:has-text("Website betreten")').first
+            if enter_btn.is_visible(timeout=1000):
+                enter_btn.click()
+                logger.debug("Dismissed region modal via 'Website betreten' button")
+                self._page.wait_for_timeout(500)
+        except Exception:
+            pass
+
+    def _dismiss_cookie_banner(self) -> None:
+        """Dismiss cookie consent banner if present."""
+        assert self._page is not None
+
+        cookie_selectors = [
+            "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll",
+            "#CybotCookiebotDialogBodyButtonAccept",
+            'button:has-text("Accept all")',
+            'button:has-text("Allow all")',
+            'button:has-text("Alle akzeptieren")',
+        ]
+        for selector in cookie_selectors:
+            try:
+                btn = self._page.locator(selector).first
+                if btn.is_visible(timeout=1000):
+                    btn.click()
+                    logger.debug("Dismissed cookie banner")
+                    self._page.wait_for_timeout(500)
+                    return
+            except Exception:
+                continue
+
     def download_product_files(self, output_dir: Path) -> bool:
         """Download product files using Playwright browser automation.
 
-        Downloads technical information and instruction manual by default.
+        Downloads technical information, instruction manual, and images
+        using the new individual download button UI.
 
         Args:
             output_dir: Directory to save downloaded files
@@ -1164,31 +1219,21 @@ class VibiaScraper(BaseScraper):
         # Navigate to product page with authenticated session
         logger.info(f"Navigating to product page: {product_url}")
         self._page.goto(product_url, wait_until="networkidle")
-        self._page.wait_for_timeout(2000)  # Give page time to load
+        self._page.wait_for_timeout(PAGE_LOAD_DELAY)
 
-        # Dismiss cookie banner if present
-        cookie_selectors = [
-            "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll",
-            "#CybotCookiebotDialogBodyButtonAccept",
-            'button:has-text("Accept all")',
-            'button:has-text("Allow all")',
-        ]
-        for selector in cookie_selectors:
-            try:
-                self._page.click(selector, timeout=2000)
-                logger.debug("Dismissed cookie banner")
-                self._page.wait_for_timeout(500)
-                break
-            except Exception:
-                continue
+        # Dismiss modals that may block interactions
+        self._dismiss_region_modal()
+        self._dismiss_cookie_banner()
 
         try:
             logger.info("Looking for download trigger button...")
 
-            # First, click the Download button to open the modal
-            # Based on screenshot: button[data-qa="download-popup-open-inspirational"]
+            # Click the Download button to open the modal
             download_trigger = self._page.locator(
-                'button[data-qa="download-popup-open-inspirational"], button.vib-link:has-text("Download")'
+                'button[data-qa="download-popup-open-inspirational"], '
+                'button[data-qa="download-popup-open-lower-menu"], '
+                'button.vib-link:has-text("Herunterladen"), '
+                'button.vib-link:has-text("Download")'
             )
 
             if download_trigger.count() == 0:
@@ -1199,126 +1244,86 @@ class VibiaScraper(BaseScraper):
             download_trigger.first.scroll_into_view_if_needed()
             download_trigger.first.click()
 
-            # Wait for modal to appear and be fully rendered
-            logger.info("Waiting for download modal to fully load...")
-
-            # Wait for modal dialog to be visible (gives time for animation)
+            # Wait for modal to appear
             try:
                 self._page.wait_for_selector(
                     'div[role="dialog"]',
                     timeout=MODAL_OPEN_TIMEOUT,
                     state="visible"
                 )
-                logger.debug("Modal dialog is visible")
+                logger.debug("Download modal is visible")
             except PlaywrightTimeout:
-                logger.warning("Modal dialog not found within timeout")
-            except Exception as e:
-                logger.warning(f"Unexpected error waiting for modal: {e}")
+                logger.warning("Download modal not found within timeout")
+                return False
 
-            # Give extra time for checkboxes to render and become interactive
+            # Wait for modal animation to complete
             self._page.wait_for_timeout(MODAL_ANIMATION_DELAY)
 
-            # Wait for checkboxes to be visible and attached to DOM
-            try:
-                self._page.wait_for_selector(
-                    'input.Vb-rf-checkbox[type="checkbox"]',
-                    timeout=CHECKBOX_WAIT_TIMEOUT,
-                    state="visible"
-                )
-                logger.debug("Checkboxes are visible in modal")
-            except PlaywrightTimeout:
-                logger.warning("Checkboxes not visible within timeout")
-            except Exception as e:
-                logger.warning(f"Unexpected error waiting for checkboxes: {e}")
-
-            # Select checkboxes for documents and images
-            checkboxes_to_select = [
-                ('input[name="specSheet"]', "Technical information"),
-                ('input[name="manual"]', "Instruction manual"),
-                ('input[name="images"]', "Images (HD)"),
-            ]
-
-            checked_count = 0
-            for selector, label in checkboxes_to_select:
-                try:
-                    checkbox = self._page.locator(selector)
-                    # Wait for specific checkbox to be visible
-                    checkbox.wait_for(state="visible", timeout=CHECKBOX_INDIVIDUAL_TIMEOUT)
-                    # Check the checkbox
-                    checkbox.check(force=True)
-                    checked_count += 1
-                    logger.info(f"✓ {label} selected")
-                    # Small delay between clicks
-                    self._page.wait_for_timeout(CHECKBOX_CLICK_DELAY)
-                except PlaywrightTimeout:
-                    logger.warning(f"Checkbox not found within timeout: {label}")
-                except Exception as e:
-                    logger.warning(f"Failed to check {label}: {e}")
-
-            if checked_count == 0:
-                logger.error("No checkboxes were successfully checked!")
-                return False
-
-            # Wait for download package to be prepared (especially for large image packages)
-            logger.info("Waiting for download package to be prepared...")
-            self._page.wait_for_timeout(DOWNLOAD_PACKAGE_DELAY)
-
-            # Setup download handler and click Download button inside modal
+            # Setup output directory
             output_dir.mkdir(parents=True, exist_ok=True)
 
-            logger.info("Clicking Download button in modal...")
+            # Download files using individual download buttons (new Vibia UI)
+            download_buttons = [
+                ('button[data-qa="download-specSheet"]', "spec_sheet", "Technical information"),
+                ('button[data-qa="download-manual"]', "instruction_manual", "Instruction manual"),
+                ('button[data-qa="download-product"]', "product_images", "Product images"),
+                ('button[data-qa="download-ambient"]', "ambient_images", "Ambient/Room images"),
+            ]
 
-            # Wait for download button to be visible and enabled
-            download_button = self._page.locator(
-                '#downloadArticle, button[data-qa="downloadArticle"]'
-            )
-            download_button.wait_for(state="visible", timeout=10000)
+            downloaded_count = 0
+            for selector, filename_prefix, label in download_buttons:
+                try:
+                    btn = self._page.locator(selector)
+                    if not btn.is_visible(timeout=2000):
+                        logger.debug(f"Download button not visible: {label}")
+                        continue
 
-            # Check if button is disabled and wait for it to become enabled
-            try:
-                self._page.wait_for_function(
-                    """() => {
-                        const btn = document.querySelector('#downloadArticle, button[data-qa="downloadArticle"]');
-                        return btn && !btn.disabled;
-                    }""",
-                    timeout=10000,
-                )
-                logger.debug("Download button is enabled")
-            except Exception:
-                logger.warning("Download button may still be disabled, trying anyway")
+                    logger.info(f"Downloading: {label}...")
 
-            # Increase timeout for image downloads (can be large)
-            with self._page.expect_download(timeout=180000) as download_info:
-                # Click the download button (don't force - let it fail if actually disabled)
-                download_button.click()
+                    # Wait for and handle download
+                    with self._page.expect_download(timeout=120000) as download_info:
+                        btn.click()
 
-            download = download_info.value
+                    download = download_info.value
+                    suggested_filename = download.suggested_filename
 
-            # Save the downloaded file
-            zip_path = output_dir / "vibia_documents.zip"
-            download.save_as(zip_path)
+                    # Determine file extension from suggested filename
+                    ext = Path(suggested_filename).suffix or ".zip"
+                    save_path = output_dir / f"{filename_prefix}{ext}"
 
-            logger.success(f"Downloaded file to {zip_path}")
+                    download.save_as(save_path)
+                    downloaded_count += 1
+                    logger.success(f"✓ Downloaded {label} to {save_path.name}")
 
-            # Extract ZIP contents securely (handle nested ZIPs)
-            try:
-                extracted_count = self._extract_and_process_zip(zip_path, output_dir)
-                logger.success(f"Extracted {extracted_count} files to {output_dir}")
+                    # Process ZIP files
+                    if ext.lower() == ".zip" and save_path.exists():
+                        try:
+                            extracted_count = self._extract_and_process_zip(
+                                save_path, output_dir
+                            )
+                            logger.debug(f"Extracted {extracted_count} files from {save_path.name}")
+                        except zipfile.BadZipFile:
+                            logger.warning(f"{save_path.name} is not a valid ZIP, keeping as-is")
 
-                # Rename files based on document type
-                self._rename_extracted_documents(output_dir)
+                    # Delay between downloads to avoid rate limiting
+                    self._page.wait_for_timeout(DOWNLOAD_CLICK_DELAY)
 
-                # Classify and organize images
-                self._classify_and_organize_images(output_dir)
+                except PlaywrightTimeout:
+                    logger.warning(f"Download timeout for: {label}")
+                except Exception as e:
+                    logger.warning(f"Failed to download {label}: {e}")
 
-            except zipfile.BadZipFile:
-                logger.error("Downloaded file is not a valid ZIP")
+            if downloaded_count == 0:
+                logger.error("No files were successfully downloaded!")
                 return False
-            finally:
-                # Remove ZIP file after extraction
-                if zip_path.exists():
-                    zip_path.unlink()
 
+            # Rename files based on document type
+            self._rename_extracted_documents(output_dir)
+
+            # Classify and organize images
+            self._classify_and_organize_images(output_dir)
+
+            logger.success(f"Downloaded {downloaded_count} file(s) to {output_dir}")
             return True
 
         except Exception as e:
