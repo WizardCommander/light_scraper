@@ -301,6 +301,8 @@ class ScraperOrchestrator:
 
             # Step 3a: Download images and PDFs if requested
             if download_images:
+                vibia_download_success = False
+
                 # Vibia-specific: Download documents and images from modal
                 if manufacturer.lower() == "vibia":
                     logger.info(
@@ -311,11 +313,11 @@ class ScraperOrchestrator:
                         with scraper_class() as scraper:
                             # Use first product's SKU to build the product URL
                             first_product = product_group[0]
-                            success = scraper.download_product_files(
+                            vibia_download_success = scraper.download_product_files(
                                 sku=first_product.sku,
                                 output_dir=product_output_dir,
                             )
-                            if success:
+                            if vibia_download_success:
                                 logger.info(
                                     f"Successfully downloaded Vibia documents for {folder_name}"
                                 )
@@ -328,29 +330,30 @@ class ScraperOrchestrator:
                             f"Vibia document download error for {folder_name}: {e}, falling back to URL-based downloads"
                         )
 
-                # Download images for all products in group
-                for product in product_group:
-                    if product.images:
-                        images_dir = str(product_output_dir / "images")
-                        for idx, image_url in enumerate(product.images):
-                            try:
-                                from src.downloaders.asset_downloader import (
-                                    download_image,
-                                )
+                # Download images for all products in group (skip if Vibia UI download succeeded)
+                if not vibia_download_success:
+                    for product in product_group:
+                        if product.images:
+                            images_dir = str(product_output_dir / "images")
+                            for idx, image_url in enumerate(product.images):
+                                try:
+                                    from src.downloaders.asset_downloader import (
+                                        download_image,
+                                    )
 
-                                download_image(
-                                    image_url,
-                                    product.sku
-                                    or folder_name,  # Use folder_name if product.sku is empty
-                                    manufacturer,
-                                    output_dir=images_dir,
-                                    index=idx,
-                                    flat_structure=True,
-                                )
-                            except Exception as e:
-                                logger.warning(
-                                    f"Failed to download image {image_url}: {e}"
-                                )
+                                    download_image(
+                                        image_url,
+                                        product.sku
+                                        or folder_name,  # Use folder_name if product.sku is empty
+                                        manufacturer,
+                                        output_dir=images_dir,
+                                        index=idx,
+                                        flat_structure=True,
+                                    )
+                                except Exception as e:
+                                    logger.warning(
+                                        f"Failed to download image {image_url}: {e}"
+                                    )
 
                 # Download PDF for the product family (use first product with datasheet_url)
                 for product in product_group:
