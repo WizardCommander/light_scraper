@@ -403,8 +403,10 @@ def _load_json_price_list() -> dict[str, ProductInfo]:
     try:
         with open(json_path, encoding="utf-8") as f:
             data = json.load(f)
-            logger.info(f"Loaded {len(data)} products from {json_path}")
-            return data
+            # JSON file has structure: {"metadata": ..., "products": {...}}
+            products = data.get("products", data)
+            logger.info(f"Loaded {len(products)} products from {json_path}")
+            return products
     except Exception as e:
         logger.error(f"Failed to load JSON price list: {e}")
         return {}

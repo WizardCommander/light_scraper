@@ -990,37 +990,32 @@ class VibiaScraper(BaseScraper):
             except (OSError, PermissionError) as e:
                 logger.debug(f"Could not remove directory {subdir.name}: {e}")
 
-    def _classify_and_organize_images(self, output_dir: Path) -> None:
-        """Classify downloaded images as product or project using AI and organize into subdirectories.
+    def _classify_and_organize_images(self, images_dir: Path) -> None:
+        """Classify downloaded images as product or project using AI.
+
+        Organizes images into flat structure matching Lodes output:
+        - images/product_00.jpg, product_01.jpg, ...
+        - images/project_00.jpg, project_01.jpg, ...
 
         Args:
-            output_dir: Directory containing extracted files
+            images_dir: Directory containing extracted image files
         """
         import time
 
         # Import here to avoid circular dependency
         from src.ai.image_classifier import classify_image_file
 
-        # Find all image files
-        image_files = self._find_image_files(output_dir)
+        # Find all image files in images_dir and subdirectories
+        image_files = self._find_image_files(images_dir)
         if not image_files:
             logger.debug("No images found in downloaded files")
             return
 
-        # Create output directories
-        product_dir = output_dir / "images" / "product"
-        project_dir = output_dir / "images" / "project"
-        product_dir.mkdir(parents=True, exist_ok=True)
-        project_dir.mkdir(parents=True, exist_ok=True)
-
-        # Filter out already-classified images
-        images_to_classify = self._filter_unclassified_images(
-            image_files, product_dir, project_dir
-        )
-
-        if len(images_to_classify) < len(image_files):
-            skipped = len(image_files) - len(images_to_classify)
-            logger.debug(f"Skipping {skipped} already-classified images")
+        # Filter out already-classified images (product_XX or project_XX)
+        images_to_classify = [
+            img for img in image_files
+            if not (img.name.startswith("product_") or img.name.startswith("project_"))
+        ]
 
         if not images_to_classify:
             logger.debug("All images already classified")
@@ -1028,46 +1023,59 @@ class VibiaScraper(BaseScraper):
 
         logger.info(f"Classifying {len(images_to_classify)} images using AI...")
 
-        # Classify and move each image
+        # Count existing classified images to continue numbering
+        existing_product = len(list(images_dir.glob("product_*.jpg")))
+        existing_project = len(list(images_dir.glob("project_*.jpg")))
+        product_counter = existing_product
+        project_counter = existing_project
+
+        # Classify and rename each image
         for image_file in images_to_classify:
             try:
-                # Skip duplicates
-                if self._is_duplicate_image(image_file, product_dir, project_dir):
-                    logger.debug(f"Skipping duplicate: {image_file.name}")
-                    image_file.unlink()
-                    continue
-
-                # Classify and move
+                # Classify image
                 classification = classify_image_file(str(image_file))
                 time.sleep(0.5)  # Rate limiting prevention
-                self._move_classified_image(
-                    image_file, classification, product_dir, project_dir
-                )
+
+                # Determine new filename based on classification
+                ext = image_file.suffix.lower() or ".jpg"
+                if classification == "product":
+                    new_name = f"product_{product_counter:02d}{ext}"
+                    product_counter += 1
+                else:
+                    # Default to project for "project" or unknown
+                    new_name = f"project_{project_counter:02d}{ext}"
+                    project_counter += 1
+
+                # Move/rename to images_dir with new name
+                dest = images_dir / new_name
+                if image_file.parent != images_dir:
+                    # File is in a subdirectory, move it
+                    import shutil
+                    shutil.move(str(image_file), str(dest))
+                else:
+                    # File is already in images_dir, just rename
+                    image_file.rename(dest)
+
+                logger.info(f"✓ {classification.capitalize()} image: {new_name}")
 
             except (FileNotFoundError, OSError) as e:
                 logger.warning(f"Failed to process image {image_file.name}: {e}")
-                # Fallback: try to move to product dir
-                try:
-                    dest = product_dir / image_file.name
-                    if not dest.exists() and image_file.exists():
-                        image_file.rename(dest)
-                    elif image_file.exists():
-                        image_file.unlink()
-                except (OSError, PermissionError):
-                    logger.debug(f"Could not recover from error for {image_file.name}")
-
             except Exception as e:
                 logger.error(f"Unexpected error classifying {image_file.name}: {e}")
-                # Try to clean up the file
+
+        # Clean up empty subdirectories
+        for subdir in images_dir.iterdir():
+            if subdir.is_dir():
                 try:
-                    if image_file.exists():
-                        image_file.unlink()
+                    if not any(subdir.iterdir()):
+                        subdir.rmdir()
+                        logger.debug(f"Removed empty directory: {subdir.name}")
                 except (OSError, PermissionError):
                     pass
 
-        # Clean up leftover files
-        self._cleanup_leftover_files(output_dir, product_dir, project_dir)
-        logger.info("Organized images into product and project directories")
+        logger.info(
+            f"Organized {product_counter} product and {project_counter} project images"
+        )
 
     def _login_and_inject_cookies(self) -> bool:
         """Login via API and inject cookies into Playwright browser.
@@ -1193,7 +1201,9 @@ class VibiaScraper(BaseScraper):
             except Exception:
                 continue
 
-    def download_product_files(self, output_dir: Path) -> bool:
+    def download_product_files(
+        self, output_dir: Path, sku: Optional[SKU] = None
+    ) -> bool:
         """Download product files using Playwright browser automation.
 
         Downloads technical information, instruction manual, and images
@@ -1201,6 +1211,7 @@ class VibiaScraper(BaseScraper):
 
         Args:
             output_dir: Directory to save downloaded files
+            sku: Optional SKU to navigate to product page (if not already there)
 
         Returns:
             True if download successful, False otherwise
@@ -1208,8 +1219,13 @@ class VibiaScraper(BaseScraper):
         self._ensure_browser()
         assert self._page is not None
 
-        # Save current product page URL before login
-        product_url = self._page.url
+        # Determine product URL - either from current page or build from SKU
+        if sku:
+            # Build URL from SKU and navigate
+            product_url = self.build_product_url(sku)
+        else:
+            # Use current page URL
+            product_url = self._page.url
 
         # Login via API and inject cookies into browser
         if not self._login_and_inject_cookies():
@@ -1225,6 +1241,9 @@ class VibiaScraper(BaseScraper):
         self._dismiss_region_modal()
         self._dismiss_cookie_banner()
 
+        # Wait for page to stabilize after dismissing modals
+        self._page.wait_for_timeout(1000)
+
         try:
             logger.info("Looking for download trigger button...")
 
@@ -1236,18 +1255,22 @@ class VibiaScraper(BaseScraper):
                 'button.vib-link:has-text("Download")'
             )
 
-            if download_trigger.count() == 0:
+            # Wait for button to be visible and stable
+            try:
+                download_trigger.first.wait_for(state="visible", timeout=10000)
+            except PlaywrightTimeout:
                 logger.error("Download trigger button not found on page")
                 return False
 
             logger.info("Clicking Download button to open modal...")
             download_trigger.first.scroll_into_view_if_needed()
-            download_trigger.first.click()
+            self._page.wait_for_timeout(500)  # Brief pause after scroll
+            download_trigger.first.click(force=True)  # Force click to bypass any overlays
 
-            # Wait for modal to appear
+            # Wait for modal to appear - use specific Vibia modal selectors (not Cookiebot)
             try:
                 self._page.wait_for_selector(
-                    'div[role="dialog"]',
+                    'div.vib-collection-modal--download, div.vib-modal__content[role="dialog"]',
                     timeout=MODAL_OPEN_TIMEOUT,
                     state="visible"
                 )
@@ -1256,25 +1279,46 @@ class VibiaScraper(BaseScraper):
                 logger.warning("Download modal not found within timeout")
                 return False
 
-            # Wait for modal animation to complete
+            # Wait for modal animation and content to load
             self._page.wait_for_timeout(MODAL_ANIMATION_DELAY)
 
-            # Setup output directory
+            # Wait for download buttons to appear in the modal
+            try:
+                self._page.wait_for_selector(
+                    'button[data-qa^="download-"][class="download-icon"]',
+                    timeout=DOWNLOAD_BUTTON_TIMEOUT,
+                    state="visible"
+                )
+                logger.debug("Download buttons are visible in modal")
+            except PlaywrightTimeout:
+                logger.warning("Download buttons not visible in modal")
+
+            # Setup output directories to match Lodes structure
             output_dir.mkdir(parents=True, exist_ok=True)
+            datasheets_dir = output_dir / "datasheets"
+            datasheets_dir.mkdir(exist_ok=True)
+            manuals_dir = output_dir / "installation_manuals"
+            manuals_dir.mkdir(exist_ok=True)
+            images_dir = output_dir / "images"
+            images_dir.mkdir(exist_ok=True)
+
+            # Extract base SKU for file naming
+            base_sku = output_dir.name  # The output_dir is named after the SKU
 
             # Download files using individual download buttons (new Vibia UI)
+            # Format: (selector, save_dir, filename_template, label)
             download_buttons = [
-                ('button[data-qa="download-specSheet"]', "spec_sheet", "Technical information"),
-                ('button[data-qa="download-manual"]', "instruction_manual", "Instruction manual"),
-                ('button[data-qa="download-product"]', "product_images", "Product images"),
-                ('button[data-qa="download-ambient"]', "ambient_images", "Ambient/Room images"),
+                ('button[data-qa="download-specSheet"]', datasheets_dir, f"{base_sku}.pdf", "Technical information"),
+                ('button[data-qa="download-manual"]', manuals_dir, f"{base_sku}_installation.pdf", "Instruction manual"),
+                ('button[data-qa="download-product"]', images_dir, "product_images.zip", "Product images"),
+                ('button[data-qa="download-ambient"]', images_dir, "ambient_images.zip", "Ambient/Room images"),
             ]
 
             downloaded_count = 0
-            for selector, filename_prefix, label in download_buttons:
+            for selector, save_dir, filename, label in download_buttons:
                 try:
                     btn = self._page.locator(selector)
-                    if not btn.is_visible(timeout=2000):
+                    if not btn.is_visible(timeout=5000):
                         logger.debug(f"Download button not visible: {label}")
                         continue
 
@@ -1287,19 +1331,21 @@ class VibiaScraper(BaseScraper):
                     download = download_info.value
                     suggested_filename = download.suggested_filename
 
-                    # Determine file extension from suggested filename
-                    ext = Path(suggested_filename).suffix or ".zip"
-                    save_path = output_dir / f"{filename_prefix}{ext}"
+                    # Use suggested extension if our filename doesn't have one
+                    if not Path(filename).suffix:
+                        ext = Path(suggested_filename).suffix or ".zip"
+                        filename = f"{filename}{ext}"
 
+                    save_path = save_dir / filename
                     download.save_as(save_path)
                     downloaded_count += 1
                     logger.success(f"✓ Downloaded {label} to {save_path.name}")
 
-                    # Process ZIP files
-                    if ext.lower() == ".zip" and save_path.exists():
+                    # Process ZIP files - extract to images_dir for image ZIPs
+                    if save_path.suffix.lower() == ".zip" and save_path.exists():
                         try:
                             extracted_count = self._extract_and_process_zip(
-                                save_path, output_dir
+                                save_path, images_dir
                             )
                             logger.debug(f"Extracted {extracted_count} files from {save_path.name}")
                         except zipfile.BadZipFile:
@@ -1317,11 +1363,8 @@ class VibiaScraper(BaseScraper):
                 logger.error("No files were successfully downloaded!")
                 return False
 
-            # Rename files based on document type
-            self._rename_extracted_documents(output_dir)
-
-            # Classify and organize images
-            self._classify_and_organize_images(output_dir)
+            # Classify and organize images (into images/ folder with proper naming)
+            self._classify_and_organize_images(images_dir)
 
             logger.success(f"Downloaded {downloaded_count} file(s) to {output_dir}")
             return True
