@@ -89,316 +89,22 @@ CONTROL_CODES = {
     "Z": {"en": "Casambi", "de": "Casambi"},
 }
 
-# Circus product family from Preisliste_DE_Nov_2024.pdf
-CIRCUS_PRODUCTS: dict[str, ProductInfo] = {
-    # Circus Pendelleuchte Ø 20 cm
-    "0162": {
-        "base_sku": "0162",
-        "product_name": "Circus Pendelleuchte Ø 20 cm",
-        "url_slug": "circus",
-        "category_prefix": "pendelleuchten",
-        "product_type_suffix": "pendelleuchte",
-        "designer": "Antoni Arola",
-        "voltage": "2700 K - 3000 K - 3500K; 1 x LED 6,7 W 600 mA",
-        "ip_rating": "IP20",
-        "dimensions": {"diameter": 20.0, "height": 20.0},
-        "variants": [
-            {
-                "sku": "0162/1",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "1",
-                "led_name_en": "Static White + DALI-2",
-                "led_name_de": "Static White + DALI-2",
-                "control_code": "1",
-                "control_name_en": "DALI-2",
-                "control_name_de": "DALI-2",
-                "price_eur": 350.00,
-            },
-            {
-                "sku": "0162/Y",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + ProtoPixel (P3P)",
-                "led_name_de": "Static White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 455.00,
-            },
-            {
-                "sku": "0162/Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + Casambi (P3P)",
-                "led_name_de": "Static White + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 515.00,
-            },
-            {
-                "sku": "0162/BY",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable White + ProtoPixel (P3P)",
-                "led_name_de": "Tunable White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 510.00,
-            },
-            {
-                "sku": "0162/BZ",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable Red + Casambi (P3P)",
-                "led_name_de": "Tunable Red + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 550.00,
-            },
-            {
-                "sku": "0162/9Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "9",
-                "led_name_en": "Tunable Red + Casambi (P3P)",
-                "led_name_de": "Tunable Red + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 580.00,
-            },
-        ],
-    },
-    # Circus Pendelleuchte Ø 45 cm
-    "0167": {
-        "base_sku": "0167",
-        "product_name": "Circus Pendelleuchte Ø 45 cm",
-        "url_slug": "circus",
-        "category_prefix": "pendelleuchten",
-        "product_type_suffix": "pendelleuchte",
-        "designer": "Antoni Arola",
-        "voltage": "2700 K - 3000 K - 3500K",
-        "ip_rating": "IP20",
-        "dimensions": {"diameter": 45.0, "height": 45.0},
-        "variants": [
-            {
-                "sku": "0167/1",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "1",
-                "led_name_en": "Static White + DALI-2",
-                "led_name_de": "Static White + DALI-2",
-                "control_code": "1",
-                "control_name_en": "DALI-2",
-                "control_name_de": "DALI-2",
-                "price_eur": 465.00,
-            },
-            {
-                "sku": "0167/Y",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + ProtoPixel (P3P)",
-                "led_name_de": "Static White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 590.00,
-            },
-            {
-                "sku": "0167/Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + Casambi (P3P)",
-                "led_name_de": "Static White + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 620.00,
-            },
-            {
-                "sku": "0167/BY",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable White + ProtoPixel (P3P)",
-                "led_name_de": "Tunable White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 635.00,
-            },
-            {
-                "sku": "0167/BZ",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable White + Casambi (P3P)",
-                "led_name_de": "Tunable White + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 665.00,
-            },
-            {
-                "sku": "0167/9Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "9",
-                "led_name_en": "Tunable Red + Casambi (P3P)",
-                "led_name_de": "Tunable Red + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 685.00,
-            },
-        ],
-    },
-    # Circus Direkt an der Schiene Ø 20 cm
-    "0164": {
-        "base_sku": "0164",
-        "product_name": "Circus Direkt an der Schiene Ø 20 cm",
-        "url_slug": "circus",
-        "category_prefix": "pendelleuchten",
-        "product_type_suffix": "pendelleuchte",
-        "designer": "Antoni Arola",
-        "voltage": "Static White",
-        "ip_rating": "IP20",
-        "dimensions": {"diameter": 20.0},
-        "variants": [
-            {
-                "sku": "0164/1",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "1",
-                "led_name_en": "Static White + DALI-2",
-                "led_name_de": "Static White + DALI-2",
-                "control_code": "1",
-                "control_name_en": "DALI-2",
-                "control_name_de": "DALI-2",
-                "price_eur": 295.00,
-            },
-            {
-                "sku": "0164/Y",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + ProtoPixel (P3P)",
-                "led_name_de": "Static White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 450.00,
-            },
-            {
-                "sku": "0164/Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Static White + Casambi (P3P)",
-                "led_name_de": "Static White + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 480.00,
-            },
-            {
-                "sku": "0164/BY",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable White + ProtoPixel (P3P)",
-                "led_name_de": "Tunable White + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 495.00,
-            },
-            {
-                "sku": "0164/BZ",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable White + Casambi (P3P)",
-                "led_name_de": "Tunable White + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 525.00,
-            },
-            {
-                "sku": "0164/BY",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "6",
-                "led_name_en": "Tunable Red + ProtoPixel (P3P)",
-                "led_name_de": "Tunable Red + ProtoPixel (P3P)",
-                "control_code": "Y",
-                "control_name_en": "ProtoPixel",
-                "control_name_de": "ProtoPixel",
-                "price_eur": 535.00,
-            },
-            {
-                "sku": "0164/9Z",
-                "surface_code": "10",
-                "surface_name_en": "Black",
-                "surface_name_de": "Schwarz",
-                "led_code": "9",
-                "led_name_en": "Tunable Red + Casambi (P3P)",
-                "led_name_de": "Tunable Red + Casambi (P3P)",
-                "control_code": "Z",
-                "control_name_en": "Casambi",
-                "control_name_de": "Casambi",
-                "price_eur": 545.00,
-            },
-        ],
-    },
-}
-
-# All products combined
-ALL_PRODUCTS: dict[str, ProductInfo] = {
-    **CIRCUS_PRODUCTS,
-}
-
-
 def _load_json_price_list() -> dict[str, ProductInfo]:
-    """Load price list from JSON file if available.
+    """Load price list from JSON file.
 
     Returns:
-        Dictionary mapping model numbers to ProductInfo, or empty dict if file not found
+        Dictionary mapping model numbers to ProductInfo
+
+    Raises:
+        FileNotFoundError: If the JSON price list file is not found
     """
     json_path = Path("output/vibia_price_list_data.json")
 
     if not json_path.exists():
-        logger.debug(f"JSON price list not found at {json_path}, using hardcoded data")
-        return {}
+        raise FileNotFoundError(
+            f"Price list JSON not found at {json_path}. "
+            f"Run scripts/parse_vibia_price_list.py to generate it."
+        )
 
     try:
         with open(json_path, encoding="utf-8") as f:
@@ -407,14 +113,14 @@ def _load_json_price_list() -> dict[str, ProductInfo]:
             products = data.get("products", data)
             logger.info(f"Loaded {len(products)} products from {json_path}")
             return products
-    except Exception as e:
-        logger.error(f"Failed to load JSON price list: {e}")
-        return {}
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON in price list file: {e}")
 
 
-# Load JSON data if available, otherwise use hardcoded data
-_JSON_PRODUCTS = _load_json_price_list()
-PRODUCTS = _JSON_PRODUCTS if _JSON_PRODUCTS else ALL_PRODUCTS
+# Load all products from JSON
+PRODUCTS = _load_json_price_list()
+
+logger.info(f"Price list initialized with {len(PRODUCTS)} products")
 
 
 def get_product_by_model(model: str) -> ProductInfo | None:

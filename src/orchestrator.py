@@ -102,19 +102,20 @@ class ScraperOrchestrator:
                                     f"Failed to translate {product.sku} to German: {e}"
                                 )
 
-                        # Generate short description (always enabled per client requirements)
-                        try:
-                            short_desc = generate_short_description(
-                                product, max_words=20
-                            )
-                            product.short_description = short_desc
-                            logger.info(
-                                f"✓ Generated short description for {product.name}"
-                            )
-                        except Exception as e:
-                            logger.warning(
-                                f"Failed to generate short description for {product.sku}: {e}"
-                            )
+                        # Generate short description only when AI descriptions enabled
+                        if ai_descriptions:
+                            try:
+                                short_desc = generate_short_description(
+                                    product, max_words=20
+                                )
+                                product.short_description = short_desc
+                                logger.info(
+                                    f"✓ Generated short description for {product.name}"
+                                )
+                            except Exception as e:
+                                logger.warning(
+                                    f"Failed to generate short description for {product.sku}: {e}"
+                                )
 
                         # Note: Image and PDF downloading now handled per-product
                         # in run_full_pipeline for better organization

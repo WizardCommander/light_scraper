@@ -25,6 +25,49 @@ DOWNLOAD_BUTTON_TIMEOUT = 10000  # Wait for download buttons to be visible
 DOWNLOAD_CLICK_DELAY = 1000  # Delay between download clicks
 PAGE_LOAD_DELAY = 2000  # Wait for page to fully load after navigation
 
+# Language-specific URL path translations
+# German terms are stored in price list, need English equivalents for EN URLs
+URL_PATH_TRANSLATIONS = {
+    "de": {
+        "collections": "kollektionen",
+        "categories": {
+            "pendelleuchten": "pendelleuchten",
+            "wandleuchten": "wandleuchten",
+            "deckenleuchten": "deckenleuchten",
+            "stehleuchten": "stehleuchten",
+            "tischleuchten": "tischleuchten",
+            "aussenleuchten": "aussenleuchten",
+        },
+        "types": {
+            "pendelleuchte": "pendelleuchte",
+            "wandleuchte": "wandleuchte",
+            "deckenleuchte": "deckenleuchte",
+            "stehleuchte": "stehleuchte",
+            "tischleuchte": "tischleuchte",
+            "aussenleuchte": "aussenleuchte",
+        },
+    },
+    "en": {
+        "collections": "collections",
+        "categories": {
+            "pendelleuchten": "hanging-lamps",
+            "wandleuchten": "wall-lamps",
+            "deckenleuchten": "ceiling-lamps",
+            "stehleuchten": "floor-lamps",
+            "tischleuchten": "table-lamps",
+            "aussenleuchten": "outdoor-lamps",
+        },
+        "types": {
+            "pendelleuchte": "hanging",
+            "wandleuchte": "wall",
+            "deckenleuchte": "ceiling",
+            "stehleuchte": "floor",
+            "tischleuchte": "table",
+            "aussenleuchte": "outdoor",
+        },
+    },
+}
+
 
 class VibiaScraper(BaseScraper):
     """Scraper for Vibia.com product pages."""
@@ -55,8 +98,8 @@ class VibiaScraper(BaseScraper):
         Examples:
             >>> build_product_url("0162", "de")
             'https://www.vibia.com/de/int/kollektionen/pendelleuchten-circus-pendelleuchte'
-            >>> build_product_url("circus", "de")
-            'https://www.vibia.com/de/int/kollektionen/pendelleuchten-circus-pendelleuchte'
+            >>> build_product_url("0162", "en")
+            'https://www.vibia.com/en/int/collections/hanging-lamps-circus-hanging'
         """
         # Parse SKU to extract model or slug
         slug = self._extract_slug_from_sku(sku)
@@ -64,22 +107,28 @@ class VibiaScraper(BaseScraper):
         if not slug:
             raise ValueError(f"Could not determine product slug from SKU: {sku}")
 
-        # Get category prefix from price list
-        category = vibia_price_list.get_category_for_slug(slug)
-        if not category:
+        # Get category prefix from price list (stored in German)
+        category_de = vibia_price_list.get_category_for_slug(slug)
+        if not category_de:
             logger.warning(
                 f"No category found for slug '{slug}', using default 'pendelleuchten'"
             )
-            category = "pendelleuchten"
+            category_de = "pendelleuchten"
 
-        # Get product type suffix (e.g., "pendelleuchte", "wandleuchte")
+        # Get product type suffix from price list (stored in German)
         products = vibia_price_list.get_product_by_slug(slug)
-        product_type = (
+        product_type_de = (
             products[0]["product_type_suffix"] if products else "pendelleuchte"
         )
 
-        # Construct URL: /{lang}/int/kollektionen/{category}-{slug}-{type}
-        return f"{self.config.base_url}/{language}/int/kollektionen/{category}-{slug}-{product_type}"
+        # Get language-specific path translations
+        lang_paths = URL_PATH_TRANSLATIONS.get(language, URL_PATH_TRANSLATIONS["en"])
+        collections_path = lang_paths["collections"]
+        category = lang_paths["categories"].get(category_de, category_de)
+        product_type = lang_paths["types"].get(product_type_de, product_type_de)
+
+        # Construct URL: /{lang}/int/{collections}/{category}-{slug}-{type}
+        return f"{self.config.base_url}/{language}/int/{collections_path}/{category}-{slug}-{product_type}"
 
     def _extract_slug_from_sku(self, sku: SKU) -> str | None:
         """Extract product slug from SKU.
