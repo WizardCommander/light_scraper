@@ -75,12 +75,12 @@ def _load_json_price_list() -> dict[str, ProductInfo]:
     Raises:
         FileNotFoundError: If the JSON price list file is not found
     """
-    json_path = Path("output/price_list_data.json")
+    json_path = Path("data/price_list_data.json")
 
     if not json_path.exists():
         raise FileNotFoundError(
             f"Price list JSON not found at {json_path}. "
-            f"Run scripts/parse_lodes_price_list.py to generate it."
+            f"Ensure the data folder contains the price list JSON file."
         )
 
     try:

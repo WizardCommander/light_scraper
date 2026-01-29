@@ -59,8 +59,8 @@
         "filter": ["**/*"]
       },
       {
-        "from": "output",
-        "to": "output",
+        "from": "data",
+        "to": "data",
         "filter": ["**/*.json"]
       }
     ],

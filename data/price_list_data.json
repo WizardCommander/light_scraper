@@ -1,0 +1,5043 @@
+{
+  "metadata": {
+    "source_pdf": "Lodes-2025 Price List-Europa neue Version.pdf",
+    "parser_version": "1.0.0",
+    "total_products": 105,
+    "total_variants": 524
+  },
+  "products": {
+    "17371": {
+      "base_sku": "17371",
+      "product_name": "Max 430 cm",
+      "url_slug": "max-cm",
+      "variants": [
+        {
+          "sku": "17371 4100",
+          "color_code": "4100",
+          "color_name_en": "Color 41 (variant 00)",
+          "color_name_de": "Farbe 41 (Variante 00)",
+          "price_eur": 304.0
+        },
+        {
+          "sku": "17371 5000",
+          "color_code": "5000",
+          "color_name_en": "Gold (variant 00)",
+          "color_name_de": "Gold (Variante 00)",
+          "price_eur": 304.0
+        },
+        {
+          "sku": "17371 5100",
+          "color_code": "5100",
+          "color_name_en": "Color 51 (variant 00)",
+          "color_name_de": "Farbe 51 (Variante 00)",
+          "price_eur": 304.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17820": {
+      "base_sku": "17820",
+      "product_name": "Nero Opaco –9005",
+      "url_slug": "nero-opaco-9005",
+      "variants": [
+        {
+          "sku": "17820 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "17820 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 210.0
+        },
+        {
+          "sku": "17820 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 220.0
+        },
+        {
+          "sku": "17820 2035",
+          "color_code": "2035",
+          "color_name_en": "Matte Black - 3500K",
+          "color_name_de": "Schwarz Matt - 3500K",
+          "price_eur": 663.0
+        },
+        {
+          "sku": "17820 4535",
+          "color_code": "4535",
+          "color_name_en": "Matte Champagne - 3500K",
+          "color_name_de": "Champagner Matt - 3500K",
+          "price_eur": 796.0
+        },
+        {
+          "sku": "17820 6735",
+          "color_code": "6735",
+          "color_name_en": "Extra Matte Champagne - 3500K",
+          "color_name_de": "Extra Matt Champagner - 3500K",
+          "price_eur": 806.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "20621": {
+      "base_sku": "20621",
+      "product_name": "Nero Opaco –9005",
+      "url_slug": "nero-opaco-9005",
+      "variants": [
+        {
+          "sku": "20621 2227",
+          "color_code": "2227",
+          "color_name_en": "Glossy Black - 2700K",
+          "color_name_de": "Nero Lucido - 2700K",
+          "price_eur": 969.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16924": {
+      "base_sku": "16924",
+      "product_name": "Central canopy",
+      "url_slug": "central-canopy",
+      "variants": [
+        {
+          "sku": "16924 2800",
+          "color_code": "2800",
+          "color_name_en": "Color 28 (variant 00)",
+          "color_name_de": "Farbe 28 (Variante 00)",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "16924 6600",
+          "color_code": "6600",
+          "color_name_en": "Color 66 (variant 00)",
+          "color_name_de": "Farbe 66 (Variante 00)",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "16924 2700",
+          "color_code": "2700",
+          "color_name_en": "Color 27 (variant 00)",
+          "color_name_de": "Farbe 27 (Variante 00)",
+          "price_eur": 516.0
+        },
+        {
+          "sku": "16924 6500",
+          "color_code": "6500",
+          "color_name_en": "Color 65 (variant 00)",
+          "color_name_de": "Farbe 65 (Variante 00)",
+          "price_eur": 516.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14126": {
+      "base_sku": "14126",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14126 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 572.0
+        },
+        {
+          "sku": "14126 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 572.0
+        },
+        {
+          "sku": "14126 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 607.0
+        },
+        {
+          "sku": "14126 4500",
+          "color_code": "4500",
+          "color_name_en": "Matte Champagne",
+          "color_name_de": "Champagner Matt",
+          "price_eur": 607.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14127": {
+      "base_sku": "14127",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14127 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 913.0
+        },
+        {
+          "sku": "14127 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 939.0
+        },
+        {
+          "sku": "14127 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 1214.0
+        },
+        {
+          "sku": "14127 4500",
+          "color_code": "4500",
+          "color_name_en": "Matte Champagne",
+          "color_name_de": "Champagner Matt",
+          "price_eur": 1240.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14128": {
+      "base_sku": "14128",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14128 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 3264.0
+        },
+        {
+          "sku": "14128 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 3326.0
+        },
+        {
+          "sku": "14128 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 1102.0
+        },
+        {
+          "sku": "14128 4500",
+          "color_code": "4500",
+          "color_name_en": "Matte Champagne",
+          "color_name_de": "Champagner Matt",
+          "price_eur": 1102.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14122": {
+      "base_sku": "14122",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14122 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 1153.0
+        },
+        {
+          "sku": "14122 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 1153.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14123": {
+      "base_sku": "14123",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14123 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 883.0
+        },
+        {
+          "sku": "14123 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 883.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14124": {
+      "base_sku": "14124",
+      "product_name": "Kelly small dome 50",
+      "url_slug": "kelly",
+      "variants": [
+        {
+          "sku": "14124 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 913.0
+        },
+        {
+          "sku": "14124 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 913.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22121": {
+      "base_sku": "22121",
+      "product_name": "Clear",
+      "url_slug": "clear",
+      "variants": [
+        {
+          "sku": "22121 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 1839.0
+        },
+        {
+          "sku": "22121 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 2693.0
+        },
+        {
+          "sku": "22121 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 2126.0
+        },
+        {
+          "sku": "22121 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 2980.0
+        },
+        {
+          "sku": "22121 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 2980.0
+        },
+        {
+          "sku": "22121 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 2980.0
+        },
+        {
+          "sku": "22121 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 2980.0
+        },
+        {
+          "sku": "22121 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 2980.0
+        },
+        {
+          "sku": "22121 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 2980.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22122": {
+      "base_sku": "22122",
+      "product_name": "Clear",
+      "url_slug": "clear",
+      "variants": [
+        {
+          "sku": "22122 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 3576.0
+        },
+        {
+          "sku": "22122 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 5284.0
+        },
+        {
+          "sku": "22122 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 4150.0
+        },
+        {
+          "sku": "22122 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 5858.0
+        },
+        {
+          "sku": "22122 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 5858.0
+        },
+        {
+          "sku": "22122 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 5858.0
+        },
+        {
+          "sku": "22122 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 5858.0
+        },
+        {
+          "sku": "22122 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 5858.0
+        },
+        {
+          "sku": "22122 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 5858.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22125": {
+      "base_sku": "22125",
+      "product_name": "Codice",
+      "url_slug": "codice",
+      "variants": [
+        {
+          "sku": "22125 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 5691.0
+        },
+        {
+          "sku": "22125 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 8497.0
+        },
+        {
+          "sku": "22125 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 6634.0
+        },
+        {
+          "sku": "22125 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 9440.0
+        },
+        {
+          "sku": "22125 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 9440.0
+        },
+        {
+          "sku": "22125 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 9440.0
+        },
+        {
+          "sku": "22125 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 9440.0
+        },
+        {
+          "sku": "22125 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 9440.0
+        },
+        {
+          "sku": "22125 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 9440.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22126": {
+      "base_sku": "22126",
+      "product_name": "Classe energeticaD",
+      "url_slug": "classe-energeticad",
+      "variants": [
+        {
+          "sku": "22126 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 5530.0
+        },
+        {
+          "sku": "22126 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 7848.0
+        },
+        {
+          "sku": "22126 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 4751.0
+        },
+        {
+          "sku": "22126 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 7069.0
+        },
+        {
+          "sku": "22126 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 7069.0
+        },
+        {
+          "sku": "22126 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 7069.0
+        },
+        {
+          "sku": "22126 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 7069.0
+        },
+        {
+          "sku": "22126 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 7069.0
+        },
+        {
+          "sku": "22126 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 7069.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14822": {
+      "base_sku": "14822",
+      "product_name": "Sky–Fall medium a",
+      "url_slug": "skyfall",
+      "variants": [
+        {
+          "sku": "14822 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 582.0
+        },
+        {
+          "sku": "14822 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 709.0
+        },
+        {
+          "sku": "14822 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 709.0
+        },
+        {
+          "sku": "14822 7127",
+          "color_code": "7127",
+          "color_name_en": "Color 71 - 2700K",
+          "color_name_de": "Farbe 71 - 2700K",
+          "price_eur": 709.0
+        },
+        {
+          "sku": "14822 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 800.0
+        },
+        {
+          "sku": "14822 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 1082.0
+        },
+        {
+          "sku": "14822 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 1082.0
+        },
+        {
+          "sku": "14822 7130",
+          "color_code": "7130",
+          "color_name_en": "Color 71 - 3000K",
+          "color_name_de": "Farbe 71 - 3000K",
+          "price_eur": 1082.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14821": {
+      "base_sku": "14821",
+      "product_name": "Sky–Fall medium a",
+      "url_slug": "skyfall",
+      "variants": [
+        {
+          "sku": "14821 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 607.0
+        },
+        {
+          "sku": "14821 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 745.0
+        },
+        {
+          "sku": "14821 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 745.0
+        },
+        {
+          "sku": "14821 7127",
+          "color_code": "7127",
+          "color_name_en": "Color 71 - 2700K",
+          "color_name_de": "Farbe 71 - 2700K",
+          "price_eur": 745.0
+        },
+        {
+          "sku": "14821 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 842.0
+        },
+        {
+          "sku": "14821 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 1133.0
+        },
+        {
+          "sku": "14821 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 1133.0
+        },
+        {
+          "sku": "14821 7130",
+          "color_code": "7130",
+          "color_name_en": "Color 71 - 3000K",
+          "color_name_de": "Farbe 71 - 3000K",
+          "price_eur": 1133.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19921": {
+      "base_sku": "19921",
+      "product_name": "Tidal",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19921 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "19921 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "19921 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 1290.0
+        },
+        {
+          "sku": "19921 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 1320.0
+        },
+        {
+          "sku": "19921 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 1360.0
+        },
+        {
+          "sku": "19921 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 1360.0
+        },
+        {
+          "sku": "19921 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 1390.0
+        },
+        {
+          "sku": "19921 6730",
+          "color_code": "6730",
+          "color_name_en": "Extra Matte Champagne - 3000K",
+          "color_name_de": "Extra Matt Champagner - 3000K",
+          "price_eur": 1420.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19922": {
+      "base_sku": "19922",
+      "product_name": "Tidal",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19922 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "19922 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "19922 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 1290.0
+        },
+        {
+          "sku": "19922 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 1320.0
+        },
+        {
+          "sku": "19922 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 1360.0
+        },
+        {
+          "sku": "19922 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 1360.0
+        },
+        {
+          "sku": "19922 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 1390.0
+        },
+        {
+          "sku": "19922 6730",
+          "color_code": "6730",
+          "color_name_en": "Extra Matte Champagne - 3000K",
+          "color_name_de": "Extra Matt Champagner - 3000K",
+          "price_eur": 1420.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19925": {
+      "base_sku": "19925",
+      "product_name": "Tidal",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19925 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "19925 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 118.0
+        },
+        {
+          "sku": "19925 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 403.0
+        },
+        {
+          "sku": "19925 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 403.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19926": {
+      "base_sku": "19926",
+      "product_name": "Tidal",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19926 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 674.0
+        },
+        {
+          "sku": "19926 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 674.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18720": {
+      "base_sku": "18720",
+      "product_name": "Bianco Lucido",
+      "url_slug": "bianco-lucido",
+      "variants": [
+        {
+          "sku": "18720 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 520.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19923": {
+      "base_sku": "19923",
+      "product_name": "Bianco Lucido",
+      "url_slug": "bianco-lucido",
+      "variants": [
+        {
+          "sku": "19923 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 1460.0
+        },
+        {
+          "sku": "19923 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 1460.0
+        },
+        {
+          "sku": "19923 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 1490.0
+        },
+        {
+          "sku": "19923 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 1520.0
+        },
+        {
+          "sku": "19923 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 1560.0
+        },
+        {
+          "sku": "19923 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 1560.0
+        },
+        {
+          "sku": "19923 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 1590.0
+        },
+        {
+          "sku": "19923 6730",
+          "color_code": "6730",
+          "color_name_en": "Extra Matte Champagne - 3000K",
+          "color_name_de": "Extra Matt Champagner - 3000K",
+          "price_eur": 1620.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19924": {
+      "base_sku": "19924",
+      "product_name": "Bianco Lucido",
+      "url_slug": "bianco-lucido",
+      "variants": [
+        {
+          "sku": "19924 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 1460.0
+        },
+        {
+          "sku": "19924 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 1460.0
+        },
+        {
+          "sku": "19924 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 1490.0
+        },
+        {
+          "sku": "19924 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 1520.0
+        },
+        {
+          "sku": "19924 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 1560.0
+        },
+        {
+          "sku": "19924 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 1560.0
+        },
+        {
+          "sku": "19924 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 1590.0
+        },
+        {
+          "sku": "19924 6730",
+          "color_code": "6730",
+          "color_name_en": "Extra Matte Champagne - 3000K",
+          "color_name_de": "Extra Matt Champagner - 3000K",
+          "price_eur": 1620.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09624": {
+      "base_sku": "09624",
+      "product_name": "A–T ube",
+      "url_slug": "at-ube",
+      "variants": [
+        {
+          "sku": "09624 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "09624 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "09624 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 179.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09623": {
+      "base_sku": "09623",
+      "product_name": "A–T ube",
+      "url_slug": "at-ube",
+      "variants": [
+        {
+          "sku": "09623 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "09623 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "09623 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 265.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09622": {
+      "base_sku": "09622",
+      "product_name": "A–T ube",
+      "url_slug": "at-ube",
+      "variants": [
+        {
+          "sku": "09622 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 347.0
+        },
+        {
+          "sku": "09622 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 347.0
+        },
+        {
+          "sku": "09622 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 368.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15822": {
+      "base_sku": "15822",
+      "product_name": "A–Tube Nano small",
+      "url_slug": "atube-small",
+      "variants": [
+        {
+          "sku": "15822 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 169.0
+        },
+        {
+          "sku": "15822 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "15822 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15822 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "15822 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "15822 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "15822 2035",
+          "color_code": "2035",
+          "color_name_en": "Matte Black - 3500K",
+          "color_name_de": "Schwarz Matt - 3500K",
+          "price_eur": 154.0
+        },
+        {
+          "sku": "15822 4035",
+          "color_code": "4035",
+          "color_name_en": "Chrome - 3500K",
+          "color_name_de": "Chrom - 3500K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "15822 4535",
+          "color_code": "4535",
+          "color_name_en": "Matte Champagne - 3500K",
+          "color_name_de": "Champagner Matt - 3500K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "15822 5035",
+          "color_code": "5035",
+          "color_name_en": "Gold - 3500K",
+          "color_name_de": "Gold - 3500K",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15822 5535",
+          "color_code": "5535",
+          "color_name_en": "Rose Gold - 3500K",
+          "color_name_de": "Roségold - 3500K",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15822 6735",
+          "color_code": "6735",
+          "color_name_en": "Extra Matte Champagne - 3500K",
+          "color_name_de": "Extra Matt Champagner - 3500K",
+          "price_eur": 174.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15826": {
+      "base_sku": "15826",
+      "product_name": "A–Tube Nano small",
+      "url_slug": "atube-small",
+      "variants": [
+        {
+          "sku": "15826 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 169.0
+        },
+        {
+          "sku": "15826 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "15826 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15826 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "15826 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "15826 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "15826 2035",
+          "color_code": "2035",
+          "color_name_en": "Matte Black - 3500K",
+          "color_name_de": "Schwarz Matt - 3500K",
+          "price_eur": 154.0
+        },
+        {
+          "sku": "15826 4035",
+          "color_code": "4035",
+          "color_name_en": "Chrome - 3500K",
+          "color_name_de": "Chrom - 3500K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "15826 4535",
+          "color_code": "4535",
+          "color_name_en": "Matte Champagne - 3500K",
+          "color_name_de": "Champagner Matt - 3500K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "15826 5035",
+          "color_code": "5035",
+          "color_name_en": "Gold - 3500K",
+          "color_name_de": "Gold - 3500K",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15826 5535",
+          "color_code": "5535",
+          "color_name_en": "Rose Gold - 3500K",
+          "color_name_de": "Roségold - 3500K",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15826 6735",
+          "color_code": "6735",
+          "color_name_en": "Extra Matte Champagne - 3500K",
+          "color_name_de": "Extra Matt Champagner - 3500K",
+          "price_eur": 174.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15823": {
+      "base_sku": "15823",
+      "product_name": "A–Tube Nano small",
+      "url_slug": "atube-small",
+      "variants": [
+        {
+          "sku": "15823 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15823 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 214.0
+        },
+        {
+          "sku": "15823 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "15823 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 224.0
+        },
+        {
+          "sku": "15823 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 224.0
+        },
+        {
+          "sku": "15823 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 214.0
+        },
+        {
+          "sku": "15823 2035",
+          "color_code": "2035",
+          "color_name_en": "Matte Black - 3500K",
+          "color_name_de": "Schwarz Matt - 3500K",
+          "price_eur": 184.0
+        },
+        {
+          "sku": "15823 4035",
+          "color_code": "4035",
+          "color_name_en": "Chrome - 3500K",
+          "color_name_de": "Chrom - 3500K",
+          "price_eur": 210.0
+        },
+        {
+          "sku": "15823 4535",
+          "color_code": "4535",
+          "color_name_en": "Matte Champagne - 3500K",
+          "color_name_de": "Champagner Matt - 3500K",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "15823 5035",
+          "color_code": "5035",
+          "color_name_en": "Gold - 3500K",
+          "color_name_de": "Gold - 3500K",
+          "price_eur": 225.0
+        },
+        {
+          "sku": "15823 5535",
+          "color_code": "5535",
+          "color_name_en": "Rose Gold - 3500K",
+          "color_name_de": "Roségold - 3500K",
+          "price_eur": 225.0
+        },
+        {
+          "sku": "15823 6735",
+          "color_code": "6735",
+          "color_name_en": "Extra Matte Champagne - 3500K",
+          "color_name_de": "Extra Matt Champagner - 3500K",
+          "price_eur": 210.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15827": {
+      "base_sku": "15827",
+      "product_name": "A–Tube Nano small",
+      "url_slug": "atube-small",
+      "variants": [
+        {
+          "sku": "15827 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 179.0
+        },
+        {
+          "sku": "15827 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 214.0
+        },
+        {
+          "sku": "15827 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "15827 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 224.0
+        },
+        {
+          "sku": "15827 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 224.0
+        },
+        {
+          "sku": "15827 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 214.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21010": {
+      "base_sku": "21010",
+      "product_name": "Cono di Luce small",
+      "url_slug": "cono-di-luce",
+      "variants": [
+        {
+          "sku": "21010 3227",
+          "color_code": "3227",
+          "color_name_en": "Color 32 - 2700K",
+          "color_name_de": "Farbe 32 - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "21010 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 419.0
+        },
+        {
+          "sku": "21010 6027",
+          "color_code": "6027",
+          "color_name_en": "Lacquer Red - 2700K",
+          "color_name_de": "Lack Rot - 2700K",
+          "price_eur": 368.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21011": {
+      "base_sku": "21011",
+      "product_name": "Cono di Luce small",
+      "url_slug": "cono-di-luce",
+      "variants": [
+        {
+          "sku": "21011 3227",
+          "color_code": "3227",
+          "color_name_en": "Color 32 - 2700K",
+          "color_name_de": "Farbe 32 - 2700K",
+          "price_eur": 470.0
+        },
+        {
+          "sku": "21011 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 521.0
+        },
+        {
+          "sku": "21011 6027",
+          "color_code": "6027",
+          "color_name_en": "Lacquer Red - 2700K",
+          "color_name_de": "Lack Rot - 2700K",
+          "price_eur": 470.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17810": {
+      "base_sku": "17810",
+      "product_name": "Cono di Luce small",
+      "url_slug": "cono-di-luce",
+      "variants": [
+        {
+          "sku": "17810 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 169.0
+        },
+        {
+          "sku": "17810 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 180.0
+        },
+        {
+          "sku": "17810 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 190.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16821": {
+      "base_sku": "16821",
+      "product_name": "Black Chrome",
+      "url_slug": "black-chrome",
+      "variants": [
+        {
+          "sku": "16821 4227",
+          "color_code": "4227",
+          "color_name_en": "Color 42 - 2700K",
+          "color_name_de": "Farbe 42 - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "16821 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 378.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16822": {
+      "base_sku": "16822",
+      "product_name": "Black Chrome",
+      "url_slug": "black-chrome",
+      "variants": [
+        {
+          "sku": "16822 4227",
+          "color_code": "4227",
+          "color_name_en": "Color 42 - 2700K",
+          "color_name_de": "Farbe 42 - 2700K",
+          "price_eur": 286.0
+        },
+        {
+          "sku": "16822 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 296.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16921": {
+      "base_sku": "16921",
+      "product_name": "Black Chrome",
+      "url_slug": "black-chrome",
+      "variants": [
+        {
+          "sku": "16921 2800",
+          "color_code": "2800",
+          "color_name_en": "Color 28 (variant 00)",
+          "color_name_de": "Farbe 28 (Variante 00)",
+          "price_eur": 322.0
+        },
+        {
+          "sku": "16921 6600",
+          "color_code": "6600",
+          "color_name_en": "Color 66 (variant 00)",
+          "color_name_de": "Farbe 66 (Variante 00)",
+          "price_eur": 322.0
+        },
+        {
+          "sku": "16921 2700",
+          "color_code": "2700",
+          "color_name_en": "Color 27 (variant 00)",
+          "color_name_de": "Farbe 27 (Variante 00)",
+          "price_eur": 332.0
+        },
+        {
+          "sku": "16921 6500",
+          "color_code": "6500",
+          "color_name_en": "Color 65 (variant 00)",
+          "color_name_de": "Farbe 65 (Variante 00)",
+          "price_eur": 332.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16922": {
+      "base_sku": "16922",
+      "product_name": "Black Chrome",
+      "url_slug": "black-chrome",
+      "variants": [
+        {
+          "sku": "16922 2800",
+          "color_code": "2800",
+          "color_name_en": "Color 28 (variant 00)",
+          "color_name_de": "Farbe 28 (Variante 00)",
+          "price_eur": 276.0
+        },
+        {
+          "sku": "16922 6600",
+          "color_code": "6600",
+          "color_name_en": "Color 66 (variant 00)",
+          "color_name_de": "Farbe 66 (Variante 00)",
+          "price_eur": 276.0
+        },
+        {
+          "sku": "16922 2700",
+          "color_code": "2700",
+          "color_name_en": "Color 27 (variant 00)",
+          "color_name_de": "Farbe 27 (Variante 00)",
+          "price_eur": 286.0
+        },
+        {
+          "sku": "16922 6500",
+          "color_code": "6500",
+          "color_name_en": "Color 65 (variant 00)",
+          "color_name_de": "Farbe 65 (Variante 00)",
+          "price_eur": 286.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16923": {
+      "base_sku": "16923",
+      "product_name": "Black Chrome",
+      "url_slug": "black-chrome",
+      "variants": [
+        {
+          "sku": "16923 2800",
+          "color_code": "2800",
+          "color_name_en": "Color 28 (variant 00)",
+          "color_name_de": "Farbe 28 (Variante 00)",
+          "price_eur": 290.0
+        },
+        {
+          "sku": "16923 6600",
+          "color_code": "6600",
+          "color_name_en": "Color 66 (variant 00)",
+          "color_name_de": "Farbe 66 (Variante 00)",
+          "price_eur": 290.0
+        },
+        {
+          "sku": "16923 2700",
+          "color_code": "2700",
+          "color_name_en": "Color 27 (variant 00)",
+          "color_name_de": "Farbe 27 (Variante 00)",
+          "price_eur": 300.0
+        },
+        {
+          "sku": "16923 6500",
+          "color_code": "6500",
+          "color_name_en": "Color 65 (variant 00)",
+          "color_name_de": "Farbe 65 (Variante 00)",
+          "price_eur": 300.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14711": {
+      "base_sku": "14711",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "14711 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 388.0
+        },
+        {
+          "sku": "14711 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 388.0
+        },
+        {
+          "sku": "14711 3527",
+          "color_code": "3527",
+          "color_name_en": "Coppery Bronze - 2700K",
+          "color_name_de": "Bronze - 2700K",
+          "price_eur": 403.0
+        },
+        {
+          "sku": "14711 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 403.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15413": {
+      "base_sku": "15413",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15413 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 317.0
+        },
+        {
+          "sku": "15413 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15413 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15413 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15413 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 378.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15416": {
+      "base_sku": "15416",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15416 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 317.0
+        },
+        {
+          "sku": "15416 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15416 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15416 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "15416 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 378.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15412": {
+      "base_sku": "15412",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15412 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "15412 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15412 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15412 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15412 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 429.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15415": {
+      "base_sku": "15415",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15415 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "15415 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15415 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15415 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15415 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 429.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15414": {
+      "base_sku": "15414",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15414 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15414 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15414 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15414 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15414 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 495.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15417": {
+      "base_sku": "15417",
+      "product_name": "CRI 90",
+      "url_slug": "cri",
+      "variants": [
+        {
+          "sku": "15417 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 429.0
+        },
+        {
+          "sku": "15417 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15417 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15417 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "15417 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 495.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21813": {
+      "base_sku": "21813",
+      "product_name": "Oblò large",
+      "url_slug": "obl",
+      "variants": [
+        {
+          "sku": "21813 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 365.0
+        },
+        {
+          "sku": "21813 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "21813 0127",
+          "color_code": "0127",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 595.0
+        },
+        {
+          "sku": "21813 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "21813 8627",
+          "color_code": "8627",
+          "color_name_en": "White Silk - 2700K",
+          "color_name_de": "Weiß Seide - 2700K",
+          "price_eur": 495.0
+        },
+        {
+          "sku": "21813 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 330.0
+        },
+        {
+          "sku": "21813 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 450.0
+        },
+        {
+          "sku": "21813 0130",
+          "color_code": "0130",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 550.0
+        },
+        {
+          "sku": "21813 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 450.0
+        },
+        {
+          "sku": "21813 8630",
+          "color_code": "8630",
+          "color_name_en": "White Silk - 3000K",
+          "color_name_de": "Weiß Seide - 3000K",
+          "price_eur": 450.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21811": {
+      "base_sku": "21811",
+      "product_name": "Oblò large",
+      "url_slug": "obl",
+      "variants": [
+        {
+          "sku": "21811 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 420.0
+        },
+        {
+          "sku": "21811 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 560.0
+        },
+        {
+          "sku": "21811 0127",
+          "color_code": "0127",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 690.0
+        },
+        {
+          "sku": "21811 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 560.0
+        },
+        {
+          "sku": "21811 8627",
+          "color_code": "8627",
+          "color_name_en": "White Silk - 2700K",
+          "color_name_de": "Weiß Seide - 2700K",
+          "price_eur": 560.0
+        },
+        {
+          "sku": "21811 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 184.0
+        },
+        {
+          "sku": "21811 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "21811 0130",
+          "color_code": "0130",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "21811 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "21811 8630",
+          "color_code": "8630",
+          "color_name_en": "White Silk - 3000K",
+          "color_name_de": "Weiß Seide - 3000K",
+          "price_eur": 199.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21812": {
+      "base_sku": "21812",
+      "product_name": "Oblò large",
+      "url_slug": "obl",
+      "variants": [
+        {
+          "sku": "21812 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 184.0
+        },
+        {
+          "sku": "21812 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "21812 0127",
+          "color_code": "0127",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "21812 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "21812 8627",
+          "color_code": "8627",
+          "color_name_en": "White Silk - 2700K",
+          "color_name_de": "Weiß Seide - 2700K",
+          "price_eur": 199.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16410": {
+      "base_sku": "16410",
+      "product_name": "Random",
+      "url_slug": "random",
+      "variants": [
+        {
+          "sku": "16410 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "16410 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 378.0
+        },
+        {
+          "sku": "16410 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 100.0
+        },
+        {
+          "sku": "16410 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "16410 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "16410 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "16410 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "16410 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "16410 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 123.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17110": {
+      "base_sku": "17110",
+      "product_name": "Random",
+      "url_slug": "random",
+      "variants": [
+        {
+          "sku": "17110 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 123.0
+        },
+        {
+          "sku": "17110 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "17110 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "17110 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "17110 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "17110 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 148.0
+        },
+        {
+          "sku": "17110 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 148.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17112": {
+      "base_sku": "17112",
+      "product_name": "Random Solo 14",
+      "url_slug": "random-solo",
+      "variants": [
+        {
+          "sku": "17112 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 128.0
+        },
+        {
+          "sku": "17112 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 159.0
+        },
+        {
+          "sku": "17112 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 143.0
+        },
+        {
+          "sku": "17112 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "17112 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "17112 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "17112 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "17112 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "17112 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 174.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17113": {
+      "base_sku": "17113",
+      "product_name": "Random Solo 14",
+      "url_slug": "random-solo",
+      "variants": [
+        {
+          "sku": "17113 0027",
+          "color_code": "0027",
+          "color_name_en": "Clear Glass - 2700K",
+          "color_name_de": "Klares Glas - 2700K",
+          "price_eur": 235.0
+        },
+        {
+          "sku": "17113 1327",
+          "color_code": "1327",
+          "color_name_en": "Frosted White - 2700K",
+          "color_name_de": "Weiß Satiniert - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 4327",
+          "color_code": "4327",
+          "color_name_en": "Glossy Smoke - 2700K",
+          "color_name_de": "Rauch Glänzend - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 357.0
+        },
+        {
+          "sku": "17113 0030",
+          "color_code": "0030",
+          "color_name_en": "Clear Glass - 3000K",
+          "color_name_de": "Klares Glas - 3000K",
+          "price_eur": 276.0
+        },
+        {
+          "sku": "17113 1330",
+          "color_code": "1330",
+          "color_name_en": "Frosted White - 3000K",
+          "color_name_de": "Weiß Satiniert - 3000K",
+          "price_eur": 398.0
+        },
+        {
+          "sku": "17113 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 398.0
+        },
+        {
+          "sku": "17113 4330",
+          "color_code": "4330",
+          "color_name_en": "Glossy Smoke - 3000K",
+          "color_name_de": "Rauch Glänzend - 3000K",
+          "price_eur": 398.0
+        },
+        {
+          "sku": "17113 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 398.0
+        },
+        {
+          "sku": "17113 5030",
+          "color_code": "5030",
+          "color_name_en": "Gold - 3000K",
+          "color_name_de": "Gold - 3000K",
+          "price_eur": 398.0
+        },
+        {
+          "sku": "17113 5530",
+          "color_code": "5530",
+          "color_name_en": "Rose Gold - 3000K",
+          "color_name_de": "Roségold - 3000K",
+          "price_eur": 398.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16010": {
+      "base_sku": "16010",
+      "product_name": "Spider a",
+      "url_slug": "spider",
+      "variants": [
+        {
+          "sku": "16010 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16010 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16010 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 270.0
+        },
+        {
+          "sku": "16010 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 280.0
+        },
+        {
+          "sku": "16010 5527",
+          "color_code": "5527",
+          "color_name_en": "Rose Gold - 2700K",
+          "color_name_de": "Roségold - 2700K",
+          "price_eur": 280.0
+        },
+        {
+          "sku": "16010 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 280.0
+        },
+        {
+          "sku": "16010 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "16010 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 260.0
+        },
+        {
+          "sku": "16010 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 327.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09631": {
+      "base_sku": "09631",
+      "product_name": "Wall lamps",
+      "url_slug": "wall-lamps",
+      "variants": [
+        {
+          "sku": "09631 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 118.0
+        },
+        {
+          "sku": "09631 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 118.0
+        },
+        {
+          "sku": "09631 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 123.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09632": {
+      "base_sku": "09632",
+      "product_name": "Wall lamps",
+      "url_slug": "wall-lamps",
+      "variants": [
+        {
+          "sku": "09632 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 164.0
+        },
+        {
+          "sku": "09632 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 164.0
+        },
+        {
+          "sku": "09632 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 169.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09633": {
+      "base_sku": "09633",
+      "product_name": "Wall lamps",
+      "url_slug": "wall-lamps",
+      "variants": [
+        {
+          "sku": "09633 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 240.0
+        },
+        {
+          "sku": "09633 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 240.0
+        },
+        {
+          "sku": "09633 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 255.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "09634": {
+      "base_sku": "09634",
+      "product_name": "Wall lamps",
+      "url_slug": "wall-lamps",
+      "variants": [
+        {
+          "sku": "09634 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 337.0
+        },
+        {
+          "sku": "09634 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 337.0
+        },
+        {
+          "sku": "09634 3500",
+          "color_code": "3500",
+          "color_name_en": "Coppery Bronze",
+          "color_name_de": "Bronze",
+          "price_eur": 358.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15832": {
+      "base_sku": "15832",
+      "product_name": "A–Tube Nano Swing small a",
+      "url_slug": "atube-swing",
+      "variants": [
+        {
+          "sku": "15832 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 175.0
+        },
+        {
+          "sku": "15832 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 195.0
+        },
+        {
+          "sku": "15832 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 180.0
+        },
+        {
+          "sku": "15832 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 200.0
+        },
+        {
+          "sku": "15832 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 200.0
+        },
+        {
+          "sku": "15832 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 195.0
+        },
+        {
+          "sku": "15832 2035",
+          "color_code": "2035",
+          "color_name_en": "Matte Black - 3500K",
+          "color_name_de": "Schwarz Matt - 3500K",
+          "price_eur": 190.0
+        },
+        {
+          "sku": "15832 4035",
+          "color_code": "4035",
+          "color_name_en": "Chrome - 3500K",
+          "color_name_de": "Chrom - 3500K",
+          "price_eur": 215.0
+        },
+        {
+          "sku": "15832 4535",
+          "color_code": "4535",
+          "color_name_en": "Matte Champagne - 3500K",
+          "color_name_de": "Champagner Matt - 3500K",
+          "price_eur": 200.0
+        },
+        {
+          "sku": "15832 5035",
+          "color_code": "5035",
+          "color_name_en": "Gold - 3500K",
+          "color_name_de": "Gold - 3500K",
+          "price_eur": 225.0
+        },
+        {
+          "sku": "15832 5535",
+          "color_code": "5535",
+          "color_name_en": "Rose Gold - 3500K",
+          "color_name_de": "Roségold - 3500K",
+          "price_eur": 225.0
+        },
+        {
+          "sku": "15832 6735",
+          "color_code": "6735",
+          "color_name_en": "Extra Matte Champagne - 3500K",
+          "color_name_de": "Extra Matt Champagner - 3500K",
+          "price_eur": 215.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15833": {
+      "base_sku": "15833",
+      "product_name": "A–Tube Nano Swing small a",
+      "url_slug": "atube-swing",
+      "variants": [
+        {
+          "sku": "15833 2020",
+          "color_code": "2020",
+          "color_name_en": "Matte Black - 20cm diameter",
+          "color_name_de": "Schwarz Matt - 20cm Durchmesser",
+          "price_eur": 200.0
+        },
+        {
+          "sku": "15833 4020",
+          "color_code": "4020",
+          "color_name_en": "Chrome - 20cm diameter",
+          "color_name_de": "Chrom - 20cm Durchmesser",
+          "price_eur": 235.0
+        },
+        {
+          "sku": "15833 4520",
+          "color_code": "4520",
+          "color_name_en": "Matte Champagne - 20cm diameter",
+          "color_name_de": "Champagner Matt - 20cm Durchmesser",
+          "price_eur": 210.0
+        },
+        {
+          "sku": "15833 5020",
+          "color_code": "5020",
+          "color_name_en": "Gold - 20cm diameter",
+          "color_name_de": "Gold - 20cm Durchmesser",
+          "price_eur": 245.0
+        },
+        {
+          "sku": "15833 5520",
+          "color_code": "5520",
+          "color_name_en": "Rose Gold - 20cm diameter",
+          "color_name_de": "Roségold - 20cm Durchmesser",
+          "price_eur": 245.0
+        },
+        {
+          "sku": "15833 6720",
+          "color_code": "6720",
+          "color_name_en": "Extra Matte Champagne - 20cm diameter",
+          "color_name_de": "Extra Matt Champagner - 20cm Durchmesser",
+          "price_eur": 235.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17550": {
+      "base_sku": "17550",
+      "product_name": "Aile a",
+      "url_slug": "aile",
+      "variants": [
+        {
+          "sku": "17550 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 169.0
+        },
+        {
+          "sku": "17550 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 169.0
+        },
+        {
+          "sku": "17550 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 194.0
+        },
+        {
+          "sku": "17550 6027",
+          "color_code": "6027",
+          "color_name_en": "Lacquer Red - 2700K",
+          "color_name_de": "Lack Rot - 2700K",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "17550 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "17550 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "17550 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "17550 6030",
+          "color_code": "6030",
+          "color_name_en": "Lacquer Red - 3000K",
+          "color_name_de": "Lack Rot - 3000K",
+          "price_eur": 250.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16131": {
+      "base_sku": "16131",
+      "product_name": "Aile a",
+      "url_slug": "aile",
+      "variants": [
+        {
+          "sku": "16131 1227",
+          "color_code": "1227",
+          "color_name_en": "Glossy White - 2700K",
+          "color_name_de": "Bianco Lucido - 2700K",
+          "price_eur": 444.0
+        },
+        {
+          "sku": "16131 2227",
+          "color_code": "2227",
+          "color_name_en": "Glossy Black - 2700K",
+          "color_name_de": "Nero Lucido - 2700K",
+          "price_eur": 444.0
+        },
+        {
+          "sku": "16131 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 444.0
+        },
+        {
+          "sku": "16131 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 444.0
+        },
+        {
+          "sku": "16131 1230",
+          "color_code": "1230",
+          "color_name_en": "Glossy White - 3000K",
+          "color_name_de": "Bianco Lucido - 3000K",
+          "price_eur": 582.0
+        },
+        {
+          "sku": "16131 2230",
+          "color_code": "2230",
+          "color_name_en": "Glossy Black - 3000K",
+          "color_name_de": "Nero Lucido - 3000K",
+          "price_eur": 582.0
+        },
+        {
+          "sku": "16131 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 582.0
+        },
+        {
+          "sku": "16131 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 582.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16134": {
+      "base_sku": "16134",
+      "product_name": "Dimming",
+      "url_slug": "dimming",
+      "variants": [
+        {
+          "sku": "16134 1227",
+          "color_code": "1227",
+          "color_name_en": "Glossy White - 2700K",
+          "color_name_de": "Bianco Lucido - 2700K",
+          "price_eur": 847.0
+        },
+        {
+          "sku": "16134 2227",
+          "color_code": "2227",
+          "color_name_en": "Glossy Black - 2700K",
+          "color_name_de": "Nero Lucido - 2700K",
+          "price_eur": 847.0
+        },
+        {
+          "sku": "16134 4027",
+          "color_code": "4027",
+          "color_name_en": "Chrome - 2700K",
+          "color_name_de": "Chrom - 2700K",
+          "price_eur": 847.0
+        },
+        {
+          "sku": "16134 4627",
+          "color_code": "4627",
+          "color_name_en": "Glossy Bronze - 2700K",
+          "color_name_de": "Bronze Glänzend - 2700K",
+          "price_eur": 847.0
+        },
+        {
+          "sku": "16134 1230",
+          "color_code": "1230",
+          "color_name_en": "Glossy White - 3000K",
+          "color_name_de": "Bianco Lucido - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "16134 2230",
+          "color_code": "2230",
+          "color_name_en": "Glossy Black - 3000K",
+          "color_name_de": "Nero Lucido - 3000K",
+          "price_eur": 174.0
+        },
+        {
+          "sku": "16134 4030",
+          "color_code": "4030",
+          "color_name_en": "Chrome - 3000K",
+          "color_name_de": "Chrom - 3000K",
+          "price_eur": 184.0
+        },
+        {
+          "sku": "16134 4630",
+          "color_code": "4630",
+          "color_name_en": "Glossy Bronze - 3000K",
+          "color_name_de": "Bronze Glänzend - 3000K",
+          "price_eur": 305.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "03652": {
+      "base_sku": "03652",
+      "product_name": "Dimming",
+      "url_slug": "dimming",
+      "variants": [
+        {
+          "sku": "03652 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 310.0
+        },
+        {
+          "sku": "03652 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 305.0
+        },
+        {
+          "sku": "03652 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 310.0
+        },
+        {
+          "sku": "03652 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 315.0
+        },
+        {
+          "sku": "03652 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 365.0
+        },
+        {
+          "sku": "03652 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 315.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22731": {
+      "base_sku": "22731",
+      "product_name": "Dimming",
+      "url_slug": "dimming",
+      "variants": [
+        {
+          "sku": "22731 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 375.0
+        },
+        {
+          "sku": "22731 4523",
+          "color_code": "4523",
+          "color_name_en": "Matte Champagne (variant 23)",
+          "color_name_de": "Champagner Matt (Variante 23)",
+          "price_eur": 375.0
+        },
+        {
+          "sku": "22731 6923",
+          "color_code": "6923",
+          "color_name_en": "Color 69 (variant 23)",
+          "color_name_de": "Farbe 69 (Variante 23)",
+          "price_eur": 280.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22733": {
+      "base_sku": "22733",
+      "product_name": "Dimming",
+      "url_slug": "dimming",
+      "variants": [
+        {
+          "sku": "22733 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 385.0
+        },
+        {
+          "sku": "22733 4523",
+          "color_code": "4523",
+          "color_name_en": "Matte Champagne (variant 23)",
+          "color_name_de": "Champagner Matt (Variante 23)",
+          "price_eur": 395.0
+        },
+        {
+          "sku": "22733 6923",
+          "color_code": "6923",
+          "color_name_en": "Color 69 (variant 23)",
+          "color_name_de": "Farbe 69 (Variante 23)",
+          "price_eur": 395.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "22732": {
+      "base_sku": "22732",
+      "product_name": "Dimming",
+      "url_slug": "dimming",
+      "variants": [
+        {
+          "sku": "22732 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 265.0
+        },
+        {
+          "sku": "22732 4523",
+          "color_code": "4523",
+          "color_name_en": "Matte Champagne (variant 23)",
+          "color_name_de": "Champagner Matt (Variante 23)",
+          "price_eur": 275.0
+        },
+        {
+          "sku": "22732 6923",
+          "color_code": "6923",
+          "color_name_en": "Color 69 (variant 23)",
+          "color_name_de": "Farbe 69 (Variante 23)",
+          "price_eur": 275.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16553": {
+      "base_sku": "16553",
+      "product_name": "Nautilus  Dim–to–Warm",
+      "url_slug": "nautilus-dimtowarm",
+      "variants": [
+        {
+          "sku": "16553 1926",
+          "color_code": "1926",
+          "color_name_en": "Color 19 (variant 26)",
+          "color_name_de": "Farbe 19 (Variante 26)",
+          "price_eur": 470.0
+        },
+        {
+          "sku": "16553 2926",
+          "color_code": "2926",
+          "color_name_en": "Color 29 (variant 26)",
+          "color_name_de": "Farbe 29 (Variante 26)",
+          "price_eur": 470.0
+        },
+        {
+          "sku": "16553 4926",
+          "color_code": "4926",
+          "color_name_en": "Color 49 (variant 26)",
+          "color_name_de": "Farbe 49 (Variante 26)",
+          "price_eur": 490.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16550": {
+      "base_sku": "16550",
+      "product_name": "Nautilus  Dim–to–Warm",
+      "url_slug": "nautilus-dimtowarm",
+      "variants": [
+        {
+          "sku": "16550 1927",
+          "color_code": "1927",
+          "color_name_en": "Color 19 - 2700K",
+          "color_name_de": "Farbe 19 - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "16550 2927",
+          "color_code": "2927",
+          "color_name_en": "Color 29 - 2700K",
+          "color_name_de": "Farbe 29 - 2700K",
+          "price_eur": 368.0
+        },
+        {
+          "sku": "16550 4927",
+          "color_code": "4927",
+          "color_name_en": "Color 49 - 2700K",
+          "color_name_de": "Farbe 49 - 2700K",
+          "price_eur": 388.0
+        },
+        {
+          "sku": "16550 1930",
+          "color_code": "1930",
+          "color_name_en": "Color 19 - 3000K",
+          "color_name_de": "Farbe 19 - 3000K",
+          "price_eur": 170.0
+        },
+        {
+          "sku": "16550 2930",
+          "color_code": "2930",
+          "color_name_en": "Color 29 - 3000K",
+          "color_name_de": "Farbe 29 - 3000K",
+          "price_eur": 175.0
+        },
+        {
+          "sku": "16550 4930",
+          "color_code": "4930",
+          "color_name_en": "Color 49 - 3000K",
+          "color_name_de": "Farbe 49 - 3000K",
+          "price_eur": 175.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16552": {
+      "base_sku": "16552",
+      "product_name": "Nautilus Mini a",
+      "url_slug": "nautilus",
+      "variants": [
+        {
+          "sku": "16552 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "16552 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 189.0
+        },
+        {
+          "sku": "16552 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 199.0
+        },
+        {
+          "sku": "16552 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 235.0
+        },
+        {
+          "sku": "16552 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 235.0
+        },
+        {
+          "sku": "16552 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 240.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16530": {
+      "base_sku": "16530",
+      "product_name": "Nautilus Mini a",
+      "url_slug": "nautilus",
+      "variants": [
+        {
+          "sku": "16530 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16530 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16530 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "16530 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16530 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 255.0
+        },
+        {
+          "sku": "16530 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 270.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14641": {
+      "base_sku": "14641",
+      "product_name": "Puzzle single square a",
+      "url_slug": "puzzle-single",
+      "variants": [
+        {
+          "sku": "14641 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "14641 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 204.0
+        },
+        {
+          "sku": "14641 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 327.0
+        },
+        {
+          "sku": "14641 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 327.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14642": {
+      "base_sku": "14642",
+      "product_name": "Puzzle single square a",
+      "url_slug": "puzzle-single",
+      "variants": [
+        {
+          "sku": "14642 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 388.0
+        },
+        {
+          "sku": "14642 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 388.0
+        },
+        {
+          "sku": "14642 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 220.0
+        },
+        {
+          "sku": "14642 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 220.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "14643": {
+      "base_sku": "14643",
+      "product_name": "Puzzle single square a",
+      "url_slug": "puzzle-single",
+      "variants": [
+        {
+          "sku": "14643 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 230.0
+        },
+        {
+          "sku": "14643 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 230.0
+        },
+        {
+          "sku": "14643 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 403.0
+        },
+        {
+          "sku": "14643 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 403.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "15941": {
+      "base_sku": "15941",
+      "product_name": "Puzzle single square a",
+      "url_slug": "puzzle-single",
+      "variants": [
+        {
+          "sku": "15941 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 419.0
+        },
+        {
+          "sku": "15941 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 419.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16746": {
+      "base_sku": "16746",
+      "product_name": "Puzzle Mega round small",
+      "url_slug": "puzzle-mega",
+      "variants": [
+        {
+          "sku": "16746 1023",
+          "color_code": "1023",
+          "color_name_en": "Matte White (variant 23)",
+          "color_name_de": "Weiß Matt (Variante 23)",
+          "price_eur": 592.0
+        },
+        {
+          "sku": "16746 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 663.0
+        },
+        {
+          "sku": "16746 3923",
+          "color_code": "3923",
+          "color_name_en": "Color 39 (variant 23)",
+          "color_name_de": "Farbe 39 (Variante 23)",
+          "price_eur": 663.0
+        },
+        {
+          "sku": "16746 6023",
+          "color_code": "6023",
+          "color_name_en": "Lacquer Red (variant 23)",
+          "color_name_de": "Lack Rot (Variante 23)",
+          "price_eur": 663.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16748": {
+      "base_sku": "16748",
+      "product_name": "Puzzle Mega round small",
+      "url_slug": "puzzle-mega",
+      "variants": [
+        {
+          "sku": "16748 1023",
+          "color_code": "1023",
+          "color_name_en": "Matte White (variant 23)",
+          "color_name_de": "Weiß Matt (Variante 23)",
+          "price_eur": 1000.0
+        },
+        {
+          "sku": "16748 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 1102.0
+        },
+        {
+          "sku": "16748 3923",
+          "color_code": "3923",
+          "color_name_en": "Color 39 (variant 23)",
+          "color_name_de": "Farbe 39 (Variante 23)",
+          "price_eur": 1102.0
+        },
+        {
+          "sku": "16748 6023",
+          "color_code": "6023",
+          "color_name_en": "Lacquer Red (variant 23)",
+          "color_name_de": "Lack Rot (Variante 23)",
+          "price_eur": 1102.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16747": {
+      "base_sku": "16747",
+      "product_name": "Puzzle Mega round small",
+      "url_slug": "puzzle-mega",
+      "variants": [
+        {
+          "sku": "16747 1023",
+          "color_code": "1023",
+          "color_name_en": "Matte White (variant 23)",
+          "color_name_de": "Weiß Matt (Variante 23)",
+          "price_eur": 592.0
+        },
+        {
+          "sku": "16747 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 663.0
+        },
+        {
+          "sku": "16747 3923",
+          "color_code": "3923",
+          "color_name_en": "Color 39 (variant 23)",
+          "color_name_de": "Farbe 39 (Variante 23)",
+          "price_eur": 663.0
+        },
+        {
+          "sku": "16747 6023",
+          "color_code": "6023",
+          "color_name_en": "Lacquer Red (variant 23)",
+          "color_name_de": "Lack Rot (Variante 23)",
+          "price_eur": 663.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "16749": {
+      "base_sku": "16749",
+      "product_name": "Puzzle Mega round small",
+      "url_slug": "puzzle-mega",
+      "variants": [
+        {
+          "sku": "16749 1023",
+          "color_code": "1023",
+          "color_name_en": "Matte White (variant 23)",
+          "color_name_de": "Weiß Matt (Variante 23)",
+          "price_eur": 1000.0
+        },
+        {
+          "sku": "16749 2023",
+          "color_code": "2023",
+          "color_name_en": "Matte Black (variant 23)",
+          "color_name_de": "Schwarz Matt (Variante 23)",
+          "price_eur": 1102.0
+        },
+        {
+          "sku": "16749 3923",
+          "color_code": "3923",
+          "color_name_en": "Color 39 (variant 23)",
+          "color_name_de": "Farbe 39 (Variante 23)",
+          "price_eur": 1102.0
+        },
+        {
+          "sku": "16749 6023",
+          "color_code": "6023",
+          "color_name_en": "Lacquer Red (variant 23)",
+          "color_name_de": "Lack Rot (Variante 23)",
+          "price_eur": 1102.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18340": {
+      "base_sku": "18340",
+      "product_name": "Puzzle Mega extension",
+      "url_slug": "puzzle-mega-extension",
+      "variants": [
+        {
+          "sku": "18340 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 300.0
+        },
+        {
+          "sku": "18340 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 300.0
+        },
+        {
+          "sku": "18340 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 317.0
+        },
+        {
+          "sku": "18340 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 327.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19932": {
+      "base_sku": "19932",
+      "product_name": "Tidal 75 a",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19932 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 880.0
+        },
+        {
+          "sku": "19932 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 880.0
+        },
+        {
+          "sku": "19932 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 930.0
+        },
+        {
+          "sku": "19932 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 980.0
+        },
+        {
+          "sku": "19932 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 682.0
+        },
+        {
+          "sku": "19932 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 682.0
+        },
+        {
+          "sku": "19932 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 712.0
+        },
+        {
+          "sku": "19932 6730",
+          "color_code": "6730",
+          "color_name_en": "Extra Matte Champagne - 3000K",
+          "color_name_de": "Extra Matt Champagner - 3000K",
+          "price_eur": 743.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19931": {
+      "base_sku": "19931",
+      "product_name": "Tidal 75 a",
+      "url_slug": "tidal",
+      "variants": [
+        {
+          "sku": "19931 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 498.0
+        },
+        {
+          "sku": "19931 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 498.0
+        },
+        {
+          "sku": "19931 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 524.0
+        },
+        {
+          "sku": "19931 6727",
+          "color_code": "6727",
+          "color_name_en": "Extra Matte Champagne - 2700K",
+          "color_name_de": "Extra Matt Champagner - 2700K",
+          "price_eur": 550.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21551": {
+      "base_sku": "21551",
+      "product_name": "The light emission angle",
+      "url_slug": "the-light-emission-angle",
+      "variants": [
+        {
+          "sku": "21551 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 180.0
+        },
+        {
+          "sku": "21551 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 180.0
+        },
+        {
+          "sku": "21551 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 190.0
+        },
+        {
+          "sku": "21551 6927",
+          "color_code": "6927",
+          "color_name_en": "Color 69 - 2700K",
+          "color_name_de": "Farbe 69 - 2700K",
+          "price_eur": 185.0
+        },
+        {
+          "sku": "21551 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 240.0
+        },
+        {
+          "sku": "21551 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 240.0
+        },
+        {
+          "sku": "21551 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "21551 6930",
+          "color_code": "6930",
+          "color_name_en": "Color 69 - 3000K",
+          "color_name_de": "Farbe 69 - 3000K",
+          "price_eur": 245.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21553": {
+      "base_sku": "21553",
+      "product_name": "The light emission angle",
+      "url_slug": "the-light-emission-angle",
+      "variants": [
+        {
+          "sku": "21553 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "21553 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 250.0
+        },
+        {
+          "sku": "21553 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 265.0
+        },
+        {
+          "sku": "21553 6927",
+          "color_code": "6927",
+          "color_name_en": "Color 69 - 2700K",
+          "color_name_de": "Farbe 69 - 2700K",
+          "price_eur": 260.0
+        },
+        {
+          "sku": "21553 1030",
+          "color_code": "1030",
+          "color_name_en": "Matte White - 3000K",
+          "color_name_de": "Weiß Matt - 3000K",
+          "price_eur": 370.0
+        },
+        {
+          "sku": "21553 2030",
+          "color_code": "2030",
+          "color_name_en": "Matte Black - 3000K",
+          "color_name_de": "Schwarz Matt - 3000K",
+          "price_eur": 370.0
+        },
+        {
+          "sku": "21553 4530",
+          "color_code": "4530",
+          "color_name_en": "Matte Champagne - 3000K",
+          "color_name_de": "Champagner Matt - 3000K",
+          "price_eur": 385.0
+        },
+        {
+          "sku": "21553 6930",
+          "color_code": "6930",
+          "color_name_en": "Color 69 - 3000K",
+          "color_name_de": "Farbe 69 - 3000K",
+          "price_eur": 380.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21552": {
+      "base_sku": "21552",
+      "product_name": "The light emission angle",
+      "url_slug": "the-light-emission-angle",
+      "variants": [
+        {
+          "sku": "21552 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 373.0
+        },
+        {
+          "sku": "21552 2027",
+          "color_code": "2027",
+          "color_name_en": "Matte Black - 2700K",
+          "color_name_de": "Schwarz Matt - 2700K",
+          "price_eur": 307.0
+        },
+        {
+          "sku": "21552 4527",
+          "color_code": "4527",
+          "color_name_en": "Matte Champagne - 2700K",
+          "color_name_de": "Champagner Matt - 2700K",
+          "price_eur": 210.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18743": {
+      "base_sku": "18743",
+      "product_name": "Volum 29",
+      "url_slug": "volum",
+      "variants": [
+        {
+          "sku": "18743 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 332.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18741": {
+      "base_sku": "18741",
+      "product_name": "Volum 29",
+      "url_slug": "volum",
+      "variants": [
+        {
+          "sku": "18741 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 500.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18742": {
+      "base_sku": "18742",
+      "product_name": "Volum 29",
+      "url_slug": "volum",
+      "variants": [
+        {
+          "sku": "18742 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 169.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18744": {
+      "base_sku": "18744",
+      "product_name": "Volum 29",
+      "url_slug": "volum",
+      "variants": [
+        {
+          "sku": "18744 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 266.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19182": {
+      "base_sku": "19182",
+      "product_name": "Flar medium",
+      "url_slug": "flar",
+      "variants": [
+        {
+          "sku": "19182 6800",
+          "color_code": "6800",
+          "color_name_en": "Color 68 (variant 00)",
+          "color_name_de": "Farbe 68 (Variante 00)",
+          "price_eur": 1580.0
+        },
+        {
+          "sku": "19182 8600",
+          "color_code": "8600",
+          "color_name_en": "White Silk (variant 00)",
+          "color_name_de": "Weiß Seide (Variante 00)",
+          "price_eur": 1580.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19183": {
+      "base_sku": "19183",
+      "product_name": "Flar medium",
+      "url_slug": "flar",
+      "variants": [
+        {
+          "sku": "19183 6800",
+          "color_code": "6800",
+          "color_name_en": "Color 68 (variant 00)",
+          "color_name_de": "Farbe 68 (Variante 00)",
+          "price_eur": 2295.0
+        },
+        {
+          "sku": "19183 8600",
+          "color_code": "8600",
+          "color_name_en": "White Silk (variant 00)",
+          "color_name_de": "Weiß Seide (Variante 00)",
+          "price_eur": 2295.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19184": {
+      "base_sku": "19184",
+      "product_name": "Flar medium",
+      "url_slug": "flar",
+      "variants": [
+        {
+          "sku": "19184 6800",
+          "color_code": "6800",
+          "color_name_en": "Color 68 (variant 00)",
+          "color_name_de": "Farbe 68 (Variante 00)",
+          "price_eur": 908.0
+        },
+        {
+          "sku": "19184 8600",
+          "color_code": "8600",
+          "color_name_en": "White Silk (variant 00)",
+          "color_name_de": "Weiß Seide (Variante 00)",
+          "price_eur": 908.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "19185": {
+      "base_sku": "19185",
+      "product_name": "Flar medium",
+      "url_slug": "flar",
+      "variants": [
+        {
+          "sku": "19185 6800",
+          "color_code": "6800",
+          "color_name_en": "Color 68 (variant 00)",
+          "color_name_de": "Farbe 68 (Variante 00)",
+          "price_eur": 1030.0
+        },
+        {
+          "sku": "19185 8600",
+          "color_code": "8600",
+          "color_name_en": "White Silk (variant 00)",
+          "color_name_de": "Weiß Seide (Variante 00)",
+          "price_eur": 1030.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17270": {
+      "base_sku": "17270",
+      "product_name": "Flar medium",
+      "url_slug": "flar",
+      "variants": [
+        {
+          "sku": "17270 1000",
+          "color_code": "1000",
+          "color_name_en": "Matte White",
+          "color_name_de": "Weiß Matt",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "17270 2000",
+          "color_code": "2000",
+          "color_name_en": "Matte Black",
+          "color_name_de": "Schwarz Matt",
+          "price_eur": 1260.0
+        },
+        {
+          "sku": "17270 3400",
+          "color_code": "3400",
+          "color_name_en": "Color 34 (variant 00)",
+          "color_name_de": "Farbe 34 (Variante 00)",
+          "price_eur": 1382.0
+        },
+        {
+          "sku": "17270 7000",
+          "color_code": "7000",
+          "color_name_en": "Color 70 (variant 00)",
+          "color_name_de": "Farbe 70 (Variante 00)",
+          "price_eur": 1382.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18471": {
+      "base_sku": "18471",
+      "product_name": "Chrome",
+      "url_slug": "chrome",
+      "variants": [
+        {
+          "sku": "18471 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 403.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18480": {
+      "base_sku": "18480",
+      "product_name": "Chrome",
+      "url_slug": "chrome",
+      "variants": [
+        {
+          "sku": "18480 1027",
+          "color_code": "1027",
+          "color_name_en": "Matte White - 2700K",
+          "color_name_de": "Weiß Matt - 2700K",
+          "price_eur": 495.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "17081": {
+      "base_sku": "17081",
+      "product_name": "Easy Peasy Flamingo",
+      "url_slug": "easy-peasy-flamingo",
+      "variants": [
+        {
+          "sku": "17081 6226",
+          "color_code": "6226",
+          "color_name_en": "Color 62 (variant 26)",
+          "color_name_de": "Farbe 62 (Variante 26)",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "17081 8126",
+          "color_code": "8126",
+          "color_name_en": "Color 81 (variant 26)",
+          "color_name_de": "Farbe 81 (Variante 26)",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "17081 7226",
+          "color_code": "7226",
+          "color_name_en": "Color 72 (variant 26)",
+          "color_name_de": "Farbe 72 (Variante 26)",
+          "price_eur": 266.0
+        },
+        {
+          "sku": "17081 3826",
+          "color_code": "3826",
+          "color_name_en": "Color 38 (variant 26)",
+          "color_name_de": "Farbe 38 (Variante 26)",
+          "price_eur": 266.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "21080": {
+      "base_sku": "21080",
+      "product_name": "Easy Peasy Flamingo",
+      "url_slug": "easy-peasy-flamingo",
+      "variants": [
+        {
+          "sku": "21080 3227",
+          "color_code": "3227",
+          "color_name_en": "Color 32 - 2700K",
+          "color_name_de": "Farbe 32 - 2700K",
+          "price_eur": 530.0
+        },
+        {
+          "sku": "21080 5027",
+          "color_code": "5027",
+          "color_name_en": "Gold - 2700K",
+          "color_name_de": "Gold - 2700K",
+          "price_eur": 581.0
+        },
+        {
+          "sku": "21080 6027",
+          "color_code": "6027",
+          "color_name_en": "Lacquer Red - 2700K",
+          "color_name_de": "Lack Rot - 2700K",
+          "price_eur": 530.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18781": {
+      "base_sku": "18781",
+      "product_name": "Volum 14 Volum 14",
+      "url_slug": "volum-volum",
+      "variants": [
+        {
+          "sku": "18781 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 245.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18782": {
+      "base_sku": "18782",
+      "product_name": "Volum 14 Volum 14",
+      "url_slug": "volum-volum",
+      "variants": [
+        {
+          "sku": "18782 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 337.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18783": {
+      "base_sku": "18783",
+      "product_name": "Volum 14 Volum 14",
+      "url_slug": "volum-volum",
+      "variants": [
+        {
+          "sku": "18783 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 398.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18784": {
+      "base_sku": "18784",
+      "product_name": "Volum 14 Volum 14",
+      "url_slug": "volum-volum",
+      "variants": [
+        {
+          "sku": "18784 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 561.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18771": {
+      "base_sku": "18771",
+      "product_name": "Volum short 29",
+      "url_slug": "volum-short",
+      "variants": [
+        {
+          "sku": "18771 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 711.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18773": {
+      "base_sku": "18773",
+      "product_name": "Volum short 29",
+      "url_slug": "volum-short",
+      "variants": [
+        {
+          "sku": "18773 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 796.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18772": {
+      "base_sku": "18772",
+      "product_name": "Volum short 29",
+      "url_slug": "volum-short",
+      "variants": [
+        {
+          "sku": "18772 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 595.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    },
+    "18774": {
+      "base_sku": "18774",
+      "product_name": "Volum short 29",
+      "url_slug": "volum-short",
+      "variants": [
+        {
+          "sku": "18774 1200",
+          "color_code": "1200",
+          "color_name_en": "Glossy White (variant 00)",
+          "color_name_de": "Bianco Lucido (Variante 00)",
+          "price_eur": 680.0
+        }
+      ],
+      "cable_length": "",
+      "light_source": "",
+      "dimmability": "",
+      "voltage": "",
+      "ip_rating": "",
+      "dimensions": null
+    }
+  }
+}
